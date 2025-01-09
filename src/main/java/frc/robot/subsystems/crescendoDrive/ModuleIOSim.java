@@ -2,7 +2,9 @@ package frc.robot.subsystems.crescendoDrive;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.system.LinearSystem;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 
 import frc.robot.Constants;
@@ -10,7 +12,7 @@ import frc.robot.Constants;
 public class ModuleIOSim implements ModuleIO
 {
     private Rotation2d _turnAbsoluteInitPosition = new Rotation2d(Math.random() * 2.0 * Math.PI);
-    private DCMotorSim _driveSim                 = new DCMotorSim(DCMotor.getKrakenX60(1), 6.75, 0.025);
+    private DCMotorSim _driveSim                 = new DCMotorSim(LinearSystemId.createDCMotorSystem(DCMotorSim.getKrakenX60(), , 0), 6.75, 0.025);
     private DCMotorSim _turnSim                  = new DCMotorSim(DCMotor.getNEO(1), 150.0 / 7.0, 0.004);
     private double     _driveVolts               = 0.0;
     private double     _turnVolts                = 0.0;

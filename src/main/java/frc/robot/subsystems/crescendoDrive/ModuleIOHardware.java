@@ -20,7 +20,7 @@ import frc.robot.Constants;
 public class ModuleIOHardware implements ModuleIO
 {
     private final TalonFX              _driveMotor;
-    private final SparkMax          _turnMotor;
+    private final SparkMax             _turnMotor;
     private final StatusSignal<Double> _drivePosition;
     private final StatusSignal<Double> _driveVelocity;
     private final StatusSignal<Double> _driveAppliedVolts;
@@ -42,7 +42,6 @@ public class ModuleIOHardware implements ModuleIO
 
         _turnEncoder = _turnMotor.getEncoder();
 
-        _turnMotor.setInverted(true);
         _turnMotor.setSmartCurrentLimit(30);
         _turnMotor.enableVoltageCompensation(Constants.General.MOTOR_VOLTAGE);
 
@@ -69,6 +68,10 @@ public class ModuleIOHardware implements ModuleIO
         driveOutputConfig.Inverted = InvertedValue.Clockwise_Positive;
         _driveMotor.getConfigurator().apply(driveOutputConfig);
 
+        var driveConfig = new CurrentLimitsConfigs();
+        driveCurrentConfig.StatorCurrentLimit = 40.0;
+        driveCurrentConfig.StatorCurrentLimitEnable = true;
+        _driveMotor.getConfigurator().apply(driveCurrentConfig);
 
         var driveConfig = constants.DriveMotorInitialConfigs;
         driveConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;

@@ -136,7 +136,7 @@ public class Drive extends SubsystemBase
         ChassisSpeeds       discreteSpeeds = ChassisSpeeds.discretize(speeds, 0.02);
         SwerveModuleState[] setpointStates = _kinematics.toSwerveModuleStates(discreteSpeeds);
 
-        SwerveDriveKinematics.desaturateWheelSpeeds(setpointStates, Constants.Drive.MAX_LINEAR_SPEED);
+        SwerveDriveKinematics.desaturateWheelSpeeds(setpointStates, Constants.Drive.MAX_SPEED);
 
         // Send setpoints to modules
         SwerveModuleState[] optimizedSetpointStates = new SwerveModuleState[4];
