@@ -1,0 +1,147 @@
+package frc.robot.subsystems.drive;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.function.DoubleSupplier;
+
+import com.revrobotics.REVLibError;
+import com.revrobotics.spark.SparkBase;
+
+import edu.wpi.first.wpilibj.Notifier;
+import edu.wpi.first.wpilibj.RobotController;
+
+public class OdometryThread
+{
+    private final List<SparkBase>      _sparks          = new ArrayList<>();
+    private final List<DoubleSupplier> _sparkSignals    = new ArrayList<>();
+    private final List<DoubleSupplier> _genericSignals  = new ArrayList<>();
+    private final List<Queue<Double>>  _sparkQueues     = new ArrayList<>();
+    private final List<Queue<Double>>  _genericQueues   = new ArrayList<>();
+    private final List<Queue<Double>>  _timestampQueues = new ArrayList<>();
+    private static OdometryThread      _instance        = null;
+    private Notifier                   _notifier        = new Notifier(this::run);
+
+    public static OdometryThread getInstance()
+    {
+        if (_instance == null)
+        {
+            _instance = new OdometryThread();
+        }
+
+        return _instance;
+    }
+
+    private OdometryThread()
+    {
+        _notifier.setName("OdometryThread");
+    }
+
+    public void start()
+    {
+        if (_timestampQueues.size() > 0)
+        {
+            _notifier.startPeriodic(1.0 / DriveConstants.odometryFrequency);
+        }
+    }
+
+    public Queue<Double> registerSignal(SparkBase spark, DoubleSupplier signal)
+    {
+        Queue<Double> queue = new ArrayBlockingQueue<>(20);
+        Drive.ODOMETRY_LOCK.lock();
+
+        try
+        {
+            _sparks.add(spark);
+            _sparkSignals.add(signal);
+            _sparkQueues.add(queue);
+        }
+        finally
+        {
+            Drive.ODOMETRY_LOCK.unlock();
+        }
+
+        return queue;
+    }
+
+    public Queue<Double> registerSignal(DoubleSupplier signal)
+    {
+        Queue<Double> queue = new ArrayBlockingQueue<>(20);
+        Drive.ODOMETRY_LOCK.lock();
+
+        try
+        {
+            _genericSignals.add(signal);
+            _genericQueues.add(queue);
+        }
+        finally
+        {
+            Drive.ODOMETRY_LOCK.unlock();
+        }
+
+        return queue;
+    }
+
+    public Queue<Double> makeTimestampQueue()
+    {
+        Queue<Double> queue = new ArrayBlockingQueue<>(20);
+        Drive.ODOMETRY_LOCK.lock();
+
+        try
+        {
+            _timestampQueues.add(queue);
+        }
+        finally
+        {
+            Drive.ODOMETRY_LOCK.unlock();
+        }
+
+        return queue;
+    }
+
+    private void run()
+    {
+        Drive.ODOMETRY_LOCK.lock();
+
+        try
+        {
+            double timestamp = RobotController.getFPGATime() / 1e6;
+
+            double[] sparkValues = new double[_sparkSignals.size()];
+            boolean  isValid     = true;
+
+            for (int i = 0; i < _sparkSignals.size(); i++)
+            {
+                sparkValues[i] = _sparkSignals.get(i).getAsDouble();
+
+                if (_sparks.get(i).getLastError() != REVLibError.kOk)
+                {
+                    isValid = false;
+                }
+            }
+
+            if (isValid)
+            {
+                for (int i = 0; i < _sparkSignals.size(); i++)
+                {
+                    _sparkQueues.get(i).offer(sparkValues[i]);
+                }
+
+                for (int i = 0; i < _genericSignals.size(); i++)
+                {
+                    _genericQueues.get(i).offer(_genericSignals.get(i).getAsDouble());
+                }
+
+                for (int i = 0; i < _timestampQueues.size(); i++)
+                {
+                    _timestampQueues.get(i).offer(timestamp);
+                }
+            }
+        }
+        finally
+        {
+            Drive.ODOMETRY_LOCK.unlock();
+        }
+    }
+}
