@@ -32,6 +32,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 
 import static frc.robot.Constants.Drive.*;
+import static frc.robot.Constants.General.*;
 
 public class Drive extends SubsystemBase
 {

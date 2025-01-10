@@ -43,7 +43,7 @@ public class OdometryThread
     {
         if (_timestampQueues.size() > 0)
         {
-            _notifier.startPeriodic(1.0 / Constants.Drive.ODOMETRY_FREQUENCY);
+            _notifier.startPeriodic(1.0 / Constants.General.ODOMETRY_FREQUENCY);
         }
     }
 
