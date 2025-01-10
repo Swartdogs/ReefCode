@@ -11,6 +11,7 @@ import com.revrobotics.spark.SparkBase;
 
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
+import frc.robot.Constants;
 
 public class OdometryThread
 {
@@ -42,7 +43,7 @@ public class OdometryThread
     {
         if (_timestampQueues.size() > 0)
         {
-            _notifier.startPeriodic(1.0 / DriveConstants.odometryFrequency);
+            _notifier.startPeriodic(1.0 / Constants.Drive.ODOMETRY_FREQUENCY);
         }
     }
 

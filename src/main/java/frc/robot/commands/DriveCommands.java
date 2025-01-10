@@ -23,7 +23,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.drive.Drive;
-import frc.robot.subsystems.drive.DriveConstants;
+import frc.robot.Constants;
 
 public class DriveCommands
 {
@@ -180,7 +180,7 @@ public class DriveCommands
                                 wheelDelta += Math.abs(positions[i] - state.positions[i]) / 4.0;
                             }
 
-                            double wheelRadius = (state.gyroDelta * DriveConstants.driveBaseRadius) / wheelDelta;
+                            double wheelRadius = (state.gyroDelta * Constants.Drive.DRIVE_BASE_RADIUS) / wheelDelta;
 
                             NumberFormat formatter = new DecimalFormat("#0.000");
                             System.out.println("********** Wheel Radius Characterization Results **********");

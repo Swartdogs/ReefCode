@@ -8,11 +8,11 @@ import com.studica.frc.AHRS.NavXComType;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 
-import static frc.robot.subsystems.drive.DriveConstants.*;
+import static frc.robot.Constants.Drive.*;
 
 public class GyroIONavX implements GyroIO
 {
-    private final AHRS          _navX = new AHRS(NavXComType.kMXP_SPI, (byte)odometryFrequency);
+    private final AHRS          _navX = new AHRS(NavXComType.kMXP_SPI, (byte)ODOMETRY_FREQUENCY);
     private final Queue<Double> _yawPositionQueue;
     private final Queue<Double> _yawTimestampQueue;
     private final Queue<Double> _pitchPositionQueue;

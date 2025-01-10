@@ -31,7 +31,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 import frc.robot.Constants;
 
-import static frc.robot.subsystems.drive.DriveConstants.*;
+import static frc.robot.Constants.Drive.*;
 
 public class Drive extends SubsystemBase
 {
@@ -41,7 +41,7 @@ public class Drive extends SubsystemBase
     private final Module[]               _modules               = new Module[4]; // FL, FR, BL, BR
     private final SysIdRoutine           _sysId;
     private final Alert                  _gyroDisconnectedAlert = new Alert("Disconnected gyro, using kinematics as a fallback.", AlertType.kError);
-    private SwerveDriveKinematics        _kinematics            = new SwerveDriveKinematics(moduleTranslations);
+    private SwerveDriveKinematics        _kinematics            = new SwerveDriveKinematics(MODULE_TRANSLATIONS);
     private Rotation2d                   _rawGyroRotation       = new Rotation2d();
     private SwerveModulePosition[]       _lastModulePositions   = new SwerveModulePosition[] { new SwerveModulePosition(), new SwerveModulePosition(), new SwerveModulePosition(), new SwerveModulePosition() };
     private SwerveDrivePoseEstimator     _poseEstimator         = new SwerveDrivePoseEstimator(_kinematics, _rawGyroRotation, _lastModulePositions, new Pose2d());
@@ -127,7 +127,7 @@ public class Drive extends SubsystemBase
     {
         ChassisSpeeds       discreteSpeeds = ChassisSpeeds.discretize(speeds, 0.02);
         SwerveModuleState[] setpointStates = _kinematics.toSwerveModuleStates(discreteSpeeds);
-        SwerveDriveKinematics.desaturateWheelSpeeds(setpointStates, maxSpeedMetersPerSec);
+        SwerveDriveKinematics.desaturateWheelSpeeds(setpointStates, MAX_LINEAR_SPEED);
 
         Logger.recordOutput("SwerveStates/Setpoints", setpointStates);
         Logger.recordOutput("SwerveChassisSpeeds/Setpoints", discreteSpeeds);
@@ -159,7 +159,7 @@ public class Drive extends SubsystemBase
 
         for (int i = 0; i < 4; i++)
         {
-            headings[i] = moduleTranslations[i].getAngle();
+            headings[i] = MODULE_TRANSLATIONS[i].getAngle();
         }
 
         _kinematics.resetHeadings(headings);
@@ -255,11 +255,11 @@ public class Drive extends SubsystemBase
 
     public double getMaxLinearSpeedMetersPerSec()
     {
-        return maxSpeedMetersPerSec;
+        return MAX_LINEAR_SPEED;
     }
 
     public double getMaxAngularSpeedRadPerSec()
     {
-        return maxSpeedMetersPerSec / driveBaseRadius;
+        return MAX_LINEAR_SPEED / DRIVE_BASE_RADIUS;
     }
 }

@@ -9,7 +9,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 
-import static frc.robot.subsystems.drive.DriveConstants.*;
+import static frc.robot.Constants.Drive.*;
 
 public class Module
 {
@@ -40,7 +40,7 @@ public class Module
 
         for (int i = 0; i < sampleCount; i++)
         {
-            double     positionMeters = _inputs.odometryDrivePositionsRad[i] * wheelRadiusMeters;
+            double     positionMeters = _inputs.odometryDrivePositionsRad[i] * WHEEL_RADIUS;
             Rotation2d angle          = _inputs.odometryTurnPositions[i];
             _odometryPositions[i] = new SwerveModulePosition(positionMeters, angle);
         }
@@ -54,7 +54,7 @@ public class Module
         state.optimize(getAngle());
         state.cosineScale(_inputs.turnPosition);
 
-        _io.setDriveVelocity(state.speedMetersPerSecond / wheelRadiusMeters);
+        _io.setDriveVelocity(state.speedMetersPerSecond / WHEEL_RADIUS);
         _io.setTurnPosition(state.angle);
     }
 
@@ -77,12 +77,12 @@ public class Module
 
     public double getPositionMeters()
     {
-        return _inputs.drivePositionRad * wheelRadiusMeters;
+        return _inputs.drivePositionRad * WHEEL_RADIUS;
     }
 
     public double getVelocityMetersPerSec()
     {
-        return _inputs.driveVelocityRadPerSec * wheelRadiusMeters;
+        return _inputs.driveVelocityRadPerSec * WHEEL_RADIUS;
     }
 
     public SwerveModulePosition getPosition()
