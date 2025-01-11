@@ -2,11 +2,21 @@ package frc.robot.subsystems.drive;
 
 import static edu.wpi.first.units.Units.Volts;
 
+import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
+
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.path.Waypoint;
+import com.pathplanner.lib.pathfinding.Pathfinding;
+import com.pathplanner.lib.util.PathPlannerLogging;
 
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.hal.FRCNetComm.tInstances;
@@ -15,6 +25,7 @@ import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -24,12 +35,14 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 import frc.robot.Constants;
+import frc.robot.util.LocalADStarAK;
 
 import static frc.robot.Constants.Drive.*;
 import static frc.robot.Constants.General.*;
@@ -54,12 +67,49 @@ public class Drive extends SubsystemBase
         _modules[1] = new Module(frModuleIO, 1);
         _modules[2] = new Module(blModuleIO, 2);
         _modules[3] = new Module(brModuleIO, 3);
+        RobotConfig config;
+
+        try
+        {
+            config = RobotConfig.fromGUISettings();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            config = new RobotConfig(ROBOT_MASS, ROBOT_MOI, null, MODULE_TRANSLATIONS);
+        }
 
         HAL.report(tResourceType.kResourceType_RobotDrive, tInstances.kRobotDriveSwerve_AdvantageKit);
 
         OdometryThread.getInstance().start();
 
         // TODO: Auto builder stuff?
+        AutoBuilder.configure(
+                this::getPose, this::setPose, this::getChassisSpeeds, (speeds, feedforwards) -> runVelocity(speeds),
+                new PPHolonomicDriveController(new PIDConstants(Constants.Drive.DRIVE_KP, Constants.Drive.DRIVE_KD), new PIDConstants(Constants.Drive.TURN_KP, Constants.Drive.TURN_KD)), config,
+
+                () -> DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red, this
+        );
+
+        Pathfinding.setPathfinder(new LocalADStarAK());
+
+        PathPlannerLogging.setLogActivePathCallback((activePath) ->
+        {
+            Logger.recordOutput("Odometry/Trajectory", activePath.toArray(new Pose2d[activePath.size()]));
+        });
+
+        PathPlannerLogging.setLogTargetPoseCallback((targetPose) ->
+        {
+            Logger.recordOutput("Odometry/TrajectorySetpoint", targetPose);
+        });
+
+        _poseEstimator = new SwerveDrivePoseEstimator(_kinematics, new Rotation2d(), getModulePositions(), new Pose2d());
+
+        // Create a list of bezier points from poses. Each pose represents one waypoint.
+        // The rotation component of the pose should be the direction of travel. Do not
+        // use holonomic rotation.
+        @SuppressWarnings("removal")
+        List<Waypoint> bezierPoints = PathPlannerPath.bezierFromPoses(new Pose2d(1.0, 1.0, Rotation2d.fromDegrees(0)), new Pose2d(3.0, 1.0, Rotation2d.fromDegrees(0)), new Pose2d(5.0, 3.0, Rotation2d.fromDegrees(90)));
 
         _sysId = new SysIdRoutine(new SysIdRoutine.Config(null, null, null, (state) -> Logger.recordOutput("Drive/SysIdState", state.toString())), new SysIdRoutine.Mechanism((voltage) -> runCharacterization(voltage.in(Volts)), null, this));
     }

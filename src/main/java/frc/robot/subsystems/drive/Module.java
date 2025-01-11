@@ -14,11 +14,11 @@ import static frc.robot.Constants.Drive.*;
 public class Module
 {
     private final ModuleIO                 _io;
-    private final ModuleIOInputsAutoLogged _inputs = new ModuleIOInputsAutoLogged();
+    private final ModuleIOInputsAutoLogged _inputs            = new ModuleIOInputsAutoLogged();
     private final int                      _index;
-    private final Alert            _driveDisconnectedAlert;
-    private final Alert            _turnDisconnectedAlert;
-    private SwerveModulePosition[] _odometryPositions = new SwerveModulePosition[] {};
+    private final Alert                    _driveDisconnectedAlert;
+    private final Alert                    _turnDisconnectedAlert;
+    private SwerveModulePosition[]         _odometryPositions = new SwerveModulePosition[] {};
 
     public Module(ModuleIO io, int index)
     {

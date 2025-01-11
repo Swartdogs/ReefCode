@@ -11,7 +11,7 @@ import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.revrobotics.AbsoluteEncoder;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkMax;
@@ -31,6 +31,7 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
+import edu.wpi.first.wpilibj.AnalogEncoder;
 import frc.robot.Constants;
 
 import static edu.wpi.first.units.Units.Amps;
@@ -42,9 +43,10 @@ public class ModuleIOHardware implements ModuleIO
     private final Rotation2d _zeroRotation;
 
     // Hardware objects
-    private final TalonFX         _driveTalon;
-    private final SparkBase       _turnSpark;
-    private final AbsoluteEncoder _turnEncoder;
+    private final TalonFX       _driveTalon;
+    private final SparkBase     _turnSpark;
+    private final AnalogEncoder _turnPot;
+    private final RelativeEncoder _turnEncoder;
     // TODO: Add in absolute encoder
 
     // Voltage control requests (Talon)
@@ -98,7 +100,16 @@ public class ModuleIOHardware implements ModuleIO
             default -> 0;
         }, MotorType.kBrushless);
 
-        _turnEncoder    = _turnSpark.getAbsoluteEncoder();
+        _turnPot    = new AnalogEncoder(switch (module)
+        {
+            case 0 -> Constants.AIO.FL_ENCODER;
+            case 1 -> Constants.AIO.FR_ENCODER;
+            case 2 -> Constants.AIO.BL_ENCODER;
+            case 3 -> Constants.AIO.BR_ENCODER;
+            default -> 0;
+        });
+
+        _turnEncoder = _turnSpark.getEncoder();
         _turnController = _turnSpark.getClosedLoopController();
 
         // Configure drive motor
@@ -131,6 +142,8 @@ public class ModuleIOHardware implements ModuleIO
         turnConfig.signals.absoluteEncoderPositionAlwaysOn(true).absoluteEncoderPositionPeriodMs((int)(1000.0 / Constants.Drive.ODOMETRY_FREQUENCY)).absoluteEncoderVelocityAlwaysOn(true).absoluteEncoderVelocityPeriodMs(20)
                 .appliedOutputPeriodMs(20).busVoltagePeriodMs(20).outputCurrentPeriodMs(20);
 
+        _turnEncoder.setPosition(0);
+        
         tryUntilOk(_turnSpark, 5, () -> _turnSpark.configure(turnConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
 
         // Create drive status signals
@@ -142,7 +155,7 @@ public class ModuleIOHardware implements ModuleIO
         // Create odometry queues
         _timestampQueue     = OdometryThread.getInstance().makeTimestampQueue();
         _drivePositionQueue = OdometryThread.getInstance().registerSignal(_driveTalon.getPosition());
-        _turnPositionQueue  = OdometryThread.getInstance().registerSignal(_turnSpark, _turnEncoder::getPosition);
+        _turnPositionQueue  = OdometryThread.getInstance().registerSignal(_turnSpark, _turnPot::get);
     }
 
     @Override
@@ -161,8 +174,9 @@ public class ModuleIOHardware implements ModuleIO
         // Update turn inputs (Spark)
         sparkStickyFault = false;
 
-        ifOk(_turnSpark, _turnEncoder::getPosition, (value) -> inputs.turnPosition = new Rotation2d(value).minus(_zeroRotation));
-        ifOk(_turnSpark, _turnEncoder::getVelocity, (value) -> inputs.turnVelocityRadPerSec = value);
+        ifOk(_turnSpark, _turnPot::get,(value) -> inputs.turnAbsolutePosition = new Rotation2d(value).minus(_zeroRotation));
+        ifOk(_turnSpark, _turnEncoder::getPosition, (value) -> inputs.turnPosition = new Rotation2d(value/Constants.Drive.TURN_MOTOR_REDUCTION));
+        ifOk(_turnSpark, _turnEncoder::getVelocity, (value) -> inputs.turnVelocityRadPerSec = value/Constants.Drive.TURN_MOTOR_REDUCTION); //TODO: Fix this
         ifOk(_turnSpark, new DoubleSupplier[] { _turnSpark::getAppliedOutput, _turnSpark::getBusVoltage }, (values) -> inputs.turnAppliedVolts = values[0] * values[1]);
         ifOk(_turnSpark, _turnSpark::getOutputCurrent, (value) -> inputs.turnCurrentAmps = value);
         inputs.turnConnected = _turnConnectedDebouncer.calculate(!sparkStickyFault);

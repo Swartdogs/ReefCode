@@ -12,13 +12,14 @@ public class ModuleIOSim implements ModuleIO
 {
     private final DCMotorSim _driveSim;
     private final DCMotorSim _turnSim;
-    private boolean          _driveClosedLoop   = false;
-    private boolean          _turnClosedLoop    = false;
-    private PIDController    _driveController   = new PIDController(Constants.Drive.DRIVE_SIM_P, 0, Constants.Drive.DRIVE_SIM_D);
-    private PIDController    _turnController    = new PIDController(Constants.Drive.TURN_SIM_P, 0, Constants.Drive.TURN_SIM_D);
-    private double           _driveFFVolts      = 0.0;
-    private double           _driveAppliedVolts = 0.0;
-    private double           _turnAppliedVolts  = 0.0;
+    private boolean          _driveClosedLoop          = false;
+    private boolean          _turnClosedLoop           = false;
+    private PIDController    _driveController          = new PIDController(Constants.Drive.DRIVE_SIM_P, 0, Constants.Drive.DRIVE_SIM_D);
+    private PIDController    _turnController           = new PIDController(Constants.Drive.TURN_SIM_P, 0, Constants.Drive.TURN_SIM_D);
+    private double           _driveFFVolts             = 0.0;
+    private double           _driveAppliedVolts        = 0.0;
+    private double           _turnAppliedVolts         = 0.0;
+    private Rotation2d       _turnAbsoluteInitPosition = new Rotation2d(Math.random() * 2.0 * Math.PI);
 
     public ModuleIOSim()
     {
@@ -61,6 +62,7 @@ public class ModuleIOSim implements ModuleIO
         inputs.driveCurrentAmps       = Math.abs(_driveSim.getCurrentDrawAmps());
 
         inputs.turnConnected         = true;
+        inputs.turnAbsolutePosition  = new Rotation2d(_turnSim.getAngularPositionRad()).plus(_turnAbsoluteInitPosition);
         inputs.turnPosition          = new Rotation2d(_turnSim.getAngularPositionRad());
         inputs.turnVelocityRadPerSec = _turnSim.getAngularVelocityRadPerSec();
         inputs.turnAppliedVolts      = _turnAppliedVolts;

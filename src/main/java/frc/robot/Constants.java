@@ -32,6 +32,14 @@ public final class Constants
         }
     }
 
+    public static class AIO
+    {
+        public static final int FL_ENCODER = 0;
+        public static final int FR_ENCODER = 1;
+        public static final int BL_ENCODER = 2;
+        public static final int BR_ENCODER = 3;
+    }
+
     public static class CAN
     {
         public static final int FL_DRIVE = 1;
@@ -57,7 +65,7 @@ public final class Constants
         public static final Rotation2d      BR_ZERO_ROTATION              = new Rotation2d(0.0);
         public static final Current         DRIVE_MOTOR_CURRENT_LIMIT     = Amps.of(50);
         public static final double          WHEEL_RADIUS                  = Units.inchesToMeters(1.5);
-        public static final double          DRIVE_MOTOR_REDUCTION         = (45.0 * 22.0) / (14.0 * 15.0); // TODO: This is for a MAXSwerve, update for the X2s
+        public static final double          DRIVE_MOTOR_REDUCTION         = 5.67;
         public static final boolean         DRIVE_INVERTED                = false;
         public static final DCMotor         DRIVE_GEARBOX                 = DCMotor.getKrakenX60(1);
         public static final double          DRIVE_ENCODER_POSITION_FACTOR = 2 * Math.PI / DRIVE_MOTOR_REDUCTION;
@@ -72,7 +80,7 @@ public final class Constants
         public static final double          DRIVE_SIM_KV                  = 0.0789;
         public static final boolean         TURN_INVERTED                 = false;
         public static final int             TURN_MOTOR_CURRENT_LIMIT      = 20;
-        public static final double          TURN_MOTOR_REDUCTION          = 9424.0 / 203.0; // TODO: Check this
+        public static final double          TURN_MOTOR_REDUCTION          = 12;
         public static final DCMotor         TURN_GEARBOX                  = DCMotor.getNEO(1);
         public static final boolean         TURN_ENCODER_INVERTED         = true;
         public static final double          TURN_ENCODER_POSITION_FACTOR  = 2 * Math.PI;

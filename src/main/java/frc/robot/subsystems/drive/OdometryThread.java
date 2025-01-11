@@ -153,9 +153,9 @@ public class OdometryThread
 
         try
         {
-            double timestamp = RobotController.getFPGATime() / 1e6;
+            double timestamp        = RobotController.getFPGATime() / 1e6;
             double phoenixTimestamp = timestamp;
-            double totalLatency = 0.0;
+            double totalLatency     = 0.0;
 
             for (BaseStatusSignal signal : _phoenixSignals)
             {
