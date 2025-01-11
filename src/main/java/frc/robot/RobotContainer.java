@@ -12,6 +12,9 @@ import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIONavX;
 import frc.robot.subsystems.drive.ModuleIO;
+import frc.robot.subsystems.drive.ModuleIOHardware;
+import frc.robot.subsystems.drive.ModuleIOSim;
+
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 public class RobotContainer
@@ -34,12 +37,12 @@ public class RobotContainer
         {
             case REAL:
                 // Real robot, instantiate hardware IO implementations
-                _drive = new Drive(new GyroIONavX(), new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {});
+                _drive = new Drive(new GyroIONavX(), new ModuleIOHardware(0), new ModuleIOHardware(1), new ModuleIOHardware(2), new ModuleIOHardware(3));
                 break;
 
             case SIM:
                 // Sim robot, instantiate physics sim IO implementations
-                _drive = new Drive(new GyroIONavX(), new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {});
+                _drive = new Drive(new GyroIO() {}, new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim());
                 break;
 
             default:
