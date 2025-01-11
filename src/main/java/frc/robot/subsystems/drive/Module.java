@@ -16,7 +16,6 @@ public class Module
     private final ModuleIO                 _io;
     private final ModuleIOInputsAutoLogged _inputs = new ModuleIOInputsAutoLogged();
     private final int                      _index;
-    // TODO: Maybe swerve module constants?
     private final Alert            _driveDisconnectedAlert;
     private final Alert            _turnDisconnectedAlert;
     private SwerveModulePosition[] _odometryPositions = new SwerveModulePosition[] {};

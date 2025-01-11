@@ -1,5 +1,7 @@
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Amps;
+
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.RobotConfig;
 
@@ -7,6 +9,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.wpilibj.RobotBase;
 
 public final class Constants
@@ -52,9 +55,10 @@ public final class Constants
         public static final Rotation2d      FR_ZERO_ROTATION              = new Rotation2d(0.0);
         public static final Rotation2d      BL_ZERO_ROTATION              = new Rotation2d(0.0);
         public static final Rotation2d      BR_ZERO_ROTATION              = new Rotation2d(0.0);
-        public static final int             DRIVE_MOTOR_CURRENT_LIMIT     = 50;
+        public static final Current         DRIVE_MOTOR_CURRENT_LIMIT     = Amps.of(50);
         public static final double          WHEEL_RADIUS                  = Units.inchesToMeters(1.5);
         public static final double          DRIVE_MOTOR_REDUCTION         = (45.0 * 22.0) / (14.0 * 15.0); // TODO: This is for a MAXSwerve, update for the X2s
+        public static final boolean         DRIVE_INVERTED                = false;
         public static final DCMotor         DRIVE_GEARBOX                 = DCMotor.getKrakenX60(1);
         public static final double          DRIVE_ENCODER_POSITION_FACTOR = 2 * Math.PI / DRIVE_MOTOR_REDUCTION;
         public static final double          DRIVE_ENCODER_VELOCITY_FACTOR = 2 * Math.PI / 60.0 / DRIVE_MOTOR_REDUCTION;
@@ -80,16 +84,16 @@ public final class Constants
         public static final double          TURN_PID_MIN_INPUT            = 0;
         public static final double          TURN_PID_MAX_INPUT            = 2 * Math.PI;
         public static final double          WHEEL_COF                     = 1.2;
+        public static final double          ODOMETRY_FREQUENCY            = 100.0; // ms
         public static final RobotConfig     PP_CONFIG                     = new RobotConfig(
-                General.ROBOT_MASS, General.ROBOT_MOI, new ModuleConfig(WHEEL_RADIUS, General.MAX_LINEAR_SPEED, WHEEL_COF, DRIVE_GEARBOX.withReduction(DRIVE_MOTOR_REDUCTION), DRIVE_MOTOR_CURRENT_LIMIT, 1), MODULE_TRANSLATIONS
+                General.ROBOT_MASS, General.ROBOT_MOI, new ModuleConfig(WHEEL_RADIUS, General.MAX_LINEAR_SPEED, WHEEL_COF, DRIVE_GEARBOX.withReduction(DRIVE_MOTOR_REDUCTION), DRIVE_MOTOR_CURRENT_LIMIT.magnitude(), 1), MODULE_TRANSLATIONS
         );
     }
 
     public static class General
     {
-        public static final double          MAX_LINEAR_SPEED              = 4.8; // m/s
-        public static final double          ODOMETRY_FREQUENCY            = 100.0; // ms
-        public static final double          ROBOT_MASS                    = 74.088;
-        public static final double          ROBOT_MOI                     = 6.883;
+        public static final double MAX_LINEAR_SPEED = 4.8; // m/s
+        public static final double ROBOT_MASS       = 74.088;
+        public static final double ROBOT_MOI        = 6.883;
     }
 }

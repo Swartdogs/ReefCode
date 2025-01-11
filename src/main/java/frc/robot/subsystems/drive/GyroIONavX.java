@@ -7,12 +7,11 @@ import com.studica.frc.AHRS.NavXComType;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
-
-import static frc.robot.Constants.General.*;
+import frc.robot.Constants;
 
 public class GyroIONavX implements GyroIO
 {
-    private final AHRS          _navX = new AHRS(NavXComType.kMXP_SPI, (byte)ODOMETRY_FREQUENCY);
+    private final AHRS          _navX = new AHRS(NavXComType.kMXP_SPI, (byte)Constants.Drive.ODOMETRY_FREQUENCY);
     private final Queue<Double> _yawPositionQueue;
     private final Queue<Double> _yawTimestampQueue;
     private final Queue<Double> _pitchPositionQueue;
@@ -22,13 +21,12 @@ public class GyroIONavX implements GyroIO
 
     public GyroIONavX()
     {
-        // TODO: Set up queues
-        _yawPositionQueue    = null;
-        _yawTimestampQueue   = null;
-        _pitchPositionQueue  = null;
-        _pitchTimestampQueue = null;
-        _rollPositionQueue   = null;
-        _rollTimestampQueue  = null;
+        _yawPositionQueue    = OdometryThread.getInstance().registerSignal(_navX::getYaw);
+        _yawTimestampQueue   = OdometryThread.getInstance().makeTimestampQueue();
+        _pitchPositionQueue  = OdometryThread.getInstance().registerSignal(_navX::getPitch);
+        _pitchTimestampQueue = OdometryThread.getInstance().makeTimestampQueue();
+        _rollPositionQueue   = OdometryThread.getInstance().registerSignal(_navX::getRoll);
+        _rollTimestampQueue  = OdometryThread.getInstance().makeTimestampQueue();
     }
 
     @Override

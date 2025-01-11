@@ -4,17 +4,25 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.DoubleSupplier;
 
+import com.ctre.phoenix6.BaseStatusSignal;
+import com.ctre.phoenix6.StatusSignal;
 import com.revrobotics.REVLibError;
 import com.revrobotics.spark.SparkBase;
 
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import frc.robot.Constants;
 
 public class OdometryThread
 {
+    private final Lock                 _signalsLock     = new ReentrantLock();
+    private final List<Queue<Double>>  _phoenixQueues   = new ArrayList<>();
+    private BaseStatusSignal[]         _phoenixSignals  = new BaseStatusSignal[0];
     private final List<SparkBase>      _sparks          = new ArrayList<>();
     private final List<DoubleSupplier> _sparkSignals    = new ArrayList<>();
     private final List<DoubleSupplier> _genericSignals  = new ArrayList<>();
@@ -43,7 +51,7 @@ public class OdometryThread
     {
         if (_timestampQueues.size() > 0)
         {
-            _notifier.startPeriodic(1.0 / Constants.General.ODOMETRY_FREQUENCY);
+            _notifier.startPeriodic(1.0 / Constants.Drive.ODOMETRY_FREQUENCY);
         }
     }
 
@@ -84,6 +92,30 @@ public class OdometryThread
         return queue;
     }
 
+    public Queue<Double> registerSignal(StatusSignal<Angle> signal)
+    {
+        Queue<Double> queue = new ArrayBlockingQueue<>(20);
+
+        _signalsLock.lock();
+        Drive.ODOMETRY_LOCK.lock();
+
+        try
+        {
+            BaseStatusSignal[] newSignals = new BaseStatusSignal[_phoenixSignals.length + 1];
+            System.arraycopy(_phoenixSignals, 0, newSignals, 0, _phoenixSignals.length);
+            newSignals[_phoenixSignals.length] = signal;
+            _phoenixSignals                    = newSignals;
+            _phoenixQueues.add(queue);
+        }
+        finally
+        {
+            _signalsLock.unlock();
+            Drive.ODOMETRY_LOCK.unlock();
+        }
+
+        return queue;
+    }
+
     public Queue<Double> makeTimestampQueue()
     {
         Queue<Double> queue = new ArrayBlockingQueue<>(20);
@@ -101,13 +133,40 @@ public class OdometryThread
         return queue;
     }
 
+    // TODO: update with TalonFX stuff
     private void run()
     {
+        _signalsLock.lock();
+
+        try
+        {
+            if (_phoenixSignals.length > 0)
+            {
+                BaseStatusSignal.refreshAll(_phoenixSignals);
+            }
+        }
+        finally
+        {
+            _signalsLock.unlock();
+        }
+
         Drive.ODOMETRY_LOCK.lock();
 
         try
         {
             double timestamp = RobotController.getFPGATime() / 1e6;
+            double phoenixTimestamp = timestamp;
+            double totalLatency = 0.0;
+
+            for (BaseStatusSignal signal : _phoenixSignals)
+            {
+                totalLatency += signal.getTimestamp().getLatency();
+            }
+
+            if (_phoenixSignals.length > 0)
+            {
+                phoenixTimestamp -= totalLatency / _phoenixSignals.length;
+            }
 
             double[] sparkValues = new double[_sparkSignals.size()];
             boolean  isValid     = true;
@@ -136,7 +195,7 @@ public class OdometryThread
 
                 for (int i = 0; i < _timestampQueues.size(); i++)
                 {
-                    _timestampQueues.get(i).offer(timestamp);
+                    _timestampQueues.get(i).offer((timestamp + phoenixTimestamp) / 2.0);
                 }
             }
         }
