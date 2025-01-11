@@ -133,7 +133,6 @@ public class OdometryThread
         return queue;
     }
 
-    // TODO: update with TalonFX stuff
     private void run()
     {
         _signalsLock.lock();
