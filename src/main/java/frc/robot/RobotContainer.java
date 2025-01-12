@@ -37,12 +37,12 @@ public class RobotContainer
         {
             case REAL:
                 // Real robot, instantiate hardware IO implementations
-                _drive = new Drive(new GyroIONavX(), new ModuleIOHardware(0), new ModuleIOHardware(1), new ModuleIOHardware(2), new ModuleIOHardware(3));
+                _drive = new Drive(new GyroIONavX(), new ElevatorOHardware(0), new ElevatorOHardware(1), new ElevatorOHardware(2), new ElevatorOHardware(3));
                 break;
 
             case SIM:
                 // Sim robot, instantiate physics sim IO implementations
-                _drive = new Drive(new GyroIO() {}, new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim());
+                _drive = new Drive(new GyroIO() {}, new ElevatorIOSim(), new ElevatorIOSim(), new ElevatorIOSim(), new ElevatorIOSim());
                 break;
 
             default:

@@ -99,6 +99,15 @@ public final class Constants
         );
     }
 
+    public static class Elevator
+    {
+        public static final double EXTENSION_KP        = 0.05;
+        public static final double EXTENSION_KI        = 0.0;
+        public static final double EXTENSION_KD        = 0.0;
+        public static final double MAX_EXTENSION       = 82.0;
+        public static final double EXTENSION_TOLERANCE = 0.5;
+    }
+
     public static class General
     {
         public static final double MAX_LINEAR_SPEED = 4.8; // m/s
