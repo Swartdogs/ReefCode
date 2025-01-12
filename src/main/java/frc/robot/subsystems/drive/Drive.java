@@ -25,7 +25,6 @@ import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -67,6 +66,7 @@ public class Drive extends SubsystemBase
         _modules[1] = new Module(frModuleIO, 1);
         _modules[2] = new Module(blModuleIO, 2);
         _modules[3] = new Module(brModuleIO, 3);
+        
         RobotConfig config;
 
         try
@@ -76,7 +76,7 @@ public class Drive extends SubsystemBase
         catch (Exception e)
         {
             e.printStackTrace();
-            config = new RobotConfig(ROBOT_MASS, ROBOT_MOI, null, MODULE_TRANSLATIONS);
+            config = new RobotConfig(ROBOT_MASS, ROBOT_MOI, Constants.Drive.MODULE_CONFIG, MODULE_TRANSLATIONS);
         }
 
         HAL.report(tResourceType.kResourceType_RobotDrive, tInstances.kRobotDriveSwerve_AdvantageKit);

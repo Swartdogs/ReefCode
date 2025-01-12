@@ -93,6 +93,7 @@ public final class Constants
         public static final double          TURN_PID_MAX_INPUT            = 2 * Math.PI;
         public static final double          WHEEL_COF                     = 1.2;
         public static final double          ODOMETRY_FREQUENCY            = 100.0; // ms
+        public static final ModuleConfig    MODULE_CONFIG                 = new ModuleConfig(WHEEL_RADIUS, General.MAX_LINEAR_SPEED, WHEEL_COF, DRIVE_GEARBOX, DRIVE_MOTOR_REDUCTION, TURN_MOTOR_CURRENT_LIMIT, 1);
         public static final RobotConfig     PP_CONFIG                     = new RobotConfig(
                 General.ROBOT_MASS, General.ROBOT_MOI, new ModuleConfig(WHEEL_RADIUS, General.MAX_LINEAR_SPEED, WHEEL_COF, DRIVE_GEARBOX.withReduction(DRIVE_MOTOR_REDUCTION), DRIVE_MOTOR_CURRENT_LIMIT.magnitude(), 1), MODULE_TRANSLATIONS
         );
