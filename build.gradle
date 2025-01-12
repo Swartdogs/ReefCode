@@ -176,40 +176,40 @@ task(eventDeploy) {
 createVersionFile.dependsOn(eventDeploy)
 
 // Spotless formatting
-// project.compileJava.dependsOn(spotlessApply)
-// spotless {
-//     java {
-//         target fileTree(".") {
-//             include "**/*.java"
-//             exclude "**/build/**", "**/build-*/**"
-//         }
-//         indentWithSpaces(4)
-//         eclipse().configFile(".vscode/java-formatter.xml")
-//     }
-//     groovyGradle {
-//         target fileTree(".") {
-//             include "**/*.gradle"
-//             exclude "**/build/**", "**/build-*/**"
-//         }
-//         greclipse()
-//         indentWithSpaces(4)
-//         trimTrailingWhitespace()
-//         endWithNewline()
-//     }
-//     json {
-//         target fileTree(".") {
-//             include "**/*.json"
-//             exclude "**/build/**", "**/build-*/**"
-//         }
-//         gson().indentWithSpaces(2)
-//     }
-//     format "misc", {
-//         target fileTree(".") {
-//             include "**/*.md", "**/.gitignore"
-//             exclude "**/build/**", "**/build-*/**"
-//         }
-//         trimTrailingWhitespace()
-//         indentWithSpaces(2)
-//         endWithNewline()
-//     }
-// }
+project.compileJava.dependsOn(spotlessApply)
+spotless {
+    java {
+        target fileTree(".") {
+            include "**/*.java"
+            exclude "**/build/**", "**/build-*/**"
+        }
+        indentWithSpaces(4)
+        eclipse().configFile(".vscode/java-formatter.xml")
+    }
+    groovyGradle {
+        target fileTree(".") {
+            include "**/*.gradle"
+            exclude "**/build/**", "**/build-*/**"
+        }
+        greclipse()
+        indentWithSpaces(4)
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+    json {
+        target fileTree(".") {
+            include "**/*.json"
+            exclude "**/build/**", "**/build-*/**", "**/launch.json"
+        }
+        gson().indentWithSpaces(2)
+    }
+    format "misc", {
+        target fileTree(".") {
+            include "**/*.md", "**/.gitignore"
+            exclude "**/build/**", "**/build-*/**"
+        }
+        trimTrailingWhitespace()
+        indentWithSpaces(2)
+        endWithNewline()
+    }
+}

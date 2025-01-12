@@ -43,11 +43,10 @@ public class ModuleIOHardware implements ModuleIO
     private final Rotation2d _zeroRotation;
 
     // Hardware objects
-    private final TalonFX       _driveTalon;
-    private final SparkBase     _turnSpark;
-    private final AnalogEncoder _turnPot;
+    private final TalonFX         _driveTalon;
+    private final SparkBase       _turnSpark;
+    private final AnalogEncoder   _turnPot;
     private final RelativeEncoder _turnEncoder;
-    // TODO: Add in absolute encoder
 
     // Voltage control requests (Talon)
     private final VoltageOut      _voltageRequest         = new VoltageOut(0);
@@ -100,7 +99,7 @@ public class ModuleIOHardware implements ModuleIO
             default -> 0;
         }, MotorType.kBrushless);
 
-        _turnPot    = new AnalogEncoder(switch (module)
+        _turnPot = new AnalogEncoder(switch (module)
         {
             case 0 -> Constants.AIO.FL_ENCODER;
             case 1 -> Constants.AIO.FR_ENCODER;
@@ -109,7 +108,7 @@ public class ModuleIOHardware implements ModuleIO
             default -> 0;
         });
 
-        _turnEncoder = _turnSpark.getEncoder();
+        _turnEncoder    = _turnSpark.getEncoder();
         _turnController = _turnSpark.getClosedLoopController();
 
         // Configure drive motor
@@ -143,7 +142,7 @@ public class ModuleIOHardware implements ModuleIO
                 .appliedOutputPeriodMs(20).busVoltagePeriodMs(20).outputCurrentPeriodMs(20);
 
         _turnEncoder.setPosition(0);
-        
+
         tryUntilOk(_turnSpark, 5, () -> _turnSpark.configure(turnConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
 
         // Create drive status signals
@@ -174,9 +173,10 @@ public class ModuleIOHardware implements ModuleIO
         // Update turn inputs (Spark)
         sparkStickyFault = false;
 
-        ifOk(_turnSpark, _turnPot::get,(value) -> inputs.turnAbsolutePosition = new Rotation2d(value).minus(_zeroRotation));
-        ifOk(_turnSpark, _turnEncoder::getPosition, (value) -> inputs.turnPosition = new Rotation2d(value/Constants.Drive.TURN_MOTOR_REDUCTION));
-        ifOk(_turnSpark, _turnEncoder::getVelocity, (value) -> inputs.turnVelocityRadPerSec = value/Constants.Drive.TURN_MOTOR_REDUCTION); //TODO: Fix this
+        ifOk(_turnSpark, _turnPot::get, (value) -> inputs.turnAbsolutePosition = new Rotation2d(value).minus(_zeroRotation)); // TODO: Keep this in mind if zeroes don't behave the way we want them to -
+                                                                                                                              // Collin McIntyre
+        ifOk(_turnSpark, _turnEncoder::getPosition, (value) -> inputs.turnPosition = new Rotation2d(value / Constants.Drive.TURN_MOTOR_REDUCTION));
+        ifOk(_turnSpark, _turnEncoder::getVelocity, (value) -> inputs.turnVelocityRadPerSec = value / Constants.Drive.TURN_MOTOR_REDUCTION); // TODO: Fix this
         ifOk(_turnSpark, new DoubleSupplier[] { _turnSpark::getAppliedOutput, _turnSpark::getBusVoltage }, (values) -> inputs.turnAppliedVolts = values[0] * values[1]);
         ifOk(_turnSpark, _turnSpark::getOutputCurrent, (value) -> inputs.turnCurrentAmps = value);
         inputs.turnConnected = _turnConnectedDebouncer.calculate(!sparkStickyFault);

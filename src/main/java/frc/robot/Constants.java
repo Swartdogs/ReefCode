@@ -80,7 +80,7 @@ public final class Constants
         public static final double          DRIVE_SIM_KV                  = 0.0789;
         public static final boolean         TURN_INVERTED                 = false;
         public static final int             TURN_MOTOR_CURRENT_LIMIT      = 20;
-        public static final double          TURN_MOTOR_REDUCTION          = 12;
+        public static final double          TURN_MOTOR_REDUCTION          = 12.0;
         public static final DCMotor         TURN_GEARBOX                  = DCMotor.getNEO(1);
         public static final boolean         TURN_ENCODER_INVERTED         = true;
         public static final double          TURN_ENCODER_POSITION_FACTOR  = 2 * Math.PI;
