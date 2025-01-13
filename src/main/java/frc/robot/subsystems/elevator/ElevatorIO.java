@@ -5,7 +5,7 @@ import org.littletonrobotics.junction.AutoLog;
 public interface ElevatorIO
 {
     @AutoLog
-    public static class ModuleIOInputs
+    public static class ElevatorIOInputs
     {
         public double   extensionPosition = 0.0;
         public double   extensionVelocity = 0.0;
@@ -15,7 +15,7 @@ public interface ElevatorIO
         public double[] followerCurrent   = new double[] {};
     }
 
-    public default void updateInputs(ModuleIOInputs inputs)
+    public default void updateInputs(ElevatorIOInputs inputs)
     {
     }
 

@@ -158,7 +158,7 @@ public class ElevatorIOHardware implements ElevatorIO
     }
 
     @Override
-    public void updateInputs(ModuleIOInputs inputs)
+    public void updateInputs(ElevatorIOInputs inputs)
     {
         // Refresh all signals
         var driveStatus = BaseStatusSignal.refreshAll(_drivePosition, _driveVelocity, _driveAppliedVolts, _driveCurrent);
