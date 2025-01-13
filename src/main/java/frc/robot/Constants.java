@@ -106,6 +106,10 @@ public final class Constants
         public static final double EXTENSION_KD        = 0.0;
         public static final double MAX_EXTENSION       = 82.0;
         public static final double EXTENSION_TOLERANCE = 0.5;
+        public static final double L1_HEIGHT           = 0.0;
+        public static final double L2_HEIGHT           = 0.0;
+        public static final double L3_HEIGHT           = 0.0;
+        public static final double L4_HEIGHT           = 0.0;
     }
 
     public static class General
