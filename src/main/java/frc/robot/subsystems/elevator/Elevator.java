@@ -2,6 +2,7 @@ package frc.robot.subsystems.elevator;
 
 import org.littletonrobotics.junction.Logger;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 
 import static frc.robot.Constants.Elevator.*;
@@ -10,10 +11,7 @@ public class Elevator
 {
     public enum ElevatorHeight
     {
-        Level1(L1_HEIGHT), 
-        Level2(L2_HEIGHT), 
-        Level3(L3_HEIGHT), 
-        Level4(L4_HEIGHT);
+        Level1(L1_HEIGHT), Level2(L2_HEIGHT), Level3(L3_HEIGHT), Level4(L4_HEIGHT);
 
         private double _height;
 
@@ -51,6 +49,12 @@ public class Elevator
         _io.updateInputs(_inputs);
         Logger.processInputs("Elevator", _inputs);
 
+        if (_extensionSetPoint != null)
+        {
+            _io.setVolts(MathUtil.clamp(_extensionPID.calculate(_inputs.extensionPosition, _extensionSetPoint), -12, 12));
+
+        }
+        Logger.recordOutput("Has Extension Setpoint", _extensionSetPoint != null);
     }
 
     public void setExtension(double height) // height is measured in inches
@@ -61,5 +65,21 @@ public class Elevator
     public void setExtension(ElevatorHeight elevatorHeight) // height is measured in inches
     {
         _extensionSetPoint = elevatorHeight.getHeight();
+    }
+
+    public void setVolts(double volts)
+    {
+        _io.setVolts(volts);
+        _extensionSetPoint = null;
+    }
+
+    public boolean atSetpoint()
+    {
+        return _extensionPID.atSetpoint();
+    }
+
+    public double getExtension()
+    {
+        return _inputs.extensionPosition;
     }
 }

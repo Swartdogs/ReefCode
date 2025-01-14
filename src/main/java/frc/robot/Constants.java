@@ -42,14 +42,16 @@ public final class Constants
 
     public static class CAN
     {
-        public static final int FL_DRIVE = 1;
-        public static final int FR_DRIVE = 3;
-        public static final int BL_DRIVE = 5;
-        public static final int BR_DRIVE = 7;
-        public static final int FL_TURN  = 2;
-        public static final int FR_TURN  = 4;
-        public static final int BL_TURN  = 6;
-        public static final int BR_TURN  = 8;
+        public static final int FL_DRIVE          = 1;
+        public static final int FR_DRIVE          = 3;
+        public static final int BL_DRIVE          = 5;
+        public static final int BR_DRIVE          = 7;
+        public static final int FL_TURN           = 2;
+        public static final int FR_TURN           = 4;
+        public static final int BL_TURN           = 6;
+        public static final int BR_TURN           = 8;
+        public static final int LEAD_ELEVATOR     = 9;
+        public static final int FOLLOWER_ELEVATOR = 10;
     }
 
     public static class Drive
@@ -106,10 +108,10 @@ public final class Constants
         public static final double EXTENSION_KD        = 0.0;
         public static final double MAX_EXTENSION       = 82.0;
         public static final double EXTENSION_TOLERANCE = 0.5;
-        public static final double L1_HEIGHT           = 0.0;
-        public static final double L2_HEIGHT           = 0.0;
-        public static final double L3_HEIGHT           = 0.0;
-        public static final double L4_HEIGHT           = 0.0;
+        public static final double L1_HEIGHT           = 18.0;
+        public static final double L2_HEIGHT           = 55.88;
+        public static final double L3_HEIGHT           = 83.63;
+        public static final double L4_HEIGHT           = 144.0;
     }
 
     public static class General
