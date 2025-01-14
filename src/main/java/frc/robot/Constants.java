@@ -99,6 +99,12 @@ public final class Constants
         );
     }
 
+    public static class Vision
+    {
+        public static final String PHOTON_CAMERA_NAME = "photonCam"; //TODO Name
+
+    }
+
     public static class General
     {
         public static final double MAX_LINEAR_SPEED = 4.8; // m/s
