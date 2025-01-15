@@ -10,9 +10,9 @@ public interface ElevatorIO
         public double   extensionPosition = 0.0;
         public double   extensionVelocity = 0.0;
         public double   leaderVolts       = 0.0;
-        public double[] leaderCurrent     = new double[] {};
+        public double leaderCurrent     = 0.0;
         public double   followerVolts     = 0.0;
-        public double[] followerCurrent   = new double[] {};
+        public double followerCurrent   = 0.0;
     }
 
     public default void updateInputs(ElevatorIOInputs inputs)

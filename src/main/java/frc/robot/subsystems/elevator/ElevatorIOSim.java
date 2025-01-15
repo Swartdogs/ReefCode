@@ -1,104 +1,40 @@
 package frc.robot.subsystems.elevator;
-
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.LinearSystemId;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.Constants;
 
 public class ElevatorIOSim implements ElevatorIO
 {
-    private final DCMotorSim _driveSim;
-    private final DCMotorSim _turnSim;
-    private boolean          _driveClosedLoop          = false;
-    private boolean          _turnClosedLoop           = false;
-    private PIDController    _driveController          = new PIDController(Constants.Drive.DRIVE_SIM_P, 0, Constants.Drive.DRIVE_SIM_D);
-    private PIDController    _turnController           = new PIDController(Constants.Drive.TURN_SIM_P, 0, Constants.Drive.TURN_SIM_D);
-    private double           _driveFFVolts             = 0.0;
-    private double           _driveAppliedVolts        = 0.0;
-    private double           _turnAppliedVolts         = 0.0;
-    private Rotation2d       _turnAbsoluteInitPosition = new Rotation2d(Math.random() * 2.0 * Math.PI);
+    private DCMotorSim _leaderMotorSim;
+    private DCMotorSim _followerMotorSim;
+    private double _leaderAppliedVolts = 0.0;
+    private double _followerAppliedVolts = 0.0;
 
     public ElevatorIOSim()
     {
-        _driveSim = new DCMotorSim(LinearSystemId.createDCMotorSystem(Constants.Drive.DRIVE_GEARBOX, 0.025, Constants.Drive.DRIVE_MOTOR_REDUCTION), Constants.Drive.DRIVE_GEARBOX);
-        _turnSim  = new DCMotorSim(LinearSystemId.createDCMotorSystem(Constants.Drive.TURN_GEARBOX, 0.004, Constants.Drive.TURN_MOTOR_REDUCTION), Constants.Drive.TURN_GEARBOX);
-
-        _turnController.enableContinuousInput(-Math.PI, Math.PI);
+        _leaderMotorSim = new DCMotorSim(LinearSystemId.createDCMotorSystem(Constants.Elevator.ELEVATOR_GEARBOX, 0.004, Constants.Elevator.EXTENSION_MOTOR_REDUCTION), Constants.Elevator.ELEVATOR_GEARBOX);
+        _followerMotorSim = new DCMotorSim(LinearSystemId.createDCMotorSystem(Constants.Elevator.ELEVATOR_GEARBOX, 0.004, Constants.Elevator.EXTENSION_MOTOR_REDUCTION), Constants.Elevator.ELEVATOR_GEARBOX);
     }
 
     @Override
-    public void updateInputs(ModuleIOInputs inputs)
+    public void updateInputs(ElevatorIOInputs inputs)
     {
-        if (_driveClosedLoop)
-        {
-            _driveAppliedVolts = _driveFFVolts + _driveController.calculate(_driveSim.getAngularVelocityRadPerSec());
-        }
-        else
-        {
-            _driveController.reset();
-        }
+        inputs.leaderVolts = _leaderAppliedVolts;
+        inputs.followerVolts = _followerAppliedVolts;
 
-        if (_turnClosedLoop)
-        {
-            _turnAppliedVolts = _turnController.calculate(_turnSim.getAngularPositionRad());
-        }
-        else
-        {
-            _turnController.reset();
-        }
+        inputs.leaderCurrent = _leaderMotorSim.getCurrentDrawAmps();
+        inputs.followerCurrent = _followerMotorSim.getCurrentDrawAmps();
 
-        _driveSim.setInput(MathUtil.clamp(_driveAppliedVolts, -12.0, 12.0));
-        _turnSim.setInput(MathUtil.clamp(_turnAppliedVolts, -12.0, 12.0));
-        _driveSim.update(0.02);
-        _turnSim.update(0.02);
-
-        inputs.driveConnected         = true;
-        inputs.drivePositionRad       = _driveSim.getAngularPositionRad();
-        inputs.driveVelocityRadPerSec = _driveSim.getAngularVelocityRadPerSec();
-        inputs.driveAppliedVolts      = _driveAppliedVolts;
-        inputs.driveCurrentAmps       = Math.abs(_driveSim.getCurrentDrawAmps());
-
-        inputs.turnConnected         = true;
-        inputs.turnAbsolutePosition  = new Rotation2d(_turnSim.getAngularPositionRad()).plus(_turnAbsoluteInitPosition);
-        inputs.turnPosition          = new Rotation2d(_turnSim.getAngularPositionRad());
-        inputs.turnVelocityRadPerSec = _turnSim.getAngularVelocityRadPerSec();
-        inputs.turnAppliedVolts      = _turnAppliedVolts;
-        inputs.turnCurrentAmps       = Math.abs(_turnSim.getCurrentDrawAmps());
-
-        inputs.odometryTimestamps        = new double[] { Timer.getFPGATimestamp() };
-        inputs.odometryDrivePositionsRad = new double[] { inputs.drivePositionRad };
-        inputs.odometryTurnPositions     = new Rotation2d[] { inputs.turnPosition };
+        inputs.extensionPosition = _leaderMotorSim.getAngularPositionRotations() * Constants.Elevator.EXTENSION_SCALE;
+        inputs.extensionVelocity = _leaderMotorSim.getAngularVelocityRPM() * Constants.Elevator.EXTENSION_SCALE;
     }
-
-    @Override
-    public void setDriveOpenLoop(double output)
+    
+    @Override 
+    public void setVolts(double volts)
     {
-        _driveClosedLoop   = false;
-        _driveAppliedVolts = output;
-    }
-
-    @Override
-    public void setTurnOpenLoop(double output)
-    {
-        _turnClosedLoop   = false;
-        _turnAppliedVolts = output;
-    }
-
-    @Override
-    public void setDriveVelocity(double velocityRadPerSec)
-    {
-        _driveClosedLoop = true;
-        _driveFFVolts    = Constants.Drive.DRIVE_SIM_KS * Math.signum(velocityRadPerSec) + Constants.Drive.DRIVE_SIM_KV * velocityRadPerSec;
-        _driveController.setSetpoint(velocityRadPerSec);
-    }
-
-    @Override
-    public void setTurnPosition(Rotation2d rotation)
-    {
-        _turnClosedLoop = true;
-        _turnController.setSetpoint(rotation.getRadians());
+        _leaderMotorSim.setInputVoltage(volts);
+        _followerMotorSim.setInputVoltage(-volts);
+        _leaderAppliedVolts = volts;
+        _followerAppliedVolts = -volts;
     }
 }

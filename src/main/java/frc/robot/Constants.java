@@ -38,6 +38,7 @@ public final class Constants
         public static final int FR_ENCODER = 1;
         public static final int BL_ENCODER = 2;
         public static final int BR_ENCODER = 3;
+        public static final int EXTENSION_POT = 4;
     }
 
     public static class CAN
@@ -112,6 +113,10 @@ public final class Constants
         public static final double L2_HEIGHT           = 55.88;
         public static final double L3_HEIGHT           = 83.63;
         public static final double L4_HEIGHT           = 144.0;
+        public static final double EXTENSION_SCALE = 1.757 * Math.PI;
+        public static final double EXTENSION_MOTOR_REDUCTION = 5.0;
+        public static final DCMotor ELEVATOR_GEARBOX = DCMotor.getNeoVortex(1);
+        public static final double EXTENSION_OFFSET = 0.0;
     }
 
     public static class General
