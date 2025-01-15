@@ -34,12 +34,12 @@ public class ElevatorIOHardware implements ElevatorIO
 
         var leaderConfig = new SparkFlexConfig();
 
-        leaderConfig.idleMode(IdleMode.kBrake).voltageCompensation(12.0);
+        leaderConfig.idleMode(IdleMode.kBrake).voltageCompensation(Constants.General.MOTOR_VOLTAGE);
         leaderConfig.closedLoop.feedbackSensor(FeedbackSensor.kAbsoluteEncoder).outputRange(0, Constants.Elevator.MAX_EXTENSION);
 
         var followerConfig = new SparkFlexConfig();
 
-        followerConfig.idleMode(IdleMode.kBrake).follow(Constants.CAN.LEAD_ELEVATOR).inverted(true).voltageCompensation(12);
+        followerConfig.idleMode(IdleMode.kBrake).follow(Constants.CAN.LEAD_ELEVATOR).inverted(true).voltageCompensation(Constants.General.MOTOR_VOLTAGE);
         followerConfig.closedLoop.feedbackSensor(FeedbackSensor.kAbsoluteEncoder).outputRange(0, Constants.Elevator.MAX_EXTENSION);
 
         tryUntilOk(_leaderSparkFlex, 5, () -> _leaderSparkFlex.configure(leaderConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
@@ -51,6 +51,7 @@ public class ElevatorIOHardware implements ElevatorIO
     {
         inputs.extensionPosition = _extensionPot.get();
         ifOk(_leaderSparkFlex, _extensionEncoder::getVelocity, (value) -> inputs.extensionVelocity = value * Constants.Elevator.EXTENSION_SCALE / Constants.Elevator.EXTENSION_MOTOR_REDUCTION);
+        
         ifOk(_leaderSparkFlex, new DoubleSupplier[] { _leaderSparkFlex::getAppliedOutput, _leaderSparkFlex::getBusVoltage }, (values) -> inputs.leaderVolts = values[0] * values[1]);
         ifOk(_leaderSparkFlex, _leaderSparkFlex::getOutputCurrent, (value) -> inputs.leaderCurrent = value);
 

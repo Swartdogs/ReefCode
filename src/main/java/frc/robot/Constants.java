@@ -124,5 +124,6 @@ public final class Constants
         public static final double MAX_LINEAR_SPEED = 4.8; // m/s
         public static final double ROBOT_MASS       = 74.088;
         public static final double ROBOT_MOI        = 6.883;
+        public static final double MOTOR_VOLTAGE    = 12.0;
     }
 }

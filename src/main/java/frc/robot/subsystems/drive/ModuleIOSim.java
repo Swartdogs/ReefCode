@@ -50,8 +50,8 @@ public class ModuleIOSim implements ModuleIO
             _turnController.reset();
         }
 
-        _driveSim.setInput(MathUtil.clamp(_driveAppliedVolts, -12.0, 12.0));
-        _turnSim.setInput(MathUtil.clamp(_turnAppliedVolts, -12.0, 12.0));
+        _driveSim.setInput(MathUtil.clamp(_driveAppliedVolts, -Constants.General.MOTOR_VOLTAGE, Constants.General.MOTOR_VOLTAGE));
+        _turnSim.setInput(MathUtil.clamp(_turnAppliedVolts, -Constants.General.MOTOR_VOLTAGE, Constants.General.MOTOR_VOLTAGE));
         _driveSim.update(0.02);
         _turnSim.update(0.02);
 

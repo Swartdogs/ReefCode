@@ -131,7 +131,7 @@ public class ModuleIOHardware implements ModuleIO
         // Configure turn motor
         var turnConfig = new SparkMaxConfig();
 
-        turnConfig.inverted(Constants.Drive.TURN_INVERTED).idleMode(IdleMode.kBrake).smartCurrentLimit(Constants.Drive.TURN_MOTOR_CURRENT_LIMIT).voltageCompensation(12.0);
+        turnConfig.inverted(Constants.Drive.TURN_INVERTED).idleMode(IdleMode.kBrake).smartCurrentLimit(Constants.Drive.TURN_MOTOR_CURRENT_LIMIT).voltageCompensation(Constants.General.MOTOR_VOLTAGE);
 
         turnConfig.absoluteEncoder.inverted(Constants.Drive.TURN_INVERTED).positionConversionFactor(Constants.Drive.TURN_ENCODER_POSITION_FACTOR).velocityConversionFactor(Constants.Drive.TURN_ENCODER_VELOCITY_FACTOR).averageDepth(2);
 
