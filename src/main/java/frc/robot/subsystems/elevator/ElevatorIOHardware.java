@@ -20,17 +20,17 @@ import static frc.robot.util.SparkUtil.*;
 
 public class ElevatorIOHardware implements ElevatorIO
 {
-    private final SparkFlex        _leaderMotor;
-    private final SparkFlex        _followerMotor;
-    private final RelativeEncoder _extensionEncoder; 
+    private final SparkFlex           _leaderSparkFlex;
+    private final SparkFlex           _followerSparkFlex;
+    private final RelativeEncoder     _extensionEncoder;
     private final AnalogPotentiometer _extensionPot;
 
     public ElevatorIOHardware()
     {
-        _leaderMotor      = new SparkFlex(Constants.CAN.LEAD_ELEVATOR, MotorType.kBrushless);
-        _followerMotor    = new SparkFlex(Constants.CAN.FOLLOWER_ELEVATOR, MotorType.kBrushless);
-        _extensionEncoder = _leaderMotor.getEncoder();
-        _extensionPot = new AnalogPotentiometer(Constants.AIO.EXTENSION_POT, Constants.Elevator.EXTENSION_SCALE, -Constants.Elevator.EXTENSION_OFFSET);
+        _leaderSparkFlex   = new SparkFlex(Constants.CAN.LEAD_ELEVATOR, MotorType.kBrushless);
+        _followerSparkFlex = new SparkFlex(Constants.CAN.FOLLOWER_ELEVATOR, MotorType.kBrushless);
+        _extensionEncoder  = _leaderSparkFlex.getEncoder();
+        _extensionPot      = new AnalogPotentiometer(Constants.AIO.EXTENSION_POT, Constants.Elevator.EXTENSION_SCALE, -Constants.Elevator.EXTENSION_OFFSET);
 
         var leaderConfig = new SparkFlexConfig();
 
@@ -42,26 +42,25 @@ public class ElevatorIOHardware implements ElevatorIO
         followerConfig.idleMode(IdleMode.kBrake).follow(Constants.CAN.LEAD_ELEVATOR).inverted(true).voltageCompensation(12);
         followerConfig.closedLoop.feedbackSensor(FeedbackSensor.kAbsoluteEncoder).outputRange(0, Constants.Elevator.MAX_EXTENSION);
 
-        tryUntilOk(_leaderMotor, 5, () -> _leaderMotor.configure(leaderConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
-        tryUntilOk(_followerMotor, 5, () -> _followerMotor.configure(followerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
+        tryUntilOk(_leaderSparkFlex, 5, () -> _leaderSparkFlex.configure(leaderConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
+        tryUntilOk(_followerSparkFlex, 5, () -> _followerSparkFlex.configure(followerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
     }
 
     @Override
     public void updateInputs(ElevatorIOInputs inputs)
     {
         inputs.extensionPosition = _extensionPot.get();
-        ifOk(_leaderMotor, _extensionEncoder::getVelocity, (value)-> inputs.extensionVelocity = value * Constants.Elevator.EXTENSION_SCALE/Constants.Elevator.EXTENSION_MOTOR_REDUCTION);
-        ifOk(_leaderMotor, new DoubleSupplier[] { _leaderMotor::getAppliedOutput, _leaderMotor::getBusVoltage }, (values) -> inputs.leaderVolts = values[0] * values[1]);
-        ifOk(_leaderMotor, _leaderMotor::getOutputCurrent, (value) -> inputs.leaderCurrent = value);
+        ifOk(_leaderSparkFlex, _extensionEncoder::getVelocity, (value) -> inputs.extensionVelocity = value * Constants.Elevator.EXTENSION_SCALE / Constants.Elevator.EXTENSION_MOTOR_REDUCTION);
+        ifOk(_leaderSparkFlex, new DoubleSupplier[] { _leaderSparkFlex::getAppliedOutput, _leaderSparkFlex::getBusVoltage }, (values) -> inputs.leaderVolts = values[0] * values[1]);
+        ifOk(_leaderSparkFlex, _leaderSparkFlex::getOutputCurrent, (value) -> inputs.leaderCurrent = value);
 
-       
-        ifOk(_followerMotor, new DoubleSupplier[] { _followerMotor::getAppliedOutput, _leaderMotor::getBusVoltage }, (values) -> inputs.leaderVolts = values[0] * values[1]);
-        ifOk(_followerMotor, _leaderMotor::getOutputCurrent, (value) -> inputs.leaderCurrent = value);
+        ifOk(_followerSparkFlex, new DoubleSupplier[] { _followerSparkFlex::getAppliedOutput, _leaderSparkFlex::getBusVoltage }, (values) -> inputs.leaderVolts = values[0] * values[1]);
+        ifOk(_followerSparkFlex, _leaderSparkFlex::getOutputCurrent, (value) -> inputs.leaderCurrent = value);
     }
 
     @Override
     public void setVolts(double volts)
     {
-        _leaderMotor.setVoltage(volts);
+        _leaderSparkFlex.setVoltage(volts);
     }
 }
