@@ -4,10 +4,11 @@ import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import static frc.robot.Constants.Elevator.*;
 
-public class Elevator
+public class Elevator extends SubsystemBase
 {
     public enum ElevatorHeight
     {

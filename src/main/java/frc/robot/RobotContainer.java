@@ -89,7 +89,7 @@ public class RobotContainer
         // Reset gyro to 0° when B button is pressed
         _controller.b().onTrue(Commands.runOnce(() -> _drive.setPose(new Pose2d(_drive.getPose().getTranslation(), new Rotation2d())), _drive).ignoringDisable(true));
 
-        _controller.rightTrigger().whileTrue(ElevatorCommands.setVolts(_elevator, () -> _controller.getRightY() * Constants.General.MOTOR_VOLTAGE));
+        _elevator.setDefaultCommand(ElevatorCommands.setVolts(_elevator, () -> _controller.getRightY() * Constants.General.MOTOR_VOLTAGE));
     }
 
     /**
