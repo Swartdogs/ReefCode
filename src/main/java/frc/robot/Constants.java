@@ -121,6 +121,7 @@ public final class Constants
 
     public static class General
     {
+        public static final double LOOP_PERIOD_SECS = 0.02;
         public static final double MAX_LINEAR_SPEED = 4.8; // m/s
         public static final double ROBOT_MASS       = 74.088;
         public static final double ROBOT_MOI        = 6.883;

@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Mechanism;
 import frc.robot.Constants;
 
 public class ElevatorIOSim implements ElevatorIO
@@ -39,14 +38,14 @@ public class ElevatorIOSim implements ElevatorIO
         _carriageTopRoot    = mechanism.getRoot("Carriage Top Root", 7.0, 9);
         _carriageBottomRoot = mechanism.getRoot("Carriage Bottom Root", 7.0, 0);
 
-        elevatorLeftBase.append(new MechanismLigament2d("Left Base", 100 / 3, 90, 1, new Color8Bit(Color.kOrange)));
-        elevatorRightBase.append(new MechanismLigament2d("Right Static Stage One", 100 / 3, 90, 1, new Color8Bit(Color.kOrange)));
-        _leftStageOneRoot.append(new MechanismLigament2d("Left Stage One Root", 100 / 3, 90, 1, new Color8Bit(Color.kOrange)));
-        _rightStageOneRoot.append(new MechanismLigament2d("Right Stage One Root", 100 / 3, 90, 1, new Color8Bit(Color.kOrange)));
-        _leftStageTwoRoot.append(new MechanismLigament2d("Left Stage Two Root", 100 / 3, 90, 1, new Color8Bit(Color.kOrange)));
-        _rightStageTwoRoot.append(new MechanismLigament2d("Right Stage Two Root", 100 / 3, 90, 1, new Color8Bit(Color.kOrange)));
-        _carriageTopRoot.append(new MechanismLigament2d("Carriage Top", 16, 0, 1, new Color8Bit(Color.kOrange)));
-        _carriageBottomRoot.append(new MechanismLigament2d("Carriage Bottom", 16, 0, 1, new Color8Bit(Color.kOrange)));
+        elevatorLeftBase.append(new MechanismLigament2d("Left Base", 100 / 3, 90, 10, new Color8Bit(Color.kOrange)));
+        elevatorRightBase.append(new MechanismLigament2d("Right Static Stage One", 100 / 3, 90, 10, new Color8Bit(Color.kOrange)));
+        _leftStageOneRoot.append(new MechanismLigament2d("Left Stage One Root", 100 / 3, 90, 10, new Color8Bit(Color.kOrange)));
+        _rightStageOneRoot.append(new MechanismLigament2d("Right Stage One Root", 100 / 3, 90, 10, new Color8Bit(Color.kOrange)));
+        _leftStageTwoRoot.append(new MechanismLigament2d("Left Stage Two Root", 100 / 3, 90, 10, new Color8Bit(Color.kOrange)));
+        _rightStageTwoRoot.append(new MechanismLigament2d("Right Stage Two Root", 100 / 3, 90, 10, new Color8Bit(Color.kOrange)));
+        _carriageTopRoot.append(new MechanismLigament2d("Carriage Top", 16, 0, 10, new Color8Bit(Color.kOrange)));
+        _carriageBottomRoot.append(new MechanismLigament2d("Carriage Bottom", 16, 0, 10, new Color8Bit(Color.kOrange)));
         // MechanismLigament2d leftDynamicStageOne = elevatorLeft.append(new
         // MechanismLigament2d("Left Dynamic Stage One", 0, 90, 1, new
         // Color8Bit(Color.kOrange)));
@@ -62,14 +61,17 @@ public class ElevatorIOSim implements ElevatorIO
     @Override
     public void updateInputs(ElevatorIOInputs inputs)
     {
+        _leaderMotorSim.update(Constants.General.LOOP_PERIOD_SECS);
+        _followerMotorSim.update(Constants.General.LOOP_PERIOD_SECS);
+
         inputs.leaderVolts   = _leaderAppliedVolts;
         inputs.followerVolts = _followerAppliedVolts;
 
         inputs.leaderCurrent   = _leaderMotorSim.getCurrentDrawAmps();
         inputs.followerCurrent = _followerMotorSim.getCurrentDrawAmps();
 
-        inputs.extensionPosition = _leaderMotorSim.getAngularPositionRotations() * Constants.Elevator.EXTENSION_SCALE;
-        inputs.extensionVelocity = _leaderMotorSim.getAngularVelocityRPM() * Constants.Elevator.EXTENSION_SCALE;
+        inputs.extensionPosition = _leaderMotorSim.getAngularPositionRotations() * Constants.Elevator.EXTENSION_SCALE / Constants.Elevator.EXTENSION_MOTOR_REDUCTION;
+        inputs.extensionVelocity = _leaderMotorSim.getAngularVelocityRPM() * Constants.Elevator.EXTENSION_SCALE / Constants.Elevator.EXTENSION_MOTOR_REDUCTION;
 
         _leftStageOneRoot.setPosition(4.5, inputs.extensionPosition / 3);
         _rightStageOneRoot.setPosition(26.5, inputs.extensionPosition / 3);
