@@ -52,8 +52,9 @@ public class ModuleIOSim implements ModuleIO
 
         _driveSim.setInput(MathUtil.clamp(_driveAppliedVolts, -Constants.General.MOTOR_VOLTAGE, Constants.General.MOTOR_VOLTAGE));
         _turnSim.setInput(MathUtil.clamp(_turnAppliedVolts, -Constants.General.MOTOR_VOLTAGE, Constants.General.MOTOR_VOLTAGE));
-        _driveSim.update(0.02);
-        _turnSim.update(0.02);
+        
+        _driveSim.update(Constants.General.LOOP_PERIOD_SECS);
+        _turnSim.update(Constants.General.LOOP_PERIOD_SECS);
 
         inputs.driveConnected         = true;
         inputs.drivePositionRad       = _driveSim.getAngularPositionRad();
