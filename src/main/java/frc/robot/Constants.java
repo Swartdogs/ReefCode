@@ -107,16 +107,18 @@ public final class Constants
         public static final double  EXTENSION_KP              = 0.05;
         public static final double  EXTENSION_KI              = 0.0;
         public static final double  EXTENSION_KD              = 0.0;
-        public static final double  MAX_EXTENSION             = 80.0;
+        public static final double  MAX_EXTENSION             = 68.0;
         public static final double  EXTENSION_TOLERANCE       = 0.5;
-        public static final double  L1_HEIGHT                 = 18.0;
-        public static final double  L2_HEIGHT                 = 55.88;
-        public static final double  L3_HEIGHT                 = 83.63;
-        public static final double  L4_HEIGHT                 = 144.0;
+        public static final double  L1_HEIGHT                 = 18.0 - 12.7625; // 12.7625 account for bottom of baseplate to bottom of carrige
+        public static final double  L2_HEIGHT                 = 31.875 - 12.7625;
+        public static final double  L3_HEIGHT                 = 47.625 - 12.7625;
+        public static final double  L4_HEIGHT                 = 72.0 - 12.7625;
         public static final double  EXTENSION_SCALE           = 1.757 * Math.PI;
         public static final double  EXTENSION_MOTOR_REDUCTION = 5.0;
-        public static final DCMotor ELEVATOR_GEARBOX          = DCMotor.getNeoVortex(1);
+        public static final DCMotor ELEVATOR_GEARBOX          = DCMotor.getNeoVortex(2);
         public static final double  EXTENSION_OFFSET          = 0.0;
+        public static final double  ELEVATOR_MASS             = 15.875;
+        public static final double  ELEVATOR_DRUM_RADIUS      = 0.0223139;
     }
 
     public static class General

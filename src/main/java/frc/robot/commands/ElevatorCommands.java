@@ -29,6 +29,6 @@ public class ElevatorCommands
 
     public static Command setVolts(Elevator elevator, DoubleSupplier voltsSupplier)
     {
-        return Commands.run(() -> elevator.setVolts(voltsSupplier.getAsDouble()));
+        return Commands.run(() -> elevator.setVolts(voltsSupplier.getAsDouble()), elevator);
     }
 }
