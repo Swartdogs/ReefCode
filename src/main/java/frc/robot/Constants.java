@@ -10,6 +10,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Current;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.RobotBase;
 
 public final class Constants
@@ -104,5 +105,18 @@ public final class Constants
         public static final double MAX_LINEAR_SPEED = 4.8; // m/s
         public static final double ROBOT_MASS       = 74.088;
         public static final double ROBOT_MOI        = 6.883;
+        public static final double MOTOR_VOLTAGE    = 12.0;
+        public static final double LOOP_PERIOD_SECS = 0.02;
+    }
+
+    public static class Manipulator
+    {
+        public static final DCMotor DRIVE_MOTOR     = DCMotor.getVex775Pro(1);
+        public static final double  MOTOR_REDUCTION = 5.0;
+    }
+
+    public static class DIO
+    {
+        public static final int LIGHT_SENSOR = 1;
     }
 }
