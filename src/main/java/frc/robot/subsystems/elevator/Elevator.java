@@ -41,7 +41,7 @@ public class Elevator extends SubsystemBase
     {
         _io = io;
 
-        _extensionPID = new PIDController(EXTENSION_KP, EXTENSION_KI, EXTENSION_KP);
+        _extensionPID = new PIDController(EXTENSION_KP, EXTENSION_KI, EXTENSION_KD);
         _extensionPID.setTolerance(EXTENSION_TOLERANCE);
     }
 
