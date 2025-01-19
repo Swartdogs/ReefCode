@@ -101,9 +101,6 @@ public class Dashboard
                 catch (Exception e)
                 {
                     e.printStackTrace();
-                }
-                finally
-                {
                     serverResponse = "NACK";
                 }
 
