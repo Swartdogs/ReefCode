@@ -111,8 +111,10 @@ public final class Constants
 
     public static class Manipulator
     {
-        public static final DCMotor DRIVE_MOTOR     = DCMotor.getVex775Pro(1);
-        public static final double  MOTOR_REDUCTION = 5.0;
+        public static final DCMotor MANIPULATOR_MOTOR = DCMotor.getVex775Pro(1);
+        public static final double  MOTOR_REDUCTION   = 5.0;
+        public static final double  INTAKE_VOLTS      = 12.0;
+        public static final double  OUTPUT_VOLTS      = 12.0;
     }
 
     public static class DIO
