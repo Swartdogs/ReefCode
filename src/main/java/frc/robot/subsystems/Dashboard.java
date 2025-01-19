@@ -10,8 +10,10 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 import frc.robot.Constants;
 
@@ -43,6 +45,8 @@ public class Dashboard
     {
         try (ServerSocket serverSocket = new ServerSocket(Constants.DASHBOARD_PORT))
         {
+            serverSocket.setReuseAddress(true);
+
             System.out.println("Server is waiting for a connection...");
 
             while (true)
@@ -70,30 +74,40 @@ public class Dashboard
         try
         {
             String clientMessage;
-            int requestCount = 0;
 
             while ((clientMessage = input.readLine()) != null)
             {
                 System.out.println("Received message: " + clientMessage);
 
-                switch (clientMessage)
+                var messageParts = clientMessage.split(":", 2);
+                var messageType = messageParts[0].toUpperCase();
+                var messageContent = messageParts[1];
+
+                String serverResponse;
+
+                try
                 {
-                    case "PING":
-                        output.println("PONG");
-                        break;
-
-                    case "DATA":
-                        output.println(requestCount++);
-                        break;
-
-                    case "EVENT":
-                        output.println("EVENT:notice,event request received|error,robot collision detected");
-                        break;
-
-                    default:
-                        output.println("NACK");
-                        break;
+                    serverResponse = switch (messageType)
+                    {
+                        case "QUERY"  -> queryReply(messageContent);
+                        case "GET"    -> getReply(messageContent);
+                        case "SET"    -> setReply(messageContent);
+                        case "EVENT"  -> eventReply(messageContent);
+                        case "BUTTON" -> buttonReply(messageContent);
+                        case "PING"   -> pingReply();
+                        default       -> "NACK";
+                    };
                 }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+                finally
+                {
+                    serverResponse = "NACK";
+                }
+
+                output.println(serverResponse);
             }
         }
         catch (IOException e)
@@ -112,5 +126,52 @@ public class Dashboard
                 e.printStackTrace();
             }
         }
+    }
+
+    private static String queryReply(String rawMessage)
+    {
+        return "";
+    }
+
+    private static String getReply(String rawMessage) throws Exception
+    {
+        return Arrays
+            .stream(rawMessage.split(","))
+            .mapToInt(Integer::parseInt)
+            .mapToObj(i ->
+            {
+                String response = switch (i)
+                {
+                    case 0  -> "0|false";
+                    case 1  -> "1|hello";
+                    case 2  -> "2|3.14";
+                    case 3  -> "3|NACK";
+                    case 4  -> "4|7";
+                    default -> "";
+                };
+
+                return response;
+            })
+            .collect(Collectors.joining(","));
+    }
+
+    private static String setReply(String rawMessage)
+    {
+        return "";
+    }
+
+    private static String eventReply(String rawMessage)
+    {
+        return "EVENT:notice,event request received|error,robot collision detected";
+    }
+
+    private static String buttonReply(String rawMessage)
+    {
+        return "";
+    }
+
+    private static String pingReply()
+    {
+        return "PONG";
     }
 }
