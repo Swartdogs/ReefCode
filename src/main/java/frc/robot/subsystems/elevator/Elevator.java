@@ -5,6 +5,7 @@ import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 import static frc.robot.Constants.Elevator.*;
 
@@ -12,16 +13,11 @@ public class Elevator extends SubsystemBase
 {
     public enum ElevatorHeight
     {
-        Level1(L1_HEIGHT), Level2(L2_HEIGHT), Level3(L3_HEIGHT), Level4(L4_HEIGHT);
+        Stow(STOW_HEIGHT), Level1(L1_HEIGHT), Level2(L2_HEIGHT), Level3(L3_HEIGHT), Level4(L4_HEIGHT);
 
         private double _height;
 
         private ElevatorHeight(double height)
-        {
-            _height = height;
-        }
-
-        public void setHeight(double height)
         {
             _height = height;
         }
@@ -52,7 +48,7 @@ public class Elevator extends SubsystemBase
 
         if (_extensionSetPoint != null)
         {
-            _io.setVolts(MathUtil.clamp(_extensionPID.calculate(_inputs.extensionPosition, _extensionSetPoint), -12, 12));
+            _io.setVolts(MathUtil.clamp(_extensionPID.calculate(_inputs.extensionPosition, _extensionSetPoint), -Constants.General.MOTOR_VOLTAGE, Constants.General.MOTOR_VOLTAGE));
 
         }
         Logger.recordOutput("Has Extension Setpoint", _extensionSetPoint != null);

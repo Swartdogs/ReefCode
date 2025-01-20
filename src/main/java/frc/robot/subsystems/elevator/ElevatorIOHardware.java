@@ -55,8 +55,8 @@ public class ElevatorIOHardware implements ElevatorIO
         ifOk(_leaderSparkFlex, new DoubleSupplier[] { _leaderSparkFlex::getAppliedOutput, _leaderSparkFlex::getBusVoltage }, (values) -> inputs.leaderVolts = values[0] * values[1]);
         ifOk(_leaderSparkFlex, _leaderSparkFlex::getOutputCurrent, (value) -> inputs.leaderCurrent = value);
 
-        ifOk(_followerSparkFlex, new DoubleSupplier[] { _followerSparkFlex::getAppliedOutput, _leaderSparkFlex::getBusVoltage }, (values) -> inputs.leaderVolts = values[0] * values[1]);
-        ifOk(_followerSparkFlex, _leaderSparkFlex::getOutputCurrent, (value) -> inputs.leaderCurrent = value);
+        ifOk(_followerSparkFlex, new DoubleSupplier[] { _followerSparkFlex::getAppliedOutput, _followerSparkFlex::getBusVoltage }, (values) -> inputs.followerVolts = values[0] * values[1]);
+        ifOk(_followerSparkFlex, _followerSparkFlex::getOutputCurrent, (value) -> inputs.followerCurrent = value);
     }
 
     @Override
