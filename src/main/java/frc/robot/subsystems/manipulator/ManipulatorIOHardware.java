@@ -15,9 +15,9 @@ public class ManipulatorIOHardware implements ManipulatorIO
 
     public ManipulatorIOHardware()
     {
-        _leftTalon   = new TalonSRX(0);
-        _rightTalon  = new TalonSRX(0);
-        _lightSensor = new DigitalInput(0);
+        _leftTalon   = new TalonSRX(Constants.CAN.MANIPULATOR_LEFT);
+        _rightTalon  = new TalonSRX(Constants.CAN.MANIPULATOR_RIGHT);
+        _lightSensor = new DigitalInput(Constants.DIO.MANIPULATOR_LIGHT_SENSOR);
 
         _leftTalon.setInverted(true); // Inverts upper talon so they pull/push together.
     }

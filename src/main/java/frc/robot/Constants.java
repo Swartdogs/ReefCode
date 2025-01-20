@@ -53,6 +53,8 @@ public final class Constants
         public static final int BR_TURN           = 8;
         public static final int LEAD_ELEVATOR     = 9;
         public static final int FOLLOWER_ELEVATOR = 10;
+        public static final int MANIPULATOR_LEFT  = 11;
+        public static final int MANIPULATOR_RIGHT = 12;
     }
 
     public static class Drive
@@ -141,6 +143,6 @@ public final class Constants
 
     public static class DIO
     {
-        public static final int LIGHT_SENSOR = 1;
+        public static final int MANIPULATOR_LIGHT_SENSOR = 1;
     }
 }
