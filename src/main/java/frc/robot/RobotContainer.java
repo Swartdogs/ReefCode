@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.ElevatorCommands;
 import frc.robot.commands.ManipulatorCommands;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
@@ -15,12 +16,15 @@ import frc.robot.subsystems.drive.GyroIONavX;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOHardware;
 import frc.robot.subsystems.drive.ModuleIOSim;
+import frc.robot.subsystems.elevator.Elevator;
+import frc.robot.subsystems.elevator.ElevatorIO;
+import frc.robot.subsystems.elevator.ElevatorIOHardware;
+import frc.robot.subsystems.elevator.ElevatorIOSim;
+import frc.robot.subsystems.elevator.Elevator.ElevatorHeight;
 import frc.robot.subsystems.manipulator.Manipulator;
 import frc.robot.subsystems.manipulator.ManipulatorIO;
 import frc.robot.subsystems.manipulator.ManipulatorIOHardware;
 import frc.robot.subsystems.manipulator.ManipulatorIOSim;
-
-import java.util.function.BooleanSupplier;
 
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -28,6 +32,7 @@ public class RobotContainer
 {
     // Subsystems
     private final Drive       _drive;
+    private final Elevator    _elevator;
     private final Manipulator _manipulator;
 
     // Controller
@@ -46,18 +51,21 @@ public class RobotContainer
             case REAL:
                 // Real robot, instantiate hardware IO implementations
                 _drive = new Drive(new GyroIONavX(), new ModuleIOHardware(0), new ModuleIOHardware(1), new ModuleIOHardware(2), new ModuleIOHardware(3));
+                _elevator = new Elevator(new ElevatorIOHardware());
                 _manipulator = new Manipulator(new ManipulatorIOHardware());
                 break;
 
             case SIM:
                 // Sim robot, instantiate physics sim IO implementations
                 _drive = new Drive(new GyroIO() {}, new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim());
+                _elevator = new Elevator(new ElevatorIOSim());
                 _manipulator = new Manipulator(new ManipulatorIOSim(() -> _controller.leftTrigger().getAsBoolean()));
                 break;
 
             default:
                 // Replayed robot, disable IO implementations
                 _drive = new Drive(new GyroIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {});
+                _elevator = new Elevator(new ElevatorIO() {});
                 _manipulator = new Manipulator(new ManipulatorIO() {});
                 break;
         }
@@ -91,7 +99,14 @@ public class RobotContainer
         // Reset gyro to 0° when B button is pressed
         _controller.b().onTrue(Commands.runOnce(() -> _drive.setPose(new Pose2d(_drive.getPose().getTranslation(), new Rotation2d())), _drive).ignoringDisable(true));
 
-        _controller.rightTrigger().onTrue(ManipulatorCommands.intake(_manipulator));
+        _controller.rightTrigger().whileTrue(ElevatorCommands.setVolts(_elevator, () -> -_controller.getRightY() * Constants.General.MOTOR_VOLTAGE));
+
+        _controller.povUp().onTrue(ElevatorCommands.setHeight(_elevator, ElevatorHeight.Level1));
+        _controller.povRight().onTrue(ElevatorCommands.setHeight(_elevator, ElevatorHeight.Level2));
+        _controller.povDown().onTrue(ElevatorCommands.setHeight(_elevator, ElevatorHeight.Level3));
+        _controller.povLeft().onTrue(ElevatorCommands.setHeight(_elevator, ElevatorHeight.Level4));
+
+        _controller.leftTrigger().onTrue(ManipulatorCommands.intake(_manipulator));
         _controller.start().onTrue(ManipulatorCommands.output(_manipulator));
         _controller.rightStick().onTrue(ManipulatorCommands.stop(_manipulator));
     }
