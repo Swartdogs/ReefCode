@@ -5,6 +5,8 @@ import static edu.wpi.first.units.Units.Amps;
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.RobotConfig;
 
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -97,6 +99,34 @@ public final class Constants
         public static final RobotConfig     PP_CONFIG                     = new RobotConfig(
                 General.ROBOT_MASS, General.ROBOT_MOI, new ModuleConfig(WHEEL_RADIUS, General.MAX_LINEAR_SPEED, WHEEL_COF, DRIVE_GEARBOX.withReduction(DRIVE_MOTOR_REDUCTION), DRIVE_MOTOR_CURRENT_LIMIT.magnitude(), 1), MODULE_TRANSLATIONS
         );
+    }
+
+    public static class Field
+    {
+        public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
+        public static final Rotation2d          BLUE_REEF_ANGLE_ONE    = getTagAngle(18);
+        public static final Rotation2d          BLUE_REEF_ANGLE_TWO    = getTagAngle(17);
+        public static final Rotation2d          BLUE_REEF_ANGLE_THREE  = getTagAngle(22);
+        public static final Rotation2d          BLUE_REEF_ANGLE_FOUR   = getTagAngle(21);
+        public static final Rotation2d          BLUE_REEF_ANGLE_FIVE   = getTagAngle(20);
+        public static final Rotation2d          BLUE_REEF_ANGLE_SIX    = getTagAngle(19);
+        public static final Rotation2d          RED_REEF_ANGLE_ONE     = getTagAngle(7);
+        public static final Rotation2d          RED_REEF_ANGLE_TWO     = getTagAngle(8);
+        public static final Rotation2d          RED_REEF_ANGLE_THREE   = getTagAngle(9);
+        public static final Rotation2d          RED_REEF_ANGLE_FOUR    = getTagAngle(10);
+        public static final Rotation2d          RED_REEF_ANGLE_FIVE    = getTagAngle(11);
+        public static final Rotation2d          RED_REEF_ANGLE_SIX     = getTagAngle(6);
+        public static final Rotation2d          BLUE_LEFT_STATION      = getTagAngle(13);
+        public static final Rotation2d          BLUE_RIGHT_STATION     = getTagAngle(12);
+        public static final Rotation2d          RED_LEFT_STATION       = getTagAngle(1);
+        public static final Rotation2d          RED_RIGHT_STATION      = getTagAngle(2);
+        public static final Rotation2d          BLUE_PROCESSOR         = getTagAngle(16);
+        public static final Rotation2d          RED_PROCESSOR          = getTagAngle(3);
+
+        private static Rotation2d getTagAngle(int tagID)
+        {
+            return APRIL_TAG_FIELD_LAYOUT.getTagPose(tagID).get().getRotation().toRotation2d().rotateBy(new Rotation2d(Math.PI));
+        }
     }
 
     public static class General
