@@ -121,8 +121,8 @@ public class ModuleIOHardware implements ModuleIO
         driveConfig.Slot0.kV                               = 0.124;
         driveConfig.Feedback.SensorToMechanismRatio        = Constants.Drive.DRIVE_MOTOR_REDUCTION;
         driveConfig.TorqueCurrent.PeakForwardTorqueCurrent = Amps.of(120.0).magnitude(); // TODO: tune this. This is the current at which wheels start to slip
-        driveConfig.TorqueCurrent.PeakReverseTorqueCurrent = Amps.of(-120.0).magnitude();          // TODO: tune this as well
-        driveConfig.CurrentLimits.StatorCurrentLimit       = Amps.of(120.0).magnitude();       // Same as above
+        driveConfig.TorqueCurrent.PeakReverseTorqueCurrent = Amps.of(-120.0).magnitude(); // TODO: tune this as well
+        driveConfig.CurrentLimits.StatorCurrentLimit       = Amps.of(120.0).magnitude(); // Same as above
         driveConfig.CurrentLimits.StatorCurrentLimitEnable = true;
         driveConfig.MotorOutput.Inverted                   = Constants.Drive.DRIVE_INVERTED ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
         tryUntilOk(5, () -> _driveTalon.getConfigurator().apply(driveConfig, 0.25));
@@ -131,7 +131,7 @@ public class ModuleIOHardware implements ModuleIO
         // Configure turn motor
         var turnConfig = new SparkMaxConfig();
 
-        turnConfig.inverted(Constants.Drive.TURN_INVERTED).idleMode(IdleMode.kBrake).smartCurrentLimit(Constants.Drive.TURN_MOTOR_CURRENT_LIMIT).voltageCompensation(12.0);
+        turnConfig.inverted(Constants.Drive.TURN_INVERTED).idleMode(IdleMode.kBrake).smartCurrentLimit(Constants.Drive.TURN_MOTOR_CURRENT_LIMIT).voltageCompensation(Constants.General.MOTOR_VOLTAGE);
 
         turnConfig.absoluteEncoder.inverted(Constants.Drive.TURN_INVERTED).positionConversionFactor(Constants.Drive.TURN_ENCODER_POSITION_FACTOR).velocityConversionFactor(Constants.Drive.TURN_ENCODER_VELOCITY_FACTOR).averageDepth(2);
 
