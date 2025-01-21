@@ -4,7 +4,6 @@ import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-// TODO: Write this file. Working on it.
 public class Manipulator extends SubsystemBase
 {
     private final ManipulatorIO                 _io;
@@ -13,7 +12,6 @@ public class Manipulator extends SubsystemBase
     public Manipulator(ManipulatorIO io)
     {
         _io = io;
-
     }
 
     @Override

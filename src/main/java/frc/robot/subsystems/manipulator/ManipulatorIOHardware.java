@@ -7,7 +7,6 @@ import frc.robot.Constants;
 
 public class ManipulatorIOHardware implements ManipulatorIO
 {
-
     // Hardware objects
     private final TalonSRX     _leftTalon;
     private final TalonSRX     _rightTalon;
@@ -22,20 +21,19 @@ public class ManipulatorIOHardware implements ManipulatorIO
         _leftTalon.setInverted(true); // Inverts upper talon so they pull/push together.
     }
 
-    public void setVolts(double volts)
-    {
-        // FIXME: Use correct variable and attribute/method names.
-        _rightTalon.set(ControlMode.PercentOutput, volts / Constants.General.MOTOR_VOLTAGE);
-        _leftTalon.set(ControlMode.PercentOutput, volts / Constants.General.MOTOR_VOLTAGE);
-    }
-
     public void updateInputs(ManipulatorIOInputs inputs)
     {
         inputs.leftCurrentAmps   = _leftTalon.getStatorCurrent();
         inputs.rightCurrentAmps  = _rightTalon.getStatorCurrent();
         inputs.leftAppliedVolts  = _leftTalon.getMotorOutputVoltage();
         inputs.rightAppliedVolts = _rightTalon.getMotorOutputVoltage();
-
+        
         inputs.hasCoral = !_lightSensor.get();
+    }
+
+    public void setVolts(double volts)
+    {
+        _rightTalon.set(ControlMode.PercentOutput, volts / Constants.General.MOTOR_VOLTAGE);
+        _leftTalon.set(ControlMode.PercentOutput, volts / Constants.General.MOTOR_VOLTAGE);
     }
 }
