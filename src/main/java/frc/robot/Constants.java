@@ -121,17 +121,19 @@ public final class Constants
         public static final Rotation2d          RED_REEF_ANGLE_FOUR    = getTagAngle(10);
         public static final Rotation2d          RED_REEF_ANGLE_FIVE    = getTagAngle(11);
         public static final Rotation2d          RED_REEF_ANGLE_SIX     = getTagAngle(6);
-        public static final Rotation2d          BLUE_LEFT_STATION      = getTagAngle(13);
-        public static final Rotation2d          BLUE_RIGHT_STATION     = getTagAngle(12);
-        public static final Rotation2d          RED_LEFT_STATION       = getTagAngle(1);
-        public static final Rotation2d          RED_RIGHT_STATION      = getTagAngle(2);
-        public static final Rotation2d          BLUE_PROCESSOR         = getTagAngle(16);
-        public static final Rotation2d          RED_PROCESSOR          = getTagAngle(3);
+        public static final Rotation2d          BLUE_LEFT_STATION_ANGLE      = getTagAngle(13);
+        public static final Rotation2d          BLUE_RIGHT_STATION_ANGLE     = getTagAngle(12);
+        public static final Rotation2d          RED_LEFT_STATION_ANGLE       = getTagAngle(1);
+        public static final Rotation2d          RED_RIGHT_STATION_ANGLE      = getTagAngle(2);
+        public static final Rotation2d          BLUE_PROCESSOR_ANGLE         = getTagAngle(16);
+        public static final Rotation2d          RED_PROCESSOR_ANGLE          = getTagAngle(3);
 
         private static Rotation2d getTagAngle(int tagID)
         {
             return APRIL_TAG_FIELD_LAYOUT.getTagPose(tagID).get().getRotation().toRotation2d().rotateBy(new Rotation2d(Math.PI));
         }
+    }
+
     public static class Elevator
     {
         public static final double  EXTENSION_KP              = 0.4;
