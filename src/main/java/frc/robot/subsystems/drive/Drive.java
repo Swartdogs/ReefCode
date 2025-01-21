@@ -176,7 +176,7 @@ public class Drive extends SubsystemBase
 
     public void runVelocity(ChassisSpeeds speeds)
     {
-        ChassisSpeeds       discreteSpeeds = ChassisSpeeds.discretize(speeds, 0.02);
+        ChassisSpeeds       discreteSpeeds = ChassisSpeeds.discretize(speeds, Constants.General.LOOP_PERIOD_SECS);
         SwerveModuleState[] setpointStates = _kinematics.toSwerveModuleStates(discreteSpeeds);
         SwerveDriveKinematics.desaturateWheelSpeeds(setpointStates, MAX_LINEAR_SPEED);
 
