@@ -106,12 +106,12 @@ public final class Constants
 
     public static class Elevator
     {
-        public static final double  EXTENSION_KP              = 0.40;
-        public static final double  EXTENSION_KI              = 0.70;
+        public static final double  EXTENSION_KP              = 0.4;
+        public static final double  EXTENSION_KI              = 0.7;
         public static final double  EXTENSION_KD              = 0.15; // anything above 0.18 causes "shake"
         public static final double  MAX_EXTENSION             = 68.0;
         public static final double  EXTENSION_TOLERANCE       = 0.5;
-        public static final double  STOW_HEIGHT               = 0.00;
+        public static final double  STOW_HEIGHT               = 0.0;
         public static final double  L1_HEIGHT                 = 18.0 - 12.7625; // 12.7625 account for bottom of baseplate to bottom of carrige
         public static final double  L2_HEIGHT                 = 31.875 - 12.7625; // 19.11
         public static final double  L3_HEIGHT                 = 47.625 - 12.7625; // 34.86
