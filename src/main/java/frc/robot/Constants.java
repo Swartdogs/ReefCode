@@ -53,6 +53,8 @@ public final class Constants
         public static final int BR_TURN           = 8;
         public static final int LEAD_ELEVATOR     = 9;
         public static final int FOLLOWER_ELEVATOR = 10;
+        public static final int MANIPULATOR_LEFT  = 11;
+        public static final int MANIPULATOR_RIGHT = 12;
     }
 
     public static class Drive
@@ -104,12 +106,12 @@ public final class Constants
 
     public static class Elevator
     {
-        public static final double  EXTENSION_KP              = 0.40;
-        public static final double  EXTENSION_KI              = 0.70;
+        public static final double  EXTENSION_KP              = 0.4;
+        public static final double  EXTENSION_KI              = 0.7;
         public static final double  EXTENSION_KD              = 0.15; // anything above 0.18 causes "shake"
         public static final double  MAX_EXTENSION             = 68.0;
         public static final double  EXTENSION_TOLERANCE       = 0.5;
-        public static final double  STOW_HEIGHT               = 0.00;
+        public static final double  STOW_HEIGHT               = 0.0;
         public static final double  L1_HEIGHT                 = 18.0 - 12.7625; // 12.7625 account for bottom of baseplate to bottom of carrige
         public static final double  L2_HEIGHT                 = 31.875 - 12.7625; // 19.11
         public static final double  L3_HEIGHT                 = 47.625 - 12.7625; // 34.86
@@ -129,5 +131,18 @@ public final class Constants
         public static final double ROBOT_MASS       = 74.088;
         public static final double ROBOT_MOI        = 6.883;
         public static final double MOTOR_VOLTAGE    = 12.0;
+    }
+
+    public static class Manipulator
+    {
+        public static final DCMotor MANIPULATOR_MOTOR = DCMotor.getVex775Pro(1);
+        public static final double  MOTOR_REDUCTION   = 5.0;
+        public static final double  INTAKE_VOLTS      = 12.0;
+        public static final double  OUTPUT_VOLTS      = 12.0;
+    }
+
+    public static class DIO
+    {
+        public static final int MANIPULATOR_LIGHT_SENSOR = 1;
     }
 }

@@ -6,7 +6,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 
 public interface ModuleIO
 {
-    @AutoLog
+    @AutoLog // adds logging to ModuleIO interface
     public static class ModuleIOInputs
     {
         public boolean      driveConnected            = false;
