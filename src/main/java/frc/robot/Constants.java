@@ -101,8 +101,8 @@ public final class Constants
 
     public static class Vision
     {
-        public static final String PHOTON_CAMERA_NAME = "photonCam"; //TODO Name
-
+        public static final String PHOTON_CAMERA_NAME  = "photonCam"; // TODO Name
+        public static final double MAX_DETECTION_RANGE = Units.inchesToMeters(300);
     }
 
     public static class General
