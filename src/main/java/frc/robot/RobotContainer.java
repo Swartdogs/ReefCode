@@ -1,14 +1,10 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.ElevatorCommands;
@@ -29,8 +25,6 @@ import frc.robot.subsystems.manipulator.ManipulatorIO;
 import frc.robot.subsystems.manipulator.ManipulatorIOHardware;
 import frc.robot.subsystems.manipulator.ManipulatorIOSim;
 
-import java.util.ArrayList;
-
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 public class RobotContainer
@@ -41,8 +35,9 @@ public class RobotContainer
     private final Manipulator _manipulator;
 
     // Controller
-    private final CommandXboxController _controller = new CommandXboxController(0);
-    private final ArrayList<JoystickButton> _driverButtons = new ArrayList<JoystickButton>();
+    private final CommandJoystick _driverJoystick  = new CommandJoystick(0);
+    private final CommandJoystick _driverButtons   = new CommandJoystick(1);
+    private final CommandJoystick _operatorButtons = new CommandJoystick(2);
 
     // Dashboard inputs
     private final LoggedDashboardChooser<Command> _autoChooser;
@@ -65,7 +60,7 @@ public class RobotContainer
                 // Sim robot, instantiate physics sim IO implementations
                 _drive = new Drive(new GyroIO() {}, new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim());
                 _elevator = new Elevator(new ElevatorIOSim());
-                _manipulator = new Manipulator(new ManipulatorIOSim(() -> _controller.leftTrigger().getAsBoolean()));
+                _manipulator = new Manipulator(new ManipulatorIOSim(() -> _driverJoystick.button(7).getAsBoolean()));
                 break;
 
             default:
@@ -74,13 +69,6 @@ public class RobotContainer
                 _elevator = new Elevator(new ElevatorIO() {});
                 _manipulator = new Manipulator(new ManipulatorIO() {});
                 break;
-        }
-
-        Joystick _driverButtonBox = new Joystick(1);
-
-        for(int i = 0; i < 9; i++)
-        {
-            _driverButtons.add(new JoystickButton(_driverButtonBox, i));
         }
 
         // Set up auto routines
@@ -101,36 +89,60 @@ public class RobotContainer
     private void configureButtonBindings()
     {
         // Default command, normal field-relative drive
-        _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_controller.getLeftY(), () -> -_controller.getLeftX(), () -> -_controller.getRightX()));
+        _drive.setDefaultCommand(DriveCommands.joystickFieldCentricDrive(_drive, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> -_driverJoystick.getZ()));
 
-        _driverButtons.get(0).whileTrue(DriveCommands.joystickDriveAtAngle(_drive, () -> -_controller.getLeftY(), () -> -_controller.getLeftX(), () -> DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Red ? Constants.Field.RED_REEF_ANGLE_ONE : Constants.Field.BLUE_REEF_ANGLE_ONE));
-        _driverButtons.get(1).whileTrue(DriveCommands.joystickDriveAtAngle(_drive, () -> -_controller.getLeftY(), () -> -_controller.getLeftX(), () -> DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Red ? Constants.Field.RED_REEF_ANGLE_TWO : Constants.Field.BLUE_REEF_ANGLE_TWO));
-        _driverButtons.get(2).whileTrue(DriveCommands.joystickDriveAtAngle(_drive, () -> -_controller.getLeftY(), () -> -_controller.getLeftX(), () -> DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Red ? Constants.Field.RED_REEF_ANGLE_THREE : Constants.Field.BLUE_REEF_ANGLE_THREE));
-        _driverButtons.get(3).whileTrue(DriveCommands.joystickDriveAtAngle(_drive, () -> -_controller.getLeftY(), () -> -_controller.getLeftX(), () -> DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Red ? Constants.Field.RED_REEF_ANGLE_FOUR : Constants.Field.BLUE_REEF_ANGLE_FOUR));
-        _driverButtons.get(4).whileTrue(DriveCommands.joystickDriveAtAngle(_drive, () -> -_controller.getLeftY(), () -> -_controller.getLeftX(), () -> DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Red ? Constants.Field.RED_REEF_ANGLE_FIVE : Constants.Field.BLUE_REEF_ANGLE_FIVE));
-        _driverButtons.get(5).whileTrue(DriveCommands.joystickDriveAtAngle(_drive, () -> -_controller.getLeftY(), () -> -_controller.getLeftX(), () -> DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Red ? Constants.Field.RED_REEF_ANGLE_SIX : Constants.Field.BLUE_REEF_ANGLE_SIX));
-        _driverButtons.get(6).whileTrue(DriveCommands.joystickDriveAtAngle(_drive, () -> -_controller.getLeftY(), () -> -_controller.getLeftX(), () -> DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Red ? Constants.Field.RED_LEFT_STATION_ANGLE : Constants.Field.BLUE_LEFT_STATION_ANGLE));
-        _driverButtons.get(7).whileTrue(DriveCommands.joystickDriveAtAngle(_drive, () -> -_controller.getLeftY(), () -> -_controller.getLeftX(), () -> DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Red ? Constants.Field.RED_RIGHT_STATION_ANGLE : Constants.Field.BLUE_RIGHT_STATION_ANGLE));
-        _driverButtons.get(8).whileTrue(DriveCommands.joystickDriveAtAngle(_drive, () -> -_controller.getLeftY(), () -> -_controller.getLeftX(), () -> DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Red ? Constants.Field.RED_PROCESSOR_ANGLE : Constants.Field.BLUE_PROCESSOR_ANGLE));
-        
+        _driverJoystick.button(1).whileTrue(DriveCommands.joystickRobotCentricDrive(_drive, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> -_driverJoystick.getZ()));
+        _driverJoystick.button(2).onTrue(null); // replace this with switching cameras
+        _driverJoystick.button(11).onTrue(DriveCommands.resetGyro(_drive, () -> isRedAlliance()));
 
-        _controller.rightTrigger().whileTrue(ElevatorCommands.setVolts(_elevator, () -> -_controller.getRightY() * Constants.General.MOTOR_VOLTAGE));
+        _driverButtons.button(0)
+                .whileTrue(DriveCommands.joystickDriveAtAngle(_drive, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> isRedAlliance() ? Constants.Field.RED_REEF_ANGLE_ONE : Constants.Field.BLUE_REEF_ANGLE_ONE));
+        _driverButtons.button(1)
+                .whileTrue(DriveCommands.joystickDriveAtAngle(_drive, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> isRedAlliance() ? Constants.Field.RED_REEF_ANGLE_TWO : Constants.Field.BLUE_REEF_ANGLE_TWO));
+        _driverButtons.button(2)
+                .whileTrue(DriveCommands.joystickDriveAtAngle(_drive, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> isRedAlliance() ? Constants.Field.RED_REEF_ANGLE_THREE : Constants.Field.BLUE_REEF_ANGLE_THREE));
+        _driverButtons.button(3)
+                .whileTrue(DriveCommands.joystickDriveAtAngle(_drive, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> isRedAlliance() ? Constants.Field.RED_REEF_ANGLE_FOUR : Constants.Field.BLUE_REEF_ANGLE_FOUR));
+        _driverButtons.button(4)
+                .whileTrue(DriveCommands.joystickDriveAtAngle(_drive, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> isRedAlliance() ? Constants.Field.RED_REEF_ANGLE_FIVE : Constants.Field.BLUE_REEF_ANGLE_FIVE));
+        _driverButtons.button(5)
+                .whileTrue(DriveCommands.joystickDriveAtAngle(_drive, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> isRedAlliance() ? Constants.Field.RED_REEF_ANGLE_SIX : Constants.Field.BLUE_REEF_ANGLE_SIX));
+        _driverButtons.button(6)
+                .whileTrue(DriveCommands.joystickDriveAtAngle(_drive, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> isRedAlliance() ? Constants.Field.RED_LEFT_STATION_ANGLE : Constants.Field.BLUE_LEFT_STATION_ANGLE));
+        _driverButtons.button(7).whileTrue(
+                DriveCommands.joystickDriveAtAngle(_drive, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> isRedAlliance() ? Constants.Field.RED_RIGHT_STATION_ANGLE : Constants.Field.BLUE_RIGHT_STATION_ANGLE)
+        );
+        _driverButtons.button(8)
+                .whileTrue(DriveCommands.joystickDriveAtAngle(_drive, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> isRedAlliance() ? Constants.Field.RED_PROCESSOR_ANGLE : Constants.Field.BLUE_PROCESSOR_ANGLE));
 
-        _controller.povUp().onTrue(ElevatorCommands.setHeight(_elevator, ElevatorHeight.Level1));
-        _controller.povRight().onTrue(ElevatorCommands.setHeight(_elevator, ElevatorHeight.Level2));
-        _controller.povDown().onTrue(ElevatorCommands.setHeight(_elevator, ElevatorHeight.Level3));
-        _controller.povLeft().onTrue(ElevatorCommands.setHeight(_elevator, ElevatorHeight.Level4));
+        _operatorButtons.button(0).onTrue(ElevatorCommands.setHeight(_elevator, ElevatorHeight.Level1));
+        _operatorButtons.button(1).onTrue(ElevatorCommands.setHeight(_elevator, ElevatorHeight.Level2));
+        _operatorButtons.button(2).onTrue(ElevatorCommands.setHeight(_elevator, ElevatorHeight.Level3));
+        _operatorButtons.button(3).onTrue(ElevatorCommands.setHeight(_elevator, ElevatorHeight.Level4));
+        _operatorButtons.button(4).onTrue(ElevatorCommands.setHeight(_elevator, ElevatorHeight.Stow));
+        _operatorButtons.button(5).onTrue(ManipulatorCommands.intake(_manipulator));
+        _operatorButtons.button(6).onTrue(ManipulatorCommands.output(_manipulator));
+        _operatorButtons.button(7).onTrue(ManipulatorCommands.stop(_manipulator));
+        _operatorButtons.button(8).and(_driverJoystick.button(3)).onTrue(null); // replace with hang prep
+        _operatorButtons.button(9).onTrue(null);// replace with hang execute
+        _operatorButtons.button(10).onTrue(null);// replace with algae intake
+        _operatorButtons.button(11).onTrue(null);// replace with algae output
 
-        _controller.leftTrigger().onTrue(ManipulatorCommands.intake(_manipulator));
-        _controller.start().onTrue(ManipulatorCommands.output(_manipulator));
-        _controller.rightStick().onTrue(ManipulatorCommands.stop(_manipulator));
+        Trigger _operatorButton12 = _operatorButtons.axisGreaterThan(0, 0.5);
+        Trigger _operatorButton13 = _operatorButtons.axisGreaterThan(1, 0.5);
+        Trigger _operatorButton14 = _operatorButtons.axisLessThan(1, -0.5);
+
+        _operatorButton12.onTrue(null);// replace with algae stop
+        _operatorButton13.onTrue(ElevatorCommands.modifyHeight(_elevator, Constants.Elevator.ELEVATOR_MODIFICATION_HEIGHT));
+        _operatorButton14.onTrue(ElevatorCommands.modifyHeight(_elevator, -Constants.Elevator.ELEVATOR_MODIFICATION_HEIGHT));
+
     }
 
-    /**
-     * Use this to pass the autonomous command to the main {@link Robot} class.
-     *
-     * @return the command to run in autonomous
-     */
+    public boolean isRedAlliance()
+    {
+        return DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Red;
+    }
+
     public Command getAutonomousCommand()
     {
         return _autoChooser.get();

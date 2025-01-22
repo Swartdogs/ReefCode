@@ -70,6 +70,11 @@ public class Elevator extends SubsystemBase
         _extensionSetPoint = null;
     }
 
+    public void modifySetpoint(double modification)
+    {
+        _extensionSetPoint += modification;
+    }
+
     public boolean atSetpoint()
     {
         return _extensionPID.atSetpoint();
