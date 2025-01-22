@@ -32,19 +32,12 @@ public class Vision extends SubsystemBase
         _io.updateInputs(_inputs);
         Logger.processInputs("Vision", _inputs);
 
-        // if (Constants.Vision.ENABLE_POSE_CORRECTION)
-        // {
-        // if (!DriverStation.isAutonomous() && _lastTimestamp !=
-        // _inputs.captureTimestamp)
-        // {
-        // if (_inputs.hasPose != false)
-        // {
-        // _drive.addVisionMeasurement(_inputs.pose, _inputs.captureTimestamp);
-        // }
+        if (_inputs.hasPose != false)
+        {
+         _drive.addVisionMeasurement(_inputs.pose, _inputs.captureTimestamp);
+        }
 
-        // _lastTimestamp = _inputs.captureTimestamp;
-        // }
-        // }
+        _lastTimestamp = _inputs.captureTimestamp;
     }
 
     public void setTargetingEnabled(boolean enabled)
