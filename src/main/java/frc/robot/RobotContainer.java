@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.ElevatorCommands;
+import frc.robot.commands.FunnelCommands;
 import frc.robot.commands.ManipulatorCommands;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
@@ -19,6 +20,10 @@ import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorIO;
 import frc.robot.subsystems.elevator.ElevatorIOHardware;
 import frc.robot.subsystems.elevator.ElevatorIOSim;
+import frc.robot.subsystems.funnel.Funnel;
+import frc.robot.subsystems.funnel.FunnelIO;
+import frc.robot.subsystems.funnel.FunnelIOHardware;
+import frc.robot.subsystems.funnel.FunnelIOSim;
 import frc.robot.subsystems.elevator.Elevator.ElevatorHeight;
 import frc.robot.subsystems.manipulator.Manipulator;
 import frc.robot.subsystems.manipulator.ManipulatorIO;
@@ -33,6 +38,7 @@ public class RobotContainer
     private final Drive       _drive;
     private final Elevator    _elevator;
     private final Manipulator _manipulator;
+    private final Funnel      _funnel;
 
     // Controller
     private final CommandJoystick _driverJoystick  = new CommandJoystick(0);
@@ -54,6 +60,7 @@ public class RobotContainer
                 _drive = new Drive(new GyroIONavX(), new ModuleIOHardware(0), new ModuleIOHardware(1), new ModuleIOHardware(2), new ModuleIOHardware(3));
                 _elevator = new Elevator(new ElevatorIOHardware());
                 _manipulator = new Manipulator(new ManipulatorIOHardware());
+                _funnel = new Funnel(new FunnelIOHardware());
                 break;
 
             case SIM:
@@ -61,6 +68,7 @@ public class RobotContainer
                 _drive = new Drive(new GyroIO() {}, new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim());
                 _elevator = new Elevator(new ElevatorIOSim());
                 _manipulator = new Manipulator(new ManipulatorIOSim(() -> _driverJoystick.button(7).getAsBoolean()));
+                _funnel = new Funnel(new FunnelIOSim());
                 break;
 
             default:
@@ -68,6 +76,7 @@ public class RobotContainer
                 _drive = new Drive(new GyroIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {});
                 _elevator = new Elevator(new ElevatorIO() {});
                 _manipulator = new Manipulator(new ManipulatorIO() {});
+                _funnel = new Funnel(new FunnelIO() {});
                 break;
         }
 
@@ -123,7 +132,7 @@ public class RobotContainer
         _operatorButtons.button(5).onTrue(ManipulatorCommands.intake(_manipulator));
         _operatorButtons.button(6).onTrue(ManipulatorCommands.output(_manipulator));
         _operatorButtons.button(7).onTrue(ManipulatorCommands.stop(_manipulator));
-        _operatorButtons.button(8).and(_driverJoystick.button(3)).onTrue(null); // replace with hang prep
+        _operatorButtons.button(8).and(_driverJoystick.button(3)).onTrue(FunnelCommands.drop(_funnel)); // replace with hang prep
         _operatorButtons.button(9).onTrue(null);// replace with hang execute
         _operatorButtons.button(10).onTrue(null);// replace with algae intake
         _operatorButtons.button(11).onTrue(null);// replace with algae output
