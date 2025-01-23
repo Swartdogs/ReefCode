@@ -54,7 +54,14 @@ public class VisionIOPhotonLib implements VisionIO
 
         NetworkTableInstance.getDefault().addListener(NetworkTableInstance.getDefault().getEntry("/photonvision/" + Constants.Vision.PHOTON_CAMERA_NAME + "/latencyMillis"), EnumSet.of(NetworkTableEvent.Kind.kValueRemote), event ->
         {
-            PhotonPipelineResult      result    = _camera.getLatestResult();
+            var results = _camera.getAllUnreadResults();
+            if (results.isEmpty())
+            {
+                return;
+            }
+            // get the latest result (last in the list)
+            var result = results.get(results.size() - 1);
+
             double                    timestamp = result.getTimestampSeconds();
             List<PhotonTrackedTarget> targets   = result.getTargets();
 
@@ -113,7 +120,22 @@ public class VisionIOPhotonLib implements VisionIO
     @Override
     public synchronized void updateInputs(VisionIOInputs inputs)
     {
-        var result = _camera.getLatestResult();
+        var results = _camera.getAllUnreadResults();
+        if (results.isEmpty())
+        {
+            // No results available
+            inputs.hasTargets      = false;
+            inputs.numTargets      = 0;
+            inputs.targetIds       = new int[0];
+            inputs.targetYaws      = new double[0];
+            inputs.targetPitches   = new double[0];
+            inputs.targetAreas     = new double[0];
+            inputs.targetDistances = new double[0];
+            inputs.hasPose         = false;
+            return;
+        }
+
+        var result = results.get(results.size() - 1);
 
         inputs.captureTimestamp = result.getTimestampSeconds();
         inputs.hasTargets       = result.hasTargets();

@@ -104,16 +104,17 @@ public final class Constants
 
     public static class Vision
     {
-        public static final String      PHOTON_CAMERA_NAME  = "photonCam"; // TODO: Name
-        public static final double      MAX_DETECTION_RANGE = Units.inchesToMeters(300);
-        public static final Transform3d ROBOT_TO_CAMERA     = new Transform3d(
-            new Translation3d(0.5, 0.0, 0.5), // X forward, Y left, Z up from robot center
-            new Rotation3d(0, Units.degreesToRadians(-30), 0)); // Camera tilted up 30 degrees
-        public static final double VISION_STD_DEV_BASE_XY = 0.5; // meters
-        public static final double VISION_STD_DEV_BASE_THETA = Units.degreesToRadians(30);
-        public static final double VISION_STD_DEV_MULTI_XY = 0.1;
-        public static final double VISION_STD_DEV_MULTI_THETA = Units.degreesToRadians(10);
-        public static final double VISION_DISTANCE_SCALE = 0.2; // How much to increase uncertainty per meter
+        public static final String      PHOTON_CAMERA_NAME         = "photonCam"; // TODO: Name
+        public static final double      MAX_DETECTION_RANGE        = Units.inchesToMeters(300);
+        public static final Transform3d ROBOT_TO_CAMERA            = new Transform3d(
+                new Translation3d(0.5, 0.0, 0.5), // X forward, Y left, Z up from robot center
+                new Rotation3d(0, Units.degreesToRadians(-30), 0)
+        ); // Camera tilted up 30 degrees
+        public static final double      VISION_STD_DEV_BASE_XY     = 0.5; // meters
+        public static final double      VISION_STD_DEV_BASE_THETA  = Units.degreesToRadians(30);
+        public static final double      VISION_STD_DEV_MULTI_XY    = 0.1;
+        public static final double      VISION_STD_DEV_MULTI_THETA = Units.degreesToRadians(10);
+        public static final double      VISION_DISTANCE_SCALE      = 0.2; // How much to increase uncertainty per meter
     }
 
     public static class General

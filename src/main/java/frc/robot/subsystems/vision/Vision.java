@@ -51,14 +51,12 @@ public class Vision extends SubsystemBase
 
             if (_inputs.numTargets > 1)
             {
-                xyStdDev = Constants.Vision.VISION_STD_DEV_MULTI_XY 
-                    + (avgDistance * Constants.Vision.VISION_DISTANCE_SCALE);
+                xyStdDev    = Constants.Vision.VISION_STD_DEV_MULTI_XY + (avgDistance * Constants.Vision.VISION_DISTANCE_SCALE);
                 thetaStdDev = Constants.Vision.VISION_STD_DEV_MULTI_THETA;
             }
             else
             {
-                xyStdDev = Constants.Vision.VISION_STD_DEV_BASE_XY 
-                    + (avgDistance * Constants.Vision.VISION_DISTANCE_SCALE);
+                xyStdDev    = Constants.Vision.VISION_STD_DEV_BASE_XY + (avgDistance * Constants.Vision.VISION_DISTANCE_SCALE);
                 thetaStdDev = Constants.Vision.VISION_STD_DEV_BASE_THETA;
             }
 
