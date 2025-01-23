@@ -55,6 +55,7 @@ public final class Constants
         public static final int FOLLOWER_ELEVATOR = 10;
         public static final int MANIPULATOR_LEFT  = 11;
         public static final int MANIPULATOR_RIGHT = 12;
+        public static final int FUNNEL_LA         = 13;
     }
 
     public static class Drive
