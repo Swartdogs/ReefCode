@@ -7,14 +7,14 @@ public interface FunnelIO
     @AutoLog
     public static class FunnelIOInputs
     {
-        public boolean isDropped = false;
+        public double funnelVolts = 0.0;
     }
 
     public default void updateInputs(FunnelIOInputs inputs)
     {
     }
 
-    public default void setState(boolean state)
+    public default void setVolts(double volts)
     {
     }
 }

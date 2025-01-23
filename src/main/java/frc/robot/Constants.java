@@ -55,7 +55,7 @@ public final class Constants
         public static final int FOLLOWER_ELEVATOR = 10;
         public static final int MANIPULATOR_LEFT  = 11;
         public static final int MANIPULATOR_RIGHT = 12;
-        public static final int FUNNEL_LA         = 13;
+        public static final int FUNNEL_SOLENOID   = 13;
     }
 
     public static class Drive
@@ -123,6 +123,12 @@ public final class Constants
         public static final double  EXTENSION_OFFSET          = 0.0;
         public static final double  ELEVATOR_MASS             = 15.875;
         public static final double  ELEVATOR_DRUM_RADIUS      = 0.0223139;
+    }
+
+    public static class Funnel
+    {
+        public static final double FUNNEL_VOLTS   = 6.0;
+        public static final double DROP_TIME_SECS = 2.0;
     }
 
     public static class General

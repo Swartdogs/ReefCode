@@ -1,26 +1,29 @@
 package frc.robot.subsystems.funnel;
 
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.simulation.SolenoidSim;
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 
 public class FunnelIOSim implements FunnelIO
 {
-    private final SolenoidSim _funnelSolenoid;
+    private final DCMotorSim _funnelSolenoid;
+    private double           _appliedVolts = 0;
 
     public FunnelIOSim()
     {
-        _funnelSolenoid = new SolenoidSim(PneumaticsModuleType.CTREPCM, 0);
+        _funnelSolenoid = new DCMotorSim(LinearSystemId.createDCMotorSystem(DCMotor.getKrakenX60(1), 0.004, 1), DCMotor.getKrakenX60(1));
     }
 
     @Override
     public void updateInputs(FunnelIOInputs inputs)
     {
-        inputs.isDropped = _funnelSolenoid.getOutput();
+        inputs.funnelVolts = _appliedVolts;
     }
 
     @Override
-    public void setState(boolean state)
+    public void setVolts(double volts)
     {
-        _funnelSolenoid.setOutput(state);
+        _appliedVolts = volts;
+        _funnelSolenoid.setInputVoltage(volts);
     }
 }

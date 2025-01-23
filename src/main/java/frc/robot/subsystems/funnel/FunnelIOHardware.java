@@ -1,26 +1,28 @@
 package frc.robot.subsystems.funnel;
 
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.Solenoid;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+
+import frc.robot.Constants;
 
 public class FunnelIOHardware implements FunnelIO
 {
-    private final Solenoid _funnelSolenoid;
+    private final VictorSPX _funnelSolenoid;
 
     public FunnelIOHardware()
     {
-        _funnelSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, 0);
+        _funnelSolenoid = new VictorSPX(0);
     }
 
     @Override
     public void updateInputs(FunnelIOInputs inputs)
     {
-        inputs.isDropped = _funnelSolenoid.get();
+        inputs.funnelVolts = _funnelSolenoid.getMotorOutputVoltage();
     }
 
     @Override
-    public void setState(boolean state)
+    public void setVolts(double volts)
     {
-        _funnelSolenoid.set(state);
+        _funnelSolenoid.set(ControlMode.PercentOutput, volts / Constants.General.MOTOR_VOLTAGE);
     }
 }
