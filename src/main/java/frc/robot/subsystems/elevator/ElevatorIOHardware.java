@@ -24,6 +24,7 @@ public class ElevatorIOHardware implements ElevatorIO
     private final SparkFlex           _followerSparkFlex;
     private final RelativeEncoder     _extensionEncoder;
     private final AnalogPotentiometer _extensionPot;
+    private final ElevatorIODashboard _dashboard = new ElevatorIODashboard();
 
     public ElevatorIOHardware()
     {
@@ -49,6 +50,7 @@ public class ElevatorIOHardware implements ElevatorIO
     @Override
     public void updateInputs(ElevatorIOInputs inputs)
     {
+        // Inputs
         inputs.extensionPosition = _extensionPot.get();
         ifOk(_leaderSparkFlex, _extensionEncoder::getVelocity, (value) -> inputs.extensionVelocity = value * Constants.Elevator.EXTENSION_SCALE / Constants.Elevator.EXTENSION_MOTOR_REDUCTION);
 
@@ -57,6 +59,11 @@ public class ElevatorIOHardware implements ElevatorIO
 
         ifOk(_followerSparkFlex, new DoubleSupplier[] { _followerSparkFlex::getAppliedOutput, _followerSparkFlex::getBusVoltage }, (values) -> inputs.followerVolts = values[0] * values[1]);
         ifOk(_followerSparkFlex, _followerSparkFlex::getOutputCurrent, (value) -> inputs.followerCurrent = value);
+
+        inputs.minExtension = _dashboard.getElevatorMinExtension();
+
+        // Dashboard outputs
+        _dashboard.setElevatorExtension(inputs.extensionPosition);
     }
 
     @Override

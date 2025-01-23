@@ -51,7 +51,7 @@ public class Elevator extends SubsystemBase
             _io.setVolts(MathUtil.clamp(_extensionPID.calculate(_inputs.extensionPosition, _extensionSetPoint), -Constants.General.MOTOR_VOLTAGE, Constants.General.MOTOR_VOLTAGE));
 
         }
-        Logger.recordOutput("Has Extension Setpoint", _extensionSetPoint != null);
+        Logger.recordOutput("Elevator/Has Extension Setpoint", _extensionSetPoint != null);
     }
 
     public void setExtension(double height) // height is measured in inches

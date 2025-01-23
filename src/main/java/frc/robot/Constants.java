@@ -110,6 +110,7 @@ public final class Constants
         public static final double  EXTENSION_KP              = 0.4;
         public static final double  EXTENSION_KI              = 0.7;
         public static final double  EXTENSION_KD              = 0.15; // anything above 0.18 causes "shake"
+        public static final double  MIN_EXTENSION             = 0.0;
         public static final double  MAX_EXTENSION             = 68.0;
         public static final double  EXTENSION_TOLERANCE       = 0.5;
         public static final double  STOW_HEIGHT               = 0.0;

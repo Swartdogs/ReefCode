@@ -2,6 +2,8 @@ package frc.robot.subsystems.elevator;
 
 import org.littletonrobotics.junction.AutoLog;
 
+import frc.robot.Constants;
+
 public interface ElevatorIO
 {
     @AutoLog
@@ -13,6 +15,7 @@ public interface ElevatorIO
         public double leaderCurrent     = 0.0;
         public double followerVolts     = 0.0;
         public double followerCurrent   = 0.0;
+        public double minExtension      = Constants.Elevator.MIN_EXTENSION;
     }
 
     public default void updateInputs(ElevatorIOInputs inputs)
