@@ -27,7 +27,7 @@ public class ManipulatorIOHardware implements ManipulatorIO
         inputs.rightCurrentAmps  = _rightTalon.getStatorCurrent();
         inputs.leftAppliedVolts  = _leftTalon.getMotorOutputVoltage();
         inputs.rightAppliedVolts = _rightTalon.getMotorOutputVoltage();
-        
+
         inputs.hasCoral = !_lightSensor.get();
     }
 
