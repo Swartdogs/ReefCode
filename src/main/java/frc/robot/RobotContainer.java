@@ -14,13 +14,18 @@ import frc.robot.subsystems.drive.GyroIONavX;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOHardware;
 import frc.robot.subsystems.drive.ModuleIOSim;
+import frc.robot.subsystems.vision.Vision;
+import frc.robot.subsystems.vision.VisionIO;
+import frc.robot.subsystems.vision.VisionIOPhotonLib;
 
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 public class RobotContainer
 {
     // Subsystems
-    private final Drive _drive;
+    private final Drive  _drive;
+    @SuppressWarnings("unused")
+    private final Vision _vision; // Add this field
 
     // Controller
     private final CommandXboxController _controller = new CommandXboxController(0);
@@ -38,16 +43,19 @@ public class RobotContainer
             case REAL:
                 // Real robot, instantiate hardware IO implementations
                 _drive = new Drive(new GyroIONavX(), new ModuleIOHardware(0), new ModuleIOHardware(1), new ModuleIOHardware(2), new ModuleIOHardware(3));
+                _vision = new Vision(_drive, new VisionIOPhotonLib(_drive));
                 break;
 
             case SIM:
                 // Sim robot, instantiate physics sim IO implementations
                 _drive = new Drive(new GyroIO() {}, new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim());
+                _vision = new Vision(_drive, new VisionIO() {}); // Empty implementation for sim
                 break;
 
             default:
                 // Replayed robot, disable IO implementations
                 _drive = new Drive(new GyroIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {});
+                _vision = new Vision(_drive, new VisionIO() {});
                 break;
         }
 

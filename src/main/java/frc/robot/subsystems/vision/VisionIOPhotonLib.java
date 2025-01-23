@@ -11,12 +11,10 @@ import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
-import org.photonvision.targeting.TargetCorner;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.networktables.NetworkTableEvent;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -25,10 +23,8 @@ import frc.robot.subsystems.drive.Drive;
 
 public class VisionIOPhotonLib implements VisionIO
 {
-    private final PhotonCamera  _camera            = new PhotonCamera(Constants.Vision.PHOTON_CAMERA_NAME);
+    private final PhotonCamera  _camera;
     private double              _captureTimesStamp = 0.0;
-    private double[]            _tagX              = new double[] {};
-    private double[]            _closeTagX         = new double[] {};
     private Pose2d              _pose              = new Pose2d();
     private boolean             _hasPose           = false;
     private double[]            _distances         = new double[] {};
@@ -37,43 +33,41 @@ public class VisionIOPhotonLib implements VisionIO
     private int                 _numProcessedTargets;
     private AprilTagFieldLayout fieldLayout;
     private PhotonPoseEstimator _poseEstimator;
-    private Transform3d         _robotToCamera;
-    private final Pose3d        _lastEstimatedPose = new Pose3d();
 
-    public void VisionIOPhotonlib(Drive drive)
+    public VisionIOPhotonLib(Drive drive)
     {
+        _camera = new PhotonCamera(Constants.Vision.PHOTON_CAMERA_NAME);
+
         try
         {
-            fieldLayout = AprilTagFields.kDefaultField.loadAprilTagLayoutField();
+            // Load the 2024 field layout
+            fieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2024Crescendo.m_resourceFile);
         }
         catch (Exception e)
         {
-            System.out.println("Exception encountered: " + e.getMessage());
+            System.err.println("Failed to load AprilTag layout: " + e.getMessage());
+            throw new RuntimeException(e);
         }
 
-        _poseEstimator = new PhotonPoseEstimator(fieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, _robotToCamera);
-        // _poseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
+        _poseEstimator = new PhotonPoseEstimator(fieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, Constants.Vision.ROBOT_TO_CAMERA);
+        _poseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
 
         NetworkTableInstance.getDefault().addListener(NetworkTableInstance.getDefault().getEntry("/photonvision/" + Constants.Vision.PHOTON_CAMERA_NAME + "/latencyMillis"), EnumSet.of(NetworkTableEvent.Kind.kValueRemote), event ->
         {
-            PhotonPipelineResult      result           = _camera.getLatestResult();
-            double                    timestamp        = result.getTimestampSeconds();
-            List<Double>              tagXList         = new ArrayList<>();
-            List<Double>              closeTagXList    = new ArrayList<>();
-            List<PhotonTrackedTarget> processedTargets = new ArrayList<>();
+            PhotonPipelineResult      result    = _camera.getLatestResult();
+            double                    timestamp = result.getTimestampSeconds();
+            List<PhotonTrackedTarget> targets   = result.getTargets();
+
             List<Double>              distances        = new ArrayList<>();
             List<Integer>             ids              = new ArrayList<>();
             List<Double>              yaws             = new ArrayList<>();
+            List<PhotonTrackedTarget> processedTargets = new ArrayList<>();
 
-            for (PhotonTrackedTarget target : result.getTargets())
+            // Process all targets
+            for (PhotonTrackedTarget target : targets)
             {
                 ids.add(target.getFiducialId());
                 yaws.add(target.getYaw());
-
-                for (TargetCorner corner : target.getDetectedCorners())
-                {
-                    tagXList.add(corner.x);
-                }
 
                 var transform = target.getBestCameraToTarget();
                 var distance  = Math.hypot(transform.getX(), transform.getY());
@@ -82,19 +76,12 @@ public class VisionIOPhotonLib implements VisionIO
                 if (distance <= Constants.Vision.MAX_DETECTION_RANGE)
                 {
                     processedTargets.add(target);
-
-                    for (TargetCorner corner : target.getDetectedCorners())
-                    {
-                        closeTagXList.add(corner.x);
-                    }
-
                 }
             }
 
-            PhotonPipelineResult processedResult = new PhotonPipelineResult();
-            processedResult.getTimestampSeconds(); // TODO: see if need change
-
-            Optional<EstimatedRobotPose> estimatedPose = getEstimatedGlobalPose(drive.getPose(), processedResult);
+            // Get pose estimate from processed targets
+            _poseEstimator.setReferencePose(drive.getPose());
+            Optional<EstimatedRobotPose> estimatedPose = _poseEstimator.update(result);
             Pose2d                       pose          = new Pose2d();
             boolean                      hasPose       = false;
 
@@ -107,8 +94,6 @@ public class VisionIOPhotonLib implements VisionIO
             synchronized (VisionIOPhotonLib.this)
             {
                 _captureTimesStamp   = timestamp;
-                _tagX                = tagXList.stream().mapToDouble(Double::doubleValue).toArray();
-                _closeTagX           = closeTagXList.stream().mapToDouble(Double::doubleValue).toArray();
                 _distances           = distances.stream().mapToDouble(Double::doubleValue).toArray();
                 _pose                = pose;
                 _numProcessedTargets = processedTargets.size();
@@ -119,34 +104,72 @@ public class VisionIOPhotonLib implements VisionIO
         });
     }
 
+    public Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose, PhotonPipelineResult result)
+    {
+        _poseEstimator.setReferencePose(prevEstimatedRobotPose);
+        return _poseEstimator.update(result);
+    }
+
     @Override
     public synchronized void updateInputs(VisionIOInputs inputs)
     {
-        // PhotonPipelineResult _result = _camera.getLatestResult();
-        inputs.captureTimestamp    = _captureTimesStamp;
-        inputs.tagX                = _tagX;
-        inputs.closeTagX           = _closeTagX;
-        inputs.pose                = _pose;
-        inputs.hasPose             = _hasPose;
-        inputs.targetIds           = _targetIds;
-        inputs.targetYaws          = _targetYaws;
-        inputs.numProcessedTargets = _numProcessedTargets;
+        var result = _camera.getLatestResult();
 
-        // if (_result.hasTargets())
-        // {
-        // Optional<EstimatedRobotPose> _poseOptional = _PoseEstimator.update(_result);
-        // if (_poseOptional.isPresent())
-        // {
-        // EstimatedRobotPose _estimatedPose = _poseOptional.get();
-        // inputs.captureTimestamp = _result.getTimestampSeconds();
-        // inputs._estimatedPose
-        // }
-        // }
-    }
+        inputs.captureTimestamp = result.getTimestampSeconds();
+        inputs.hasTargets       = result.hasTargets();
 
-    private Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose, PhotonPipelineResult result)
-    {
-        _poseEstimator.setLastPose(prevEstimatedRobotPose);
-        return _poseEstimator.update(result);
+        if (inputs.hasTargets)
+        {
+            List<PhotonTrackedTarget> targets    = result.getTargets();
+            int                       numTargets = targets.size();
+
+            inputs.targetIds       = new int[numTargets];
+            inputs.targetYaws      = new double[numTargets];
+            inputs.targetPitches   = new double[numTargets];
+            inputs.targetAreas     = new double[numTargets];
+            inputs.targetDistances = new double[numTargets];
+
+            for (int i = 0; i < numTargets; i++)
+            {
+                PhotonTrackedTarget target = targets.get(i);
+                inputs.targetIds[i]     = target.getFiducialId();
+                inputs.targetYaws[i]    = target.getYaw();
+                inputs.targetPitches[i] = target.getPitch();
+                inputs.targetAreas[i]   = target.getArea();
+
+                Transform3d bestCameraToTarget = target.getBestCameraToTarget();
+                inputs.targetDistances[i] = Math.hypot(bestCameraToTarget.getX(), bestCameraToTarget.getY());
+            }
+
+            inputs.numTargets = numTargets;
+
+            // Update pose estimate if we have new data
+            if (_captureTimesStamp != inputs.captureTimestamp)
+            {
+                Optional<EstimatedRobotPose> poseEstimate = getEstimatedGlobalPose(_pose, result);
+                if (poseEstimate.isPresent())
+                {
+                    inputs.pose    = poseEstimate.get().estimatedPose.toPose2d();
+                    inputs.hasPose = true;
+                    _pose          = inputs.pose;
+                }
+                else
+                {
+                    inputs.hasPose = false;
+                }
+                _captureTimesStamp = inputs.captureTimestamp;
+            }
+        }
+        else
+        {
+            // No targets visible
+            inputs.numTargets      = 0;
+            inputs.targetIds       = new int[0];
+            inputs.targetYaws      = new double[0];
+            inputs.targetPitches   = new double[0];
+            inputs.targetAreas     = new double[0];
+            inputs.targetDistances = new double[0];
+            inputs.hasPose         = false;
+        }
     }
 }
