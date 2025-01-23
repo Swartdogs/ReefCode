@@ -11,7 +11,7 @@ public class FunnelIOHardware implements FunnelIO
 
     public FunnelIOHardware()
     {
-        _funnelSolenoid = new VictorSPX(0);
+        _funnelSolenoid = new VictorSPX(Constants.CAN.FUNNEL_SOLENOID);
     }
 
     @Override

@@ -1,8 +1,10 @@
 package frc.robot.subsystems.funnel;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
+import frc.robot.Constants;
 
 public class FunnelIOSim implements FunnelIO
 {
@@ -23,7 +25,7 @@ public class FunnelIOSim implements FunnelIO
     @Override
     public void setVolts(double volts)
     {
-        _appliedVolts = volts;
-        _funnelSolenoid.setInputVoltage(volts);
+        _appliedVolts = MathUtil.clamp(volts, -Constants.General.MOTOR_VOLTAGE, Constants.General.MOTOR_VOLTAGE);
+        _funnelSolenoid.setInputVoltage(_appliedVolts);
     }
 }

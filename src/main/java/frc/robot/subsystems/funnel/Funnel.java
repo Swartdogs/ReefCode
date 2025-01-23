@@ -16,6 +16,7 @@ public class Funnel extends SubsystemBase
         _io = io;
     }
 
+    @Override
     public void periodic()
     {
         _io.updateInputs(_inputs);
@@ -25,6 +26,7 @@ public class Funnel extends SubsystemBase
     public void setVolts(double volts)
     {
         _io.setVolts(volts);
+        
         if (volts != 0)
         {
             _isDropped = true;
