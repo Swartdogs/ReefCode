@@ -131,6 +131,12 @@ public final class Constants
         public static final double DROP_TIME_SECS = 2.0;
     }
 
+    public static class LED
+    {
+        public static final double FLASH_TIME_SECS = 1.0;
+        public static final int    NUM_LEDS        = 14;
+    }
+
     public static class General
     {
         public static final double LOOP_PERIOD_SECS = 0.02;
