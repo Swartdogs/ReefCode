@@ -2,21 +2,26 @@ package frc.robot.subsystems.leds;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.simulation.AddressableLEDSim;
 import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.Constants;
 
-public class LEDIOHardware implements LEDIO
+public class LEDIOSim implements LEDIO
 {
     private AddressableLED       _led;
     private AddressableLEDBuffer _ledBuffer;
+    private AddressableLEDSim    _ledSim;
 
-    public LEDIOHardware()
+    public LEDIOSim()
     {
         _led       = new AddressableLED(0);
         _ledBuffer = new AddressableLEDBuffer(Constants.LED.NUM_LEDS);
+        _ledSim    = new AddressableLEDSim(_led);
+
         _led.setLength(Constants.LED.NUM_LEDS);
         _led.setData(_ledBuffer);
         _led.start();
+        _ledSim.setRunning(true);
     }
 
     @Override

@@ -5,11 +5,14 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.ElevatorCommands;
 import frc.robot.commands.FunnelCommands;
+import frc.robot.commands.LEDCommands;
 import frc.robot.commands.ManipulatorCommands;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
@@ -25,11 +28,17 @@ import frc.robot.subsystems.funnel.Funnel;
 import frc.robot.subsystems.funnel.FunnelIO;
 import frc.robot.subsystems.funnel.FunnelIOHardware;
 import frc.robot.subsystems.funnel.FunnelIOSim;
+import frc.robot.subsystems.leds.LED;
+import frc.robot.subsystems.leds.LEDIO;
+import frc.robot.subsystems.leds.LEDIOHardware;
+import frc.robot.subsystems.leds.LEDIOSim;
 import frc.robot.subsystems.elevator.Elevator.ElevatorHeight;
 import frc.robot.subsystems.manipulator.Manipulator;
 import frc.robot.subsystems.manipulator.ManipulatorIO;
 import frc.robot.subsystems.manipulator.ManipulatorIOHardware;
 import frc.robot.subsystems.manipulator.ManipulatorIOSim;
+
+import java.util.Set;
 
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -40,6 +49,7 @@ public class RobotContainer
     private final Elevator    _elevator;
     private final Manipulator _manipulator;
     private final Funnel      _funnel;
+    private final LED         _led;
 
     // Controller
     private final CommandXboxController _controller = new CommandXboxController(0);
@@ -60,6 +70,7 @@ public class RobotContainer
                 _elevator = new Elevator(new ElevatorIOHardware());
                 _manipulator = new Manipulator(new ManipulatorIOHardware());
                 _funnel = new Funnel(new FunnelIOHardware());
+                _led = new LED(new LEDIOHardware());
                 break;
 
             case SIM:
@@ -68,6 +79,7 @@ public class RobotContainer
                 _elevator = new Elevator(new ElevatorIOSim());
                 _manipulator = new Manipulator(new ManipulatorIOSim(() -> _controller.leftTrigger().getAsBoolean()));
                 _funnel = new Funnel(new FunnelIOSim());
+                _led = new LED(new LEDIOSim());
                 break;
 
             default:
@@ -76,6 +88,7 @@ public class RobotContainer
                 _elevator = new Elevator(new ElevatorIO() {});
                 _manipulator = new Manipulator(new ManipulatorIO() {});
                 _funnel = new Funnel(new FunnelIO() {});
+                _led = new LED(new LEDIO() {});
                 break;
         }
 
@@ -96,29 +109,43 @@ public class RobotContainer
 
     private void configureButtonBindings()
     {
+        Trigger _hasCoral           = new Trigger(() -> _manipulator.hasCoral());
+        Trigger _manipulatorRunning = new Trigger(() -> _manipulator.isRunning());
+
         // Default command, normal field-relative drive
         _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_controller.getLeftY(), () -> -_controller.getLeftX(), () -> -_controller.getRightX()));
 
         // Lock to 0° when A button is held
         _controller.a().whileTrue(DriveCommands.joystickDriveAtAngle(_drive, () -> -_controller.getLeftY(), () -> -_controller.getLeftX(), () -> new Rotation2d()));
 
-        // Switch to X pattern when X button is pressed
-        _controller.x().onTrue(Commands.runOnce(_drive::stopWithX, _drive));
-
         // Reset gyro to 0° when B button is pressed
         _controller.b().onTrue(Commands.runOnce(() -> _drive.setPose(new Pose2d(_drive.getPose().getTranslation(), new Rotation2d())), _drive).ignoringDisable(true));
 
-        _controller.y().onTrue(FunnelCommands.drop(_funnel));
+        _controller.y().onTrue(
+                FunnelCommands.drop(_funnel).alongWith(ElevatorCommands.setHeight(_elevator, ElevatorHeight.Hang)).alongWith(LEDCommands.flashColor(_led, Constants.LED.RED)).until(() -> _elevator.atSetpoint())
+                        .andThen(LEDCommands.setDefaultColor(_led, Constants.LED.YELLOW))
+        );
         _controller.rightTrigger().whileTrue(ElevatorCommands.setVolts(_elevator, () -> -_controller.getRightY() * Constants.General.MOTOR_VOLTAGE));
 
-        _controller.povUp().onTrue(ElevatorCommands.setHeight(_elevator, ElevatorHeight.Level1));
-        _controller.povRight().onTrue(ElevatorCommands.setHeight(_elevator, ElevatorHeight.Level2));
-        _controller.povDown().onTrue(ElevatorCommands.setHeight(_elevator, ElevatorHeight.Level3));
-        _controller.povLeft().onTrue(ElevatorCommands.setHeight(_elevator, ElevatorHeight.Level4));
+        _controller.back()
+                .onTrue(ElevatorCommands.setHeight(_elevator, ElevatorHeight.Stow).alongWith(new DeferredCommand(() -> LEDCommands.setDefaultColor(_led, (_hasCoral.getAsBoolean() ? Constants.LED.GREEN : Constants.LED.RED)), Set.of())));
+        _controller.povUp()
+                .onTrue(ElevatorCommands.setHeight(_elevator, ElevatorHeight.Level1).alongWith(new DeferredCommand(() -> LEDCommands.setDefaultColor(_led, (_hasCoral.getAsBoolean() ? Constants.LED.PURPLE : Constants.LED.RED)), Set.of())));
+        _controller.povRight()
+                .onTrue(ElevatorCommands.setHeight(_elevator, ElevatorHeight.Level2).alongWith(new DeferredCommand(() -> LEDCommands.setDefaultColor(_led, (_hasCoral.getAsBoolean() ? Constants.LED.PINK : Constants.LED.RED)), Set.of())));
+        _controller.povDown()
+                .onTrue(ElevatorCommands.setHeight(_elevator, ElevatorHeight.Level3).alongWith(new DeferredCommand(() -> LEDCommands.setDefaultColor(_led, (_hasCoral.getAsBoolean() ? Constants.LED.BLUE : Constants.LED.RED)), Set.of())));
+        _controller.povLeft()
+                .onTrue(ElevatorCommands.setHeight(_elevator, ElevatorHeight.Level4).alongWith(new DeferredCommand(() -> LEDCommands.setDefaultColor(_led, (_hasCoral.getAsBoolean() ? Constants.LED.ORANGE : Constants.LED.RED)), Set.of())));
 
         _controller.leftTrigger().onTrue(ManipulatorCommands.intake(_manipulator));
         _controller.start().onTrue(ManipulatorCommands.output(_manipulator));
         _controller.rightStick().onTrue(ManipulatorCommands.stop(_manipulator));
+
+        _hasCoral.onTrue(LEDCommands.setDefaultColor(_led, Constants.LED.GREEN));
+        _hasCoral.onFalse(LEDCommands.setDefaultColor(_led, Constants.LED.RED));
+
+        _manipulatorRunning.whileTrue(LEDCommands.flashColor(_led, Constants.LED.YELLOW));
     }
 
     /**
