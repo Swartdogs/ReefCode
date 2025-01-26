@@ -11,6 +11,9 @@ import frc.robot.commands.DriveCommands;
 import frc.robot.commands.ElevatorCommands;
 import frc.robot.commands.FunnelCommands;
 import frc.robot.commands.ManipulatorCommands;
+import frc.robot.subsystems.dashboard.Dashboard;
+import frc.robot.subsystems.dashboard.DashboardIO;
+import frc.robot.subsystems.dashboard.DashboardIONetwork;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIONavX;
@@ -40,6 +43,7 @@ public class RobotContainer
     private final Elevator    _elevator;
     private final Manipulator _manipulator;
     private final Funnel      _funnel;
+    private final Dashboard   _dashboard;
 
     // Controller
     private final CommandXboxController _controller = new CommandXboxController(0);
@@ -60,6 +64,7 @@ public class RobotContainer
                 _elevator = new Elevator(new ElevatorIOHardware());
                 _manipulator = new Manipulator(new ManipulatorIOHardware());
                 _funnel = new Funnel(new FunnelIOHardware());
+                _dashboard = new Dashboard(new DashboardIONetwork());
                 break;
 
             case SIM:
@@ -68,6 +73,7 @@ public class RobotContainer
                 _elevator = new Elevator(new ElevatorIOSim());
                 _manipulator = new Manipulator(new ManipulatorIOSim(() -> _controller.leftTrigger().getAsBoolean()));
                 _funnel = new Funnel(new FunnelIOSim());
+                _dashboard = new Dashboard(new DashboardIONetwork());
                 break;
 
             default:
@@ -76,6 +82,7 @@ public class RobotContainer
                 _elevator = new Elevator(new ElevatorIO() {});
                 _manipulator = new Manipulator(new ManipulatorIO() {});
                 _funnel = new Funnel(new FunnelIO() {});
+                _dashboard = new Dashboard(new DashboardIO() {});
                 break;
         }
 
@@ -92,6 +99,7 @@ public class RobotContainer
 
         // Configure the button bindings
         configureButtonBindings();
+        _dashboard.setRobotPosition(new Pose2d(1, 1, new Rotation2d()));
     }
 
     private void configureButtonBindings()
