@@ -11,6 +11,7 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.Timer;
 
 public final class Constants
 {
@@ -58,6 +59,12 @@ public final class Constants
         public static final int FUNNEL_SOLENOID   = 13;
     }
 
+    public static class Dashboard 
+    {
+        public static final double LOW_BATTERY_VOLTAGE = 11.5;
+        public static final double CAN_ERROR_TIME_THRESHOLD = 2.0; //HI COLLIN!,TIME TO WAIT BEFORE REMOVING CAN ERROR.
+
+    }
     public static class Drive
     {
         public static final double          TRACK_WIDTH                   = Units.inchesToMeters(26.5);

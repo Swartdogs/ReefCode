@@ -1,8 +1,15 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.Alert;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Threads;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.dashboard.Dashboard;
+
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -16,8 +23,24 @@ public class Robot extends LoggedRobot
     private final RobotContainer _robotContainer;
     private Command              _autonomousCommand;
 
+    private final Timer _canErrorTimer;
+    private final Timer _canErrorTimerInitial;
+    private final Alert _canError;
+    private final Alert _funnelDrop;
+    private final Alert _sensorDisconnect;
+    private final Alert _batteryDrop;
+    private final Alert _motorBrownout;
+
     public Robot()
     {
+        _canErrorTimer = new Timer();
+        _canErrorTimerInitial = new Timer();
+        _canError = new Alert("CAN Error Detected", AlertType.kError);
+        _funnelDrop = new Alert("The Funnel Has Been Dropped", AlertType.kInfo);
+        _sensorDisconnect = new Alert("Sensor Has Been Disconnected", AlertType.kError);
+        _batteryDrop = new Alert("Battery Has Dropped Below 11.5 Volts", AlertType.kWarning);
+        _motorBrownout = new Alert("Motor Brownout Detected", AlertType.kError);
+
         // Record metadata
         Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
         Logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
@@ -72,22 +95,48 @@ public class Robot extends LoggedRobot
         _robotContainer = new RobotContainer();
     }
 
+    @Override
+    public void robotInit()
+    {
+        _canErrorTimer.reset();
+        _canErrorTimer.start();
+        _canErrorTimerInitial.reset();
+        _canErrorTimerInitial.start();
+    }
+
     /** This function is called periodically during all modes. */
     @Override
     public void robotPeriodic()
     {
-        // Switch thread to high priority to improve loop timing
+       
         Threads.setCurrentThreadPriority(true, 99);
 
-        // Runs the Scheduler. This is responsible for polling buttons, adding
-        // newly-scheduled commands, running already-scheduled commands, removing
-        // finished or interrupted commands, and running subsystem periodic() methods.
-        // This must be called from the robot's periodic block in order for anything in
-        // the Command-based framework to work.
+        
         CommandScheduler.getInstance().run();
 
-        // Return to normal thread priority
+    
         Threads.setCurrentThreadPriority(false, 10);
+
+        var canStatus = RobotController.getCANStatus();
+
+        if(canStatus.receiveErrorCount>0 || canStatus.transmitErrorCount>0)
+        {
+            _canErrorTimer.reset();
+        }
+
+        _canError.set(!_canErrorTimer.hasElapsed(Constants.Dashboard.CAN_ERROR_TIME_THRESHOLD)&& _canErrorTimerInitial.hasElapsed(Constants.Dashboard.CAN_ERROR_TIME_THRESHOLD)); //less than 2 seconds since the error has been detected but more than 2 secons since robot was started
+
+        if (RobotController.getBatteryVoltage() < Constants.Dashboard.LOW_BATTERY_VOLTAGE)
+        {
+            _batteryDrop.set(true);
+        }
+
+        _funnelDrop.set(_robotContainer.getFunnelIsDropped());
+       
+        if(RobotController.isBrownedOut())
+        {
+            _motorBrownout.set(true);
+        }
     }
 
     /**

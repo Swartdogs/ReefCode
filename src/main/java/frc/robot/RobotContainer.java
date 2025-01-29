@@ -129,6 +129,10 @@ public class RobotContainer
         _controller.rightStick().onTrue(ManipulatorCommands.stop(_manipulator));
     }
 
+    public boolean getFunnelIsDropped()
+    {
+        return _funnel.isDropped();
+    }
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.
      *
