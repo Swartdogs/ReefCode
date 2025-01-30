@@ -1,6 +1,11 @@
 package frc.robot.subsystems.dashboard;
 
+import java.util.List;
+
 import org.littletonrobotics.junction.AutoLog;
+
+import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -37,6 +42,16 @@ public interface DashboardIO
     }
 
     public default void setRobotPosition(Pose2d pose)
+    {
+
+    }
+
+    public default void setPath(PathPlannerPath path)
+    {
+
+    }
+
+    public default void setAuto(List<PathPlannerPath> auto)
     {
 
     }

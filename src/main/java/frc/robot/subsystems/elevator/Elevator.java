@@ -34,8 +34,8 @@ public class Elevator extends SubsystemBase
     private final ElevatorIOInputsAutoLogged _inputs            = new ElevatorIOInputsAutoLogged();
     private final PIDController              _extensionPID;
     private Double                           _extensionSetPoint = null;
-    private final Alert _potAlert;
-    private double _lastPosition = 0.0; //Last 20 milisecond elevator position 
+    private final Alert                      _potAlert;
+    private double                           _lastPosition      = 0.0; // Last 20 milisecond elevator position
 
     public Elevator(ElevatorIO io)
     {
@@ -59,7 +59,7 @@ public class Elevator extends SubsystemBase
         }
         Logger.recordOutput("Has Extension Setpoint", _extensionSetPoint != null);
 
-        if(_inputs.leaderVolts != 0 && _lastPosition == _inputs.extensionPosition) //if voltage is not 0 and last position does not change then error
+        if (_inputs.leaderVolts != 0 && _lastPosition == _inputs.extensionPosition) // if voltage is not 0 and last position does not change then error
         {
             _potAlert.set(true);
         }

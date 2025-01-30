@@ -19,17 +19,17 @@ public class Module
     private final Alert                    _driveDisconnectedAlert;
     private final Alert                    _turnDisconnectedAlert;
     private SwerveModulePosition[]         _odometryPositions = new SwerveModulePosition[] {};
-    private final Alert _swervePotError;
-    private Rotation2d _lastTurnPosition;
+    private final Alert                    _swervePotError;
+    private Rotation2d                     _lastTurnPosition;
 
     public Module(ModuleIO io, int index)
     {
         _io                     = io;
         _index                  = index;
-        _driveDisconnectedAlert = new Alert("Disconnected drive motor on module " + Integer.toString(_index) + ".", AlertType.kError);
-        _turnDisconnectedAlert  = new Alert("Disconnected turn motor on module " + Integer.toString(_index) + ".", AlertType.kError);
-        _swervePotError = new Alert("Swerve Potentiometer Error Detected", AlertType.kError);
-        _lastTurnPosition = new Rotation2d();
+        _driveDisconnectedAlert = new Alert("Disconnected Drive Motor on Module " + Integer.toString(_index) + ".", AlertType.kError);
+        _turnDisconnectedAlert  = new Alert("Disconnected Turn Motor on Module " + Integer.toString(_index) + ".", AlertType.kError);
+        _swervePotError         = new Alert("Swerve Potentiometer Error Detected on Module" + Integer.toString(_index) + ".", AlertType.kError);
+        _lastTurnPosition       = new Rotation2d();
     }
 
     public void periodic()
@@ -48,7 +48,7 @@ public class Module
             _odometryPositions[i] = new SwerveModulePosition(positionMeters, angle);
         }
 
-        if(_inputs.turnAppliedVolts != 0 && _inputs.turnAbsolutePosition == _lastTurnPosition)
+        if (_inputs.turnAppliedVolts != 0 && _inputs.turnAbsolutePosition == _lastTurnPosition)
         {
             _swervePotError.set(true);
         }

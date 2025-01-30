@@ -10,13 +10,12 @@ public class Manipulator extends SubsystemBase
 {
     private final ManipulatorIO                 _io;
     private final ManipulatorIOInputsAutoLogged _inputs = new ManipulatorIOInputsAutoLogged();
-
-    private final Alert _lightSensorAlert;
+    private final Alert                         _lightSensorAlert;
 
     public Manipulator(ManipulatorIO io)
     {
-        _io = io;
-        _lightSensorAlert = new Alert("Light Sensor Error", AlertType.kError);
+        _io               = io;
+        _lightSensorAlert = new Alert("Light Sensor Error Detected", AlertType.kError);
     }
 
     @Override

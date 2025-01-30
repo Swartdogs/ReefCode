@@ -1,8 +1,12 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.PathPlannerPath;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -49,7 +53,7 @@ public class RobotContainer
     private final CommandXboxController _controller = new CommandXboxController(0);
 
     // Dashboard inputs
-    private final LoggedDashboardChooser<Command> _autoChooser;
+    private final LoggedDashboardChooser<String> _autoChooser;
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -87,19 +91,35 @@ public class RobotContainer
         }
 
         // Set up auto routines
-        _autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+        _autoChooser = new LoggedDashboardChooser<>("Auto Choices", new SendableChooser<>());
 
         // Set up SysId routines
-        _autoChooser.addOption("Drive Wheel Radius Characterization", DriveCommands.wheelRadiusCharacterization(_drive));
-        _autoChooser.addOption("Drive Simple FF Characterization", DriveCommands.feedforwardCharacterization(_drive));
-        _autoChooser.addOption("Drive SysId (Quasistatic Forward)", _drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-        _autoChooser.addOption("Drive SysId (Quasistatic Reverse)", _drive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-        _autoChooser.addOption("Drive SysId (Dynamic Forward)", _drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
-        _autoChooser.addOption("Drive SysId (Dynamic Reverse)", _drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+        /*
+         * _autoChooser.addOption("Drive Wheel Radius Characterization",
+         * DriveCommands.wheelRadiusCharacterization(_drive));
+         * _autoChooser.addOption("Drive Simple FF Characterization",
+         * DriveCommands.feedforwardCharacterization(_drive));
+         * _autoChooser.addOption("Drive SysId (Quasistatic Forward)",
+         * _drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+         * _autoChooser.addOption("Drive SysId (Quasistatic Reverse)",
+         * _drive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+         * _autoChooser.addOption("Drive SysId (Dynamic Forward)",
+         * _drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
+         * _autoChooser.addOption("Drive SysId (Dynamic Reverse)",
+         * _drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+         */
+        try
+        {
+            _autoChooser.addDefaultOption("1CoralAuto", "1CoralAuto");
+            _autoChooser.addOption("2CoralAuto", "2CoralAuto");
+        }
+        catch (Exception e)
+        {
+            // TODO: handle exception
+        }
 
         // Configure the button bindings
         configureButtonBindings();
-        _dashboard.setRobotPosition(new Pose2d(1, 1, new Rotation2d()));
     }
 
     private void configureButtonBindings()
@@ -133,6 +153,14 @@ public class RobotContainer
     {
         return _funnel.isDropped();
     }
+
+    public void periodic()
+    {
+        var cedricAuto = _dashboard.getPaths(_autoChooser.get());
+        _dashboard.setAuto(cedricAuto);
+        _dashboard.setRobotPosition(cedricAuto.get(0).getStartingHolonomicPose().get());
+    }
+
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.
      *
@@ -140,6 +168,6 @@ public class RobotContainer
      */
     public Command getAutonomousCommand()
     {
-        return _autoChooser.get();
+        return null;
     }
 }
