@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.littletonrobotics.junction.AutoLog;
 
-import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -23,6 +22,7 @@ public interface DashboardIO
         public double     elevatorL4Height         = Constants.Elevator.L4_HEIGHT;
         public double     elevatorMinHeight        = 0;
         public double     elevatorStowHeight       = Constants.Elevator.STOW_HEIGHT;
+        public double     elevatorHangHeight       = Constants.Elevator.HANG_HEIGHT;
         public Rotation2d flOffset                 = Constants.Drive.FL_ZERO_ROTATION;
         public Rotation2d frOffset                 = Constants.Drive.FR_ZERO_ROTATION;
         public Rotation2d blOffset                 = Constants.Drive.BL_ZERO_ROTATION;
@@ -62,6 +62,36 @@ public interface DashboardIO
     }
 
     public default void setHasGamePiece(boolean hasGamePiece)
+    {
+
+    }
+
+    public default void setElevatorHeight(double elevatorHeight)
+    {
+
+    }
+
+    public default void setFLSwerveAngle(Rotation2d flSwerveAngle)
+    {
+
+    }
+
+    public default void setFRSwerveAngle(Rotation2d frSwerveAngle)
+    {
+
+    }
+
+    public default void setBLSwerveAngle(Rotation2d blSwerveAngle)
+    {
+
+    }
+
+    public default void setBRSwerveAngle(Rotation2d brSwerveAngle)
+    {
+
+    }
+
+    public default void setManipulatorSpeed(double manipulatorSpeed)
     {
 
     }

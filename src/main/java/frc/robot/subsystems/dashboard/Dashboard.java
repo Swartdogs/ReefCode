@@ -1,10 +1,7 @@
 package frc.robot.subsystems.dashboard;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.print.attribute.HashDocAttributeSet;
 
 import org.littletonrobotics.junction.Logger;
 
