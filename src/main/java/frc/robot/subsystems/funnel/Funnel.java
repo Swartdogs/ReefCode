@@ -26,7 +26,7 @@ public class Funnel extends SubsystemBase
     public void setVolts(double volts)
     {
         _io.setVolts(volts);
-        
+
         if (volts != 0)
         {
             _isDropped = true;

@@ -11,6 +11,7 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.util.Color;
 
 public final class Constants
 {
@@ -117,6 +118,7 @@ public final class Constants
         public static final double  L2_HEIGHT                 = 31.875 - 12.7625; // 19.11
         public static final double  L3_HEIGHT                 = 47.625 - 12.7625; // 34.86
         public static final double  L4_HEIGHT                 = 72.0 - 12.7625; // 59.29
+        public static final double  HANG_HEIGHT               = 31.875 - 12.7625; // 19.11
         public static final double  EXTENSION_SCALE           = 1.757 * Math.PI;
         public static final double  EXTENSION_MOTOR_REDUCTION = 5.0;
         public static final DCMotor ELEVATOR_GEARBOX          = DCMotor.getNeoVortex(2);
@@ -129,6 +131,19 @@ public final class Constants
     {
         public static final double FUNNEL_VOLTS   = 6.0;
         public static final double DROP_TIME_SECS = 2.0;
+    }
+
+    public static class LED
+    {
+        public static final double FLASH_TIME_SECS = 1.0;
+        public static final int    NUM_LEDS        = 14;
+        public static final Color  GREEN           = new Color(0, 115, 0);
+        public static final Color  YELLOW          = new Color(255, 115, 0);
+        public static final Color  RED             = new Color(255, 0, 0);
+        public static final Color  ORANGE          = new Color(255, 50, 0);
+        public static final Color  BLUE            = new Color(0, 0, 255);
+        public static final Color  PINK            = new Color(255, 46, 204);
+        public static final Color  PURPLE          = new Color(127, 0, 255);
     }
 
     public static class General
