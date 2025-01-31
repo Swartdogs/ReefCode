@@ -34,4 +34,9 @@ public class Manipulator extends SubsystemBase
     {
         return _inputs.hasCoral;
     }
+
+    public boolean isRunning()
+    {
+        return _inputs.leftAppliedVolts > 0;
+    }
 }
