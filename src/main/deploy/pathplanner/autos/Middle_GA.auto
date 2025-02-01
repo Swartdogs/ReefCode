@@ -11,9 +11,21 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Output"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "GToRightCS"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake"
           }
         },
         {
@@ -23,15 +35,33 @@
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "AToLeftCS"
+            "name": "Output"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "LeftCSToB"
+            "pathName": "AToRightCS"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RightCSToB"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Output"
           }
         }
       ]
