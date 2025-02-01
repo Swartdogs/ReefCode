@@ -3,7 +3,38 @@
   "command": {
     "type": "sequential",
     "data": {
-      "commands": []
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "MiddleToG"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "GToRightCS"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RightCSToB"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BToLeftCS"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "LeftCSToA"
+          }
+        }
+      ]
     }
   },
   "resetOdom": true,
