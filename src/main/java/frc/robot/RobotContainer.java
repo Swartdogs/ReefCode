@@ -1,6 +1,8 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -102,6 +104,15 @@ public class RobotContainer
         _autoChooser.addOption("Drive SysId (Quasistatic Reverse)", _drive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
         _autoChooser.addOption("Drive SysId (Dynamic Forward)", _drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
         _autoChooser.addOption("Drive SysId (Dynamic Reverse)", _drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+
+        NamedCommands.registerCommand("ExtendToL1", ElevatorCommands.setHeight(_elevator, Constants.Elevator.L1_HEIGHT));
+        NamedCommands.registerCommand("ExtendToL2", ElevatorCommands.setHeight(_elevator, Constants.Elevator.L2_HEIGHT));
+        NamedCommands.registerCommand("ExtendToL3", ElevatorCommands.setHeight(_elevator, Constants.Elevator.L3_HEIGHT));
+        NamedCommands.registerCommand("ExtendToL4", ElevatorCommands.setHeight(_elevator, Constants.Elevator.L4_HEIGHT));
+        NamedCommands.registerCommand("Stow", ElevatorCommands.setHeight(_elevator, Constants.Elevator.STOW_HEIGHT));
+
+        NamedCommands.registerCommand("Intake", ManipulatorCommands.intake(_manipulator));
+        NamedCommands.registerCommand("Output", ManipulatorCommands.output(_manipulator));
 
         // Configure the button bindings
         configureButtonBindings();

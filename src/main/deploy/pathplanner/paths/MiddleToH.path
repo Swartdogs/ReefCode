@@ -3,41 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.493428819444444,
-        "y": 4.027096354166666
+        "x": 7.553422273781902,
+        "y": 4.014820185614849
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.24635787447009,
-        "y": 3.9889394655424635
+        "x": 7.306351328807549,
+        "y": 3.9766632969906466
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "MiddleStart"
     },
     {
       "anchor": {
-        "x": 6.167950665509259,
-        "y": 4.027096354166666
+        "x": 6.107888631090487,
+        "y": 4.177697215777262
       },
       "prevControl": {
-        "x": 6.6409569031144775,
-        "y": 4.00770530664246
-      },
-      "nextControl": {
-        "x": 5.918160478235967,
-        "y": 4.0373365857057255
-      },
-      "isLocked": false,
-      "linkedName": "H"
-    },
-    {
-      "anchor": {
-        "x": 6.167950665509259,
-        "y": 4.027096354166666
-      },
-      "prevControl": {
-        "x": 5.918161094001018,
-        "y": 4.037351595057528
+        "x": 5.858099059582247,
+        "y": 4.187952456668124
       },
       "nextControl": null,
       "isLocked": false,
@@ -58,7 +42,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 177.5190138365374
+    "rotation": 180.0
   },
   "reversed": false,
   "folder": "MiddleStartingSide",
