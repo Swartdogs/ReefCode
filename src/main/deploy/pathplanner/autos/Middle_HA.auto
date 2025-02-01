@@ -3,7 +3,68 @@
   "command": {
     "type": "sequential",
     "data": {
-      "commands": []
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "MiddleToH"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Output"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "HToLeftCS"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "LeftCSToA"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Output"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "AToLeftCS"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "LeftCSToB"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Output"
+          }
+        }
+      ]
     }
   },
   "resetOdom": true,
