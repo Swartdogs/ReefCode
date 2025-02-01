@@ -5,6 +5,7 @@ import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.DeferredCommand;
@@ -59,6 +60,8 @@ public class RobotContainer
     // Dashboard inputs
     private final LoggedDashboardChooser<Command> _autoChooser;
 
+    private final LoggedDashboardChooser<Integer> _autoDelayChooser;
+
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
@@ -112,7 +115,17 @@ public class RobotContainer
         NamedCommands.registerCommand("Stow", ElevatorCommands.setHeight(_elevator, Constants.Elevator.STOW_HEIGHT));
 
         NamedCommands.registerCommand("Intake", ManipulatorCommands.intake(_manipulator));
-        NamedCommands.registerCommand("Output", ManipulatorCommands.output(_manipulator));
+        NamedCommands.registerCommand("Output", ManipulatorCommands.output(_manipulator)); 
+        NamedCommands.registerCommand("Delay", Commands.defer(() -> Commands.waitSeconds(autoDelayTime()), Set.of()));
+
+        var delayChooser = new SendableChooser<Integer>();
+        delayChooser.setDefaultOption("0", 0);
+        delayChooser.addOption("1", 1);
+        delayChooser.addOption("2", 2);
+        delayChooser.addOption("3", 3);
+        delayChooser.addOption("4", 4);
+        delayChooser.addOption("5", 5);
+        _autoDelayChooser = new LoggedDashboardChooser<>("Auto Delay", delayChooser);
 
         // Configure the button bindings
         configureButtonBindings();
@@ -167,5 +180,10 @@ public class RobotContainer
     public Command getAutonomousCommand()
     {
         return _autoChooser.get();
+    }
+
+    public Integer autoDelayTime()
+    {
+        return _autoDelayChooser.get();
     }
 }

@@ -5,6 +5,12 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "Delay"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "RightToF"
