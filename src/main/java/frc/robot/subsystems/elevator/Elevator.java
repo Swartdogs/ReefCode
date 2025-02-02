@@ -4,6 +4,8 @@ import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.Alert;
+import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -32,6 +34,8 @@ public class Elevator extends SubsystemBase
     private final ElevatorIOInputsAutoLogged _inputs            = new ElevatorIOInputsAutoLogged();
     private final PIDController              _extensionPID;
     private Double                           _extensionSetPoint = null;
+    private final Alert                      _potAlert;
+    private double                           _lastPosition      = 0.0; // Last 20 milisecond elevator position
 
     public Elevator(ElevatorIO io)
     {
@@ -39,6 +43,8 @@ public class Elevator extends SubsystemBase
 
         _extensionPID = new PIDController(EXTENSION_KP, EXTENSION_KI, EXTENSION_KD);
         _extensionPID.setTolerance(EXTENSION_TOLERANCE);
+
+        _potAlert = new Alert("Potentiometer has been disconnected", AlertType.kError);
     }
 
     public void periodic()
@@ -52,6 +58,13 @@ public class Elevator extends SubsystemBase
 
         }
         Logger.recordOutput("Has Extension Setpoint", _extensionSetPoint != null);
+
+        if (_inputs.leaderVolts != 0 && _lastPosition == _inputs.extensionPosition) // if voltage is not 0 and last position does not change then error
+        {
+            _potAlert.set(true);
+        }
+
+        _lastPosition = _inputs.extensionPosition;
     }
 
     public void setExtension(double height) // height is measured in inches

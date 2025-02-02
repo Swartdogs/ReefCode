@@ -2,6 +2,8 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -17,6 +19,9 @@ import frc.robot.commands.ElevatorCommands;
 import frc.robot.commands.FunnelCommands;
 import frc.robot.commands.LEDCommands;
 import frc.robot.commands.ManipulatorCommands;
+import frc.robot.subsystems.dashboard.Dashboard;
+import frc.robot.subsystems.dashboard.DashboardIO;
+import frc.robot.subsystems.dashboard.DashboardIONetwork;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIONavX;
@@ -52,13 +57,14 @@ public class RobotContainer
     private final Elevator    _elevator;
     private final Manipulator _manipulator;
     private final Funnel      _funnel;
+    private final Dashboard   _dashboard;
     private final LED         _led;
 
     // Controller
     private final CommandXboxController _controller = new CommandXboxController(0);
 
     // Dashboard inputs
-    private final LoggedDashboardChooser<Command> _autoChooser;
+    private final LoggedDashboardChooser<String> _autoChooser;
 
     private final LoggedDashboardChooser<Integer> _autoDelayChooser;
 
@@ -75,6 +81,7 @@ public class RobotContainer
                 _elevator = new Elevator(new ElevatorIOHardware());
                 _manipulator = new Manipulator(new ManipulatorIOHardware());
                 _funnel = new Funnel(new FunnelIOHardware());
+                _dashboard = new Dashboard(new DashboardIONetwork());
                 _led = new LED(new LEDIOHardware());
                 break;
 
@@ -84,6 +91,7 @@ public class RobotContainer
                 _elevator = new Elevator(new ElevatorIOSim());
                 _manipulator = new Manipulator(new ManipulatorIOSim(() -> _controller.leftTrigger().getAsBoolean()));
                 _funnel = new Funnel(new FunnelIOSim());
+                _dashboard = new Dashboard(new DashboardIONetwork());
                 _led = new LED(new LEDIOSim());
                 break;
 
@@ -93,20 +101,38 @@ public class RobotContainer
                 _elevator = new Elevator(new ElevatorIO() {});
                 _manipulator = new Manipulator(new ManipulatorIO() {});
                 _funnel = new Funnel(new FunnelIO() {});
+                _dashboard = new Dashboard(new DashboardIO() {});
                 _led = new LED(new LEDIO() {});
                 break;
         }
 
         // Set up auto routines
-        _autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+        _autoChooser = new LoggedDashboardChooser<>("Auto Choices", new SendableChooser<>());
 
         // Set up SysId routines
-        _autoChooser.addOption("Drive Wheel Radius Characterization", DriveCommands.wheelRadiusCharacterization(_drive));
-        _autoChooser.addOption("Drive Simple FF Characterization", DriveCommands.feedforwardCharacterization(_drive));
-        _autoChooser.addOption("Drive SysId (Quasistatic Forward)", _drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-        _autoChooser.addOption("Drive SysId (Quasistatic Reverse)", _drive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-        _autoChooser.addOption("Drive SysId (Dynamic Forward)", _drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
-        _autoChooser.addOption("Drive SysId (Dynamic Reverse)", _drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+        /*
+         * _autoChooser.addOption("Drive Wheel Radius Characterization",
+         * DriveCommands.wheelRadiusCharacterization(_drive));
+         * _autoChooser.addOption("Drive Simple FF Characterization",
+         * DriveCommands.feedforwardCharacterization(_drive));
+         * _autoChooser.addOption("Drive SysId (Quasistatic Forward)",
+         * _drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+         * _autoChooser.addOption("Drive SysId (Quasistatic Reverse)",
+         * _drive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+         * _autoChooser.addOption("Drive SysId (Dynamic Forward)",
+         * _drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
+         * _autoChooser.addOption("Drive SysId (Dynamic Reverse)",
+         * _drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+         */
+        try
+        {
+            _autoChooser.addDefaultOption("1CoralAuto", "1CoralAuto");
+            _autoChooser.addOption("2CoralAuto", "2CoralAuto");
+        }
+        catch (Exception e)
+        {
+            // TODO: handle exception
+        }
 
         NamedCommands.registerCommand("ExtendToL1", ElevatorCommands.setHeight(_elevator, Constants.Elevator.L1_HEIGHT));
         NamedCommands.registerCommand("ExtendToL2", ElevatorCommands.setHeight(_elevator, Constants.Elevator.L2_HEIGHT));
@@ -172,6 +198,18 @@ public class RobotContainer
         _manipulatorRunning.whileTrue(LEDCommands.flashColor(_led, Constants.LED.YELLOW));
     }
 
+    public boolean getFunnelIsDropped()
+    {
+        return _funnel.isDropped();
+    }
+
+    public void periodic()
+    {
+        var cedricAuto = _dashboard.getPaths(_autoChooser.get());
+        _dashboard.setAuto(cedricAuto);
+        _dashboard.setRobotPosition(cedricAuto.get(0).getStartingHolonomicPose().get());
+    }
+
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.
      *
@@ -179,7 +217,7 @@ public class RobotContainer
      */
     public Command getAutonomousCommand()
     {
-        return _autoChooser.get();
+        return null;
     }
 
     public Integer autoDelayTime()

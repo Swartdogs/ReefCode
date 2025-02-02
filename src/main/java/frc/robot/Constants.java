@@ -59,6 +59,18 @@ public final class Constants
         public static final int FUNNEL_SOLENOID   = 13;
     }
 
+    // eden is the fun police
+    public static class Dashboard
+    {
+        public static final double LOW_BATTERY_VOLTAGE      = 11.5;
+        public static final double CAN_ERROR_TIME_THRESHOLD = 2.0; // HI COLLIN!TIME TO WAIT BEFORE REMOVING CAN ERROR.
+    }
+
+    public static class DIO
+    {
+        public static final int MANIPULATOR_LIGHT_SENSOR = 1;
+    }
+
     public static class Drive
     {
         public static final double          TRACK_WIDTH                   = Units.inchesToMeters(26.5);
@@ -161,10 +173,5 @@ public final class Constants
         public static final double  MOTOR_REDUCTION   = 5.0;
         public static final double  INTAKE_VOLTS      = 12.0;
         public static final double  OUTPUT_VOLTS      = 12.0;
-    }
-
-    public static class DIO
-    {
-        public static final int MANIPULATOR_LIGHT_SENSOR = 1;
     }
 }
