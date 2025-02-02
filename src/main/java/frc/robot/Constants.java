@@ -14,6 +14,7 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.util.Color;
 
 public final class Constants
 {
@@ -37,22 +38,28 @@ public final class Constants
 
     public static class AIO
     {
-        public static final int FL_ENCODER = 0;
-        public static final int FR_ENCODER = 1;
-        public static final int BL_ENCODER = 2;
-        public static final int BR_ENCODER = 3;
+        public static final int FL_ENCODER    = 0;
+        public static final int FR_ENCODER    = 1;
+        public static final int BL_ENCODER    = 2;
+        public static final int BR_ENCODER    = 3;
+        public static final int EXTENSION_POT = 4;
     }
 
     public static class CAN
     {
-        public static final int FL_DRIVE = 1;
-        public static final int FR_DRIVE = 3;
-        public static final int BL_DRIVE = 5;
-        public static final int BR_DRIVE = 7;
-        public static final int FL_TURN  = 2;
-        public static final int FR_TURN  = 4;
-        public static final int BL_TURN  = 6;
-        public static final int BR_TURN  = 8;
+        public static final int FL_DRIVE          = 1;
+        public static final int FR_DRIVE          = 3;
+        public static final int BL_DRIVE          = 5;
+        public static final int BR_DRIVE          = 7;
+        public static final int FL_TURN           = 2;
+        public static final int FR_TURN           = 4;
+        public static final int BL_TURN           = 6;
+        public static final int BR_TURN           = 8;
+        public static final int LEAD_ELEVATOR     = 9;
+        public static final int FOLLOWER_ELEVATOR = 10;
+        public static final int MANIPULATOR_LEFT  = 11;
+        public static final int MANIPULATOR_RIGHT = 12;
+        public static final int FUNNEL_SOLENOID   = 13;
     }
 
     public static class Drive
@@ -117,10 +124,65 @@ public final class Constants
         public static final double      VISION_DISTANCE_SCALE      = 0.2; // How much to increase uncertainty per meter
     }
 
+    public static class Elevator
+    {
+        public static final double  EXTENSION_KP              = 0.4;
+        public static final double  EXTENSION_KI              = 0.7;
+        public static final double  EXTENSION_KD              = 0.15; // anything above 0.18 causes "shake"
+        public static final double  MAX_EXTENSION             = 68.0;
+        public static final double  EXTENSION_TOLERANCE       = 0.5;
+        public static final double  STOW_HEIGHT               = 0.0;
+        public static final double  L1_HEIGHT                 = 18.0 - 12.7625; // 12.7625 account for bottom of baseplate to bottom of carrige
+        public static final double  L2_HEIGHT                 = 31.875 - 12.7625; // 19.11
+        public static final double  L3_HEIGHT                 = 47.625 - 12.7625; // 34.86
+        public static final double  L4_HEIGHT                 = 72.0 - 12.7625; // 59.29
+        public static final double  HANG_HEIGHT               = 31.875 - 12.7625; // 19.11
+        public static final double  EXTENSION_SCALE           = 1.757 * Math.PI;
+        public static final double  EXTENSION_MOTOR_REDUCTION = 5.0;
+        public static final DCMotor ELEVATOR_GEARBOX          = DCMotor.getNeoVortex(2);
+        public static final double  EXTENSION_OFFSET          = 0.0;
+        public static final double  ELEVATOR_MASS             = 15.875;
+        public static final double  ELEVATOR_DRUM_RADIUS      = 0.0223139;
+    }
+
+    public static class Funnel
+    {
+        public static final double FUNNEL_VOLTS   = 6.0;
+        public static final double DROP_TIME_SECS = 2.0;
+    }
+
+    public static class LED
+    {
+        public static final double FLASH_TIME_SECS = 1.0;
+        public static final int    NUM_LEDS        = 14;
+        public static final Color  GREEN           = new Color(0, 115, 0);
+        public static final Color  YELLOW          = new Color(255, 115, 0);
+        public static final Color  RED             = new Color(255, 0, 0);
+        public static final Color  ORANGE          = new Color(255, 50, 0);
+        public static final Color  BLUE            = new Color(0, 0, 255);
+        public static final Color  PINK            = new Color(255, 46, 204);
+        public static final Color  PURPLE          = new Color(127, 0, 255);
+    }
+
     public static class General
     {
+        public static final double LOOP_PERIOD_SECS = 0.02;
         public static final double MAX_LINEAR_SPEED = 4.8; // m/s
         public static final double ROBOT_MASS       = 74.088;
         public static final double ROBOT_MOI        = 6.883;
+        public static final double MOTOR_VOLTAGE    = 12.0;
+    }
+
+    public static class Manipulator
+    {
+        public static final DCMotor MANIPULATOR_MOTOR = DCMotor.getVex775Pro(1);
+        public static final double  MOTOR_REDUCTION   = 5.0;
+        public static final double  INTAKE_VOLTS      = 12.0;
+        public static final double  OUTPUT_VOLTS      = 12.0;
+    }
+
+    public static class DIO
+    {
+        public static final int MANIPULATOR_LIGHT_SENSOR = 1;
     }
 }
