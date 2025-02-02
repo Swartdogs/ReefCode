@@ -34,7 +34,7 @@
   "eventMarkers": [
     {
       "name": "ExtendToL4",
-      "waypointRelativePos": 0.45421903052064655,
+      "waypointRelativePos": 0.3,
       "endWaypointRelativePos": null,
       "command": null
     }
