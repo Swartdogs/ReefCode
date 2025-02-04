@@ -307,10 +307,6 @@ public class Drive extends SubsystemBase
 
     public void addVisionMeasurement(Pose2d visionRobotPoseMeters, double timestampSeconds, Matrix<N3, N1> visionMeasurementStdDevs)
     {
-        // Scale vision measurement standard deviations based on distance from robot to
-        // tags
-        // and number of tags visible - this is handled by the Vision subsystem passing
-        // appropriate stdDevs
         _poseEstimator.addVisionMeasurement(visionRobotPoseMeters, timestampSeconds, visionMeasurementStdDevs);
     }
 

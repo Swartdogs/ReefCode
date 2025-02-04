@@ -50,7 +50,7 @@ public class RobotContainer
     // Subsystems
     private final Drive       _drive;
     @SuppressWarnings("unused")
-    private final Vision      _vision; // Add this field
+    private final Vision      _vision; 
     private final Elevator    _elevator;
     private final Manipulator _manipulator;
     private final Funnel      _funnel;
@@ -82,7 +82,7 @@ public class RobotContainer
             case SIM:
                 // Sim robot, instantiate physics sim IO implementations
                 _drive = new Drive(new GyroIO() {}, new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim());
-                _vision = new Vision(_drive, new VisionIO() {}); // Empty implementation for sim
+                _vision = new Vision(_drive, new VisionIOPhotonLib(_drive));
                 _elevator = new Elevator(new ElevatorIOSim());
                 _manipulator = new Manipulator(new ManipulatorIOSim(() -> _controller.leftTrigger().getAsBoolean()));
                 _funnel = new Funnel(new FunnelIOSim());

@@ -23,16 +23,16 @@ import frc.robot.subsystems.drive.Drive;
 
 public class VisionIOPhotonLib implements VisionIO
 {
-    private final PhotonCamera  _camera;
-    private double              _captureTimesStamp = 0.0;
-    private Pose2d              _pose              = new Pose2d();
-    private boolean             _hasPose           = false;
-    private double[]            _distances         = new double[] {};
-    private int[]               _targetIds         = new int[] {};
-    private double[]            _targetYaws        = new double[] {};
-    private int                 _numProcessedTargets;
-    private AprilTagFieldLayout fieldLayout;
-    private PhotonPoseEstimator _poseEstimator;
+    private final PhotonCamera        _camera;
+    private final AprilTagFieldLayout _fieldLayout;
+    private final PhotonPoseEstimator _poseEstimator;
+    private double                    _captureTimesStamp = 0.0;
+    private Pose2d                    _pose              = new Pose2d();
+    private boolean                   _hasPose           = false;
+    private double[]                  _distances         = new double[] {};
+    private int[]                     _targetIds         = new int[] {};
+    private double[]                  _targetYaws        = new double[] {};
+    private int                       _numProcessedTargets;
 
     public VisionIOPhotonLib(Drive drive)
     {
@@ -41,7 +41,7 @@ public class VisionIOPhotonLib implements VisionIO
         try
         {
             // Load the 2024 field layout
-            fieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2024Crescendo.m_resourceFile);
+            _fieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.kDefaultField.m_resourceFile);
         }
         catch (Exception e)
         {
@@ -49,7 +49,7 @@ public class VisionIOPhotonLib implements VisionIO
             throw new RuntimeException(e);
         }
 
-        _poseEstimator = new PhotonPoseEstimator(fieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, Constants.Vision.ROBOT_TO_CAMERA);
+        _poseEstimator = new PhotonPoseEstimator(_fieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, Constants.Vision.ROBOT_TO_CAMERA);
         _poseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
 
         NetworkTableInstance.getDefault().addListener(NetworkTableInstance.getDefault().getEntry("/photonvision/" + Constants.Vision.PHOTON_CAMERA_NAME + "/latencyMillis"), EnumSet.of(NetworkTableEvent.Kind.kValueRemote), event ->
@@ -111,7 +111,7 @@ public class VisionIOPhotonLib implements VisionIO
         });
     }
 
-    public Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose, PhotonPipelineResult result)
+    private Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose, PhotonPipelineResult result)
     {
         _poseEstimator.setReferencePose(prevEstimatedRobotPose);
         return _poseEstimator.update(result);
