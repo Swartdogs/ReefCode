@@ -15,7 +15,7 @@ public class Dashboard extends SubsystemBase
 {
     private final DashboardIO                  _io;
     private final DashboardIOInputsAutoLogged  _inputs     = new DashboardIOInputsAutoLogged();
-    private Map<String, PathPlannerAuto>       _autoLookup = Map.of("1CoralAuto", new PathPlannerAuto("1CoralAuto"), "2CoralAuto", new PathPlannerAuto("2CoralAuto"));
+    private Map<String, PathPlannerAuto>       _autoLookup = Map.of("Right_FC", new PathPlannerAuto("Right_FC"), "Left_JL", new PathPlannerAuto("Left_JL"));
     private Map<String, List<PathPlannerPath>> _pathLookup;
 
     public Dashboard(DashboardIO io)
@@ -24,7 +24,7 @@ public class Dashboard extends SubsystemBase
 
         try
         {
-            _pathLookup = Map.of("1CoralAuto", PathPlannerAuto.getPathGroupFromAutoFile("1CoralAuto"), "2CoralAuto", PathPlannerAuto.getPathGroupFromAutoFile("2CoralAuto"));
+            _pathLookup = Map.of("Right_FC", PathPlannerAuto.getPathGroupFromAutoFile("Right_FC"), "Left_JL", PathPlannerAuto.getPathGroupFromAutoFile("Left_JL"));
 
         }
         catch (Exception e)

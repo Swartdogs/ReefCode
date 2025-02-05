@@ -2,6 +2,9 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.Amps;
 
+import java.util.HashMap;
+
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.RobotConfig;
 
@@ -12,6 +15,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj2.command.Command;
 
 public final class Constants
 {
@@ -59,7 +63,7 @@ public final class Constants
         public static final int FUNNEL_SOLENOID   = 13;
     }
 
-    // eden is the fun police
+    // eden is not the fun police
     public static class Dashboard
     {
         public static final double LOW_BATTERY_VOLTAGE      = 11.5;
@@ -126,7 +130,8 @@ public final class Constants
         public static final double  MAX_EXTENSION             = 68.0;
         public static final double  EXTENSION_TOLERANCE       = 0.5;
         public static final double  STOW_HEIGHT               = 0.0;
-        public static final double  L1_HEIGHT                 = 18.0 - 12.7625; // 12.7625 account for bottom of baseplate to bottom of carrige
+        public static final double  L1_HEIGHT                 = 18.0 - 12.7625; // 12.7625 account for bottom of baseplate to bottom of
+                                                                                // carrige
         public static final double  L2_HEIGHT                 = 31.875 - 12.7625; // 19.11
         public static final double  L3_HEIGHT                 = 47.625 - 12.7625; // 34.86
         public static final double  L4_HEIGHT                 = 72.0 - 12.7625; // 59.29
@@ -156,6 +161,26 @@ public final class Constants
         public static final Color  BLUE            = new Color(0, 0, 255);
         public static final Color  PINK            = new Color(255, 46, 204);
         public static final Color  PURPLE          = new Color(127, 0, 255);
+    }
+
+    public static class Lookups
+    {
+        public static final HashMap<String, Command> _lookup = new HashMap<String, Command>() {
+            {
+                put("LeftIKL", AutoBuilder.buildAuto("Left_IK"));
+                put("LeftILK", AutoBuilder.buildAuto("Left_IL"));
+                put("LeftJKL", AutoBuilder.buildAuto("Left_JK"));
+                put("LeftJLK", AutoBuilder.buildAuto("Left_JL"));
+                put("MiddleGAB", AutoBuilder.buildAuto("Middle_GA"));
+                put("MiddleGBA", AutoBuilder.buildAuto("Middle_GB"));
+                put("MiddleHAB", AutoBuilder.buildAuto("Middle_HA"));
+                put("MiddleHBA", AutoBuilder.buildAuto("Middle_HB"));
+                put("RightECD", AutoBuilder.buildAuto("Right_EC"));
+                put("RightEDC", AutoBuilder.buildAuto("Right_ED"));
+                put("RightFCD", AutoBuilder.buildAuto("Right_FC"));
+                put("RightFDC", AutoBuilder.buildAuto("Right_FD"));
+            }
+        };
     }
 
     public static class General
