@@ -62,14 +62,13 @@ public class RobotContainer
     private final CommandXboxController _controller = new CommandXboxController(0);
 
     // Dashboard inputs
-    private final LoggedDashboardChooser<String>  _autoChooser;
-    private final LoggedDashboardChooser<Integer> _autoDelayChooser;
-
-    //
     private final LoggedDashboardChooser<String> _startingPositionChooser;
     private final LoggedDashboardChooser<String> _firstCoralChooser;
     private final LoggedDashboardChooser<String> _secondCoralChooser;
     private final LoggedDashboardChooser<String> _thirdCoralChooser;
+    private final LoggedDashboardChooser<Integer> _autoDelayChooser;
+
+    //
     private final Alert                          _nullAuto;
     private Command                              _selectedAuto;
 
@@ -109,34 +108,6 @@ public class RobotContainer
                 _dashboard = new Dashboard(new DashboardIO() {});
                 _led = new LED(new LEDIO() {});
                 break;
-        }
-
-        // Set up auto routines
-        _autoChooser = new LoggedDashboardChooser<>("Auto Choices", new SendableChooser<>());
-
-        // Set up SysId routines
-        /*
-         * _autoChooser.addOption("Drive Wheel Radius Characterization",
-         * DriveCommands.wheelRadiusCharacterization(_drive));
-         * _autoChooser.addOption("Drive Simple FF Characterization",
-         * DriveCommands.feedforwardCharacterization(_drive));
-         * _autoChooser.addOption("Drive SysId (Quasistatic Forward)",
-         * _drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-         * _autoChooser.addOption("Drive SysId (Quasistatic Reverse)",
-         * _drive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-         * _autoChooser.addOption("Drive SysId (Dynamic Forward)",
-         * _drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
-         * _autoChooser.addOption("Drive SysId (Dynamic Reverse)",
-         * _drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-         */
-        try
-        {
-            _autoChooser.addDefaultOption("1CoralAuto", "1CoralAuto");
-            _autoChooser.addOption("2CoralAuto", "2CoralAuto");
-        }
-        catch (Exception e)
-        {
-            // TODO: handle exception
         }
 
         NamedCommands.registerCommand("ExtendToL1", ElevatorCommands.setHeight(_elevator, Constants.Elevator.L1_HEIGHT));
@@ -246,7 +217,7 @@ public class RobotContainer
         _controller.povLeft()
                 .onTrue(ElevatorCommands.setHeight(_elevator, ElevatorHeight.Level4).alongWith(new DeferredCommand(() -> LEDCommands.setDefaultColor(_led, (_hasCoral.getAsBoolean() ? Constants.LED.ORANGE : Constants.LED.RED)), Set.of())));
 
-        _controller.leftTrigger().onTrue(ManipulatorCommands.intake(_manipulator));
+        _controller.leftStick().onTrue(ManipulatorCommands.intake(_manipulator));
         _controller.start().onTrue(ManipulatorCommands.output(_manipulator));
         _controller.rightStick().onTrue(ManipulatorCommands.stop(_manipulator));
 
