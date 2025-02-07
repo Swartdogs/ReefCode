@@ -63,7 +63,6 @@ public final class Constants
         public static final int FUNNEL_SOLENOID   = 13;
     }
 
-    // eden is not the fun police
     public static class Dashboard
     {
         public static final double LOW_BATTERY_VOLTAGE      = 11.5;
@@ -72,7 +71,7 @@ public final class Constants
 
     public static class DIO
     {
-        public static final int MANIPULATOR_LIGHT_SENSOR = 1;
+        public static final int MANIPULATOR_LIGHT_SENSOR = 0;
     }
 
     public static class Drive
@@ -163,6 +162,15 @@ public final class Constants
         public static final Color  PURPLE          = new Color(127, 0, 255);
     }
 
+    public static class General
+    {
+        public static final double LOOP_PERIOD_SECS = 0.02;
+        public static final double MAX_LINEAR_SPEED = 4.8; // m/s
+        public static final double ROBOT_MASS       = 74.088;
+        public static final double ROBOT_MOI        = 6.883;
+        public static final double MOTOR_VOLTAGE    = 12.0;
+    }
+
     public static class Lookups
     {
         public static final HashMap<String, Command> _lookup = new HashMap<String, Command>() {
@@ -181,15 +189,6 @@ public final class Constants
                 put("RightFDC", AutoBuilder.buildAuto("Right_FD"));
             }
         };
-    }
-
-    public static class General
-    {
-        public static final double LOOP_PERIOD_SECS = 0.02;
-        public static final double MAX_LINEAR_SPEED = 4.8; // m/s
-        public static final double ROBOT_MASS       = 74.088;
-        public static final double ROBOT_MOI        = 6.883;
-        public static final double MOTOR_VOLTAGE    = 12.0;
     }
 
     public static class Manipulator
