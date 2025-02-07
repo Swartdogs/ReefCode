@@ -5,6 +5,7 @@ import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Alert;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -46,6 +47,8 @@ import frc.robot.subsystems.manipulator.ManipulatorIOSim;
 
 import java.util.Set;
 
+import javax.lang.model.util.ElementScanner14;
+
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 public class RobotContainer
@@ -62,15 +65,15 @@ public class RobotContainer
     private final CommandXboxController _controller = new CommandXboxController(0);
 
     // Dashboard inputs
-    private final LoggedDashboardChooser<String> _startingPositionChooser;
-    private final LoggedDashboardChooser<String> _firstCoralChooser;
-    private final LoggedDashboardChooser<String> _secondCoralChooser;
-    private final LoggedDashboardChooser<String> _thirdCoralChooser;
+    private final LoggedDashboardChooser<String>  _startingPositionChooser;
+    private final LoggedDashboardChooser<String>  _firstCoralChooser;
+    private final LoggedDashboardChooser<String>  _secondCoralChooser;
+    private final LoggedDashboardChooser<String>  _thirdCoralChooser;
     private final LoggedDashboardChooser<Integer> _autoDelayChooser;
 
     //
-    private final Alert                          _nullAuto;
-    private Command                              _selectedAuto;
+    private final Alert _nullAuto;
+    private Command     _selectedAuto;
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -116,7 +119,15 @@ public class RobotContainer
         NamedCommands.registerCommand("ExtendToL4", ElevatorCommands.setHeight(_elevator, Constants.Elevator.L4_HEIGHT));
         NamedCommands.registerCommand("Stow", ElevatorCommands.setHeight(_elevator, Constants.Elevator.STOW_HEIGHT));
 
-        NamedCommands.registerCommand("Intake", ManipulatorCommands.intake(_manipulator));
+        if (RobotBase.isSimulation())
+        {
+            NamedCommands.registerCommand("Intake", Commands.none());
+        }
+        else
+        {
+            NamedCommands.registerCommand("Intake", ManipulatorCommands.intake(_manipulator));
+        }
+
         NamedCommands.registerCommand("Output", ManipulatorCommands.output(_manipulator));
         NamedCommands.registerCommand("Delay", Commands.defer(() -> Commands.waitSeconds(autoDelayTime()), Set.of()));
 

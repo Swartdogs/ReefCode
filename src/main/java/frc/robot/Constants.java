@@ -76,8 +76,8 @@ public final class Constants
 
     public static class Drive
     {
-        public static final double          TRACK_WIDTH                   = Units.inchesToMeters(26.5);
-        public static final double          WHEEL_BASE                    = Units.inchesToMeters(26.5);
+        public static final double          TRACK_WIDTH                   = Units.inchesToMeters(27);
+        public static final double          WHEEL_BASE                    = Units.inchesToMeters(31);
         public static final double          DRIVE_BASE_RADIUS             = Math.hypot(TRACK_WIDTH / 2.0, WHEEL_BASE / 2.0);
         public static final Translation2d[] MODULE_TRANSLATIONS           = new Translation2d[] { new Translation2d(TRACK_WIDTH / 2.0, WHEEL_BASE / 2.0), new Translation2d(TRACK_WIDTH / 2.0, -WHEEL_BASE / 2.0),
                 new Translation2d(-TRACK_WIDTH / 2.0, WHEEL_BASE / 2.0), new Translation2d(-TRACK_WIDTH / 2.0, -WHEEL_BASE / 2.0), };
@@ -86,13 +86,13 @@ public final class Constants
         public static final Rotation2d      BL_ZERO_ROTATION              = new Rotation2d(0.0);
         public static final Rotation2d      BR_ZERO_ROTATION              = new Rotation2d(0.0);
         public static final Current         DRIVE_MOTOR_CURRENT_LIMIT     = Amps.of(50);
-        public static final double          WHEEL_RADIUS                  = Units.inchesToMeters(1.5);
+        public static final double          WHEEL_RADIUS                  = Units.inchesToMeters(2);
         public static final double          DRIVE_MOTOR_REDUCTION         = 5.67;
         public static final boolean         DRIVE_INVERTED                = false;
         public static final DCMotor         DRIVE_GEARBOX                 = DCMotor.getKrakenX60(1);
         public static final double          DRIVE_ENCODER_POSITION_FACTOR = 2 * Math.PI / DRIVE_MOTOR_REDUCTION;
         public static final double          DRIVE_ENCODER_VELOCITY_FACTOR = 2 * Math.PI / 60.0 / DRIVE_MOTOR_REDUCTION;
-        public static final double          DRIVE_KP                      = 0.0;
+        public static final double          DRIVE_KP                      = 5.0;
         public static final double          DRIVE_KD                      = 0.0;
         public static final double          DRIVE_KS                      = 0.0;
         public static final double          DRIVE_KV                      = 0.1;
@@ -107,7 +107,7 @@ public final class Constants
         public static final boolean         TURN_ENCODER_INVERTED         = true;
         public static final double          TURN_ENCODER_POSITION_FACTOR  = 2 * Math.PI;
         public static final double          TURN_ENCODER_VELOCITY_FACTOR  = 2 * Math.PI / 60.0;
-        public static final double          TURN_KP                       = 2.0;
+        public static final double          TURN_KP                       = 5.0;
         public static final double          TURN_KD                       = 0.0;
         public static final double          TURN_SIM_P                    = 8.0;
         public static final double          TURN_SIM_D                    = 0.0;
