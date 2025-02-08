@@ -199,6 +199,22 @@ public class Drive extends SubsystemBase
         }
     }
 
+    public void setTurnOpenLoop(double volts)
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            _modules[i].setTurnOpenLoop(volts);
+        }
+    }
+
+    public void setTurnPosition(Rotation2d angle)
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            _modules[i].setTurnPosition(angle);
+        }
+    }
+
     public void stop()
     {
         runVelocity(new ChassisSpeeds());

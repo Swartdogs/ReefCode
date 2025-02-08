@@ -113,4 +113,14 @@ public class Module
     {
         return Units.radiansToRotations(_inputs.driveVelocityRadPerSec);
     }
+
+    public void setTurnOpenLoop(double volts)
+    {
+        _io.setTurnOpenLoop(volts);
+    }
+
+    public void setTurnPosition(Rotation2d angle)
+    {
+        _io.setTurnPosition(angle);
+    }
 }

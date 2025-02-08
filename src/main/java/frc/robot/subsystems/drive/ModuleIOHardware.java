@@ -133,12 +133,12 @@ public class ModuleIOHardware implements ModuleIO
 
         turnConfig.inverted(Constants.Drive.TURN_INVERTED).idleMode(IdleMode.kBrake).smartCurrentLimit(Constants.Drive.TURN_MOTOR_CURRENT_LIMIT).voltageCompensation(Constants.General.MOTOR_VOLTAGE);
 
-        turnConfig.absoluteEncoder.inverted(Constants.Drive.TURN_INVERTED).positionConversionFactor(Constants.Drive.TURN_ENCODER_POSITION_FACTOR).velocityConversionFactor(Constants.Drive.TURN_ENCODER_VELOCITY_FACTOR).averageDepth(2);
+        turnConfig.encoder.positionConversionFactor(Constants.Drive.TURN_ENCODER_POSITION_FACTOR).velocityConversionFactor(Constants.Drive.TURN_ENCODER_VELOCITY_FACTOR);
 
-        turnConfig.closedLoop.feedbackSensor(FeedbackSensor.kAbsoluteEncoder).positionWrappingEnabled(true).positionWrappingInputRange(Constants.Drive.TURN_PID_MIN_INPUT, Constants.Drive.TURN_PID_MAX_INPUT)
+        turnConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder).positionWrappingEnabled(true).positionWrappingInputRange(Constants.Drive.TURN_PID_MIN_INPUT, Constants.Drive.TURN_PID_MAX_INPUT)
                 .pidf(Constants.Drive.TURN_KP, 0.0, Constants.Drive.TURN_KD, 0.0);
 
-        turnConfig.signals.absoluteEncoderPositionAlwaysOn(true).absoluteEncoderPositionPeriodMs((int)(1000.0 / Constants.Drive.ODOMETRY_FREQUENCY)).absoluteEncoderVelocityAlwaysOn(true).absoluteEncoderVelocityPeriodMs(20)
+        turnConfig.signals.primaryEncoderPositionAlwaysOn(true).primaryEncoderPositionPeriodMs((int)(1000.0 / Constants.Drive.ODOMETRY_FREQUENCY)).primaryEncoderVelocityAlwaysOn(true).primaryEncoderVelocityPeriodMs(20)
                 .appliedOutputPeriodMs(20).busVoltagePeriodMs(20).outputCurrentPeriodMs(20);
 
         _turnEncoder.setPosition(0);
@@ -173,10 +173,10 @@ public class ModuleIOHardware implements ModuleIO
         // Update turn inputs (Spark)
         sparkStickyFault = false;
 
-        ifOk(_turnSpark, _turnPot::get, (value) -> inputs.turnAbsolutePosition = new Rotation2d(value).minus(_zeroRotation)); // TODO: Keep this in mind if zeroes don't behave the way we want them to -
-                                                                                                                              // Collin McIntyre
-        ifOk(_turnSpark, _turnEncoder::getPosition, (value) -> inputs.turnPosition = new Rotation2d(value / Constants.Drive.TURN_MOTOR_REDUCTION));
-        ifOk(_turnSpark, _turnEncoder::getVelocity, (value) -> inputs.turnVelocityRadPerSec = value / Constants.Drive.TURN_MOTOR_REDUCTION); // TODO: Fix this
+        ifOk(_turnSpark, _turnPot::get, (value) -> inputs.turnAbsolutePosition = Rotation2d.fromRotations(value).minus(_zeroRotation).getDegrees()); // TODO: Keep this in mind if zeroes don't behave the way we want them to -
+        // Collin McIntyre
+        ifOk(_turnSpark, _turnEncoder::getPosition, (value) -> inputs.turnPosition = Rotation2d.fromRadians(value / Constants.Drive.TURN_MOTOR_REDUCTION));
+        ifOk(_turnSpark, _turnEncoder::getVelocity, (value) -> inputs.turnVelocityRadPerSec = value / Constants.Drive.TURN_MOTOR_REDUCTION);
         ifOk(_turnSpark, new DoubleSupplier[] { _turnSpark::getAppliedOutput, _turnSpark::getBusVoltage }, (values) -> inputs.turnAppliedVolts = values[0] * values[1]);
         ifOk(_turnSpark, _turnSpark::getOutputCurrent, (value) -> inputs.turnCurrentAmps = value);
         inputs.turnConnected = _turnConnectedDebouncer.calculate(!sparkStickyFault);

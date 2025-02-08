@@ -182,6 +182,11 @@ public class OdometryThread
 
             if (isValid)
             {
+                for (int i = 0; i < _phoenixSignals.length; i++)
+                {
+                    _phoenixQueues.get(i).offer(_phoenixSignals[i].getValueAsDouble());
+                }
+
                 for (int i = 0; i < _sparkSignals.size(); i++)
                 {
                     _sparkQueues.get(i).offer(sparkValues[i]);

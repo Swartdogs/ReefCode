@@ -66,10 +66,10 @@ public final class Constants
         public static final double          DRIVE_BASE_RADIUS             = Math.hypot(TRACK_WIDTH / 2.0, WHEEL_BASE / 2.0);
         public static final Translation2d[] MODULE_TRANSLATIONS           = new Translation2d[] { new Translation2d(TRACK_WIDTH / 2.0, WHEEL_BASE / 2.0), new Translation2d(TRACK_WIDTH / 2.0, -WHEEL_BASE / 2.0),
                 new Translation2d(-TRACK_WIDTH / 2.0, WHEEL_BASE / 2.0), new Translation2d(-TRACK_WIDTH / 2.0, -WHEEL_BASE / 2.0), };
-        public static final Rotation2d      FL_ZERO_ROTATION              = new Rotation2d(0.0);
-        public static final Rotation2d      FR_ZERO_ROTATION              = new Rotation2d(0.0);
-        public static final Rotation2d      BL_ZERO_ROTATION              = new Rotation2d(0.0);
-        public static final Rotation2d      BR_ZERO_ROTATION              = new Rotation2d(0.0);
+        public static final Rotation2d      FL_ZERO_ROTATION              = Rotation2d.fromRotations(0.1559 + 0.125); // Raw reading + 1/8 for the 45 degree offset
+        public static final Rotation2d      FR_ZERO_ROTATION              = Rotation2d.fromRotations(0.5307 - 0.125);
+        public static final Rotation2d      BL_ZERO_ROTATION              = Rotation2d.fromRotations(0.1805 - 0.125);
+        public static final Rotation2d      BR_ZERO_ROTATION              = Rotation2d.fromRotations(0.7905 + 0.125);
         public static final Current         DRIVE_MOTOR_CURRENT_LIMIT     = Amps.of(50);
         public static final double          WHEEL_RADIUS                  = Units.inchesToMeters(1.5);
         public static final double          DRIVE_MOTOR_REDUCTION         = 5.67;
@@ -85,11 +85,10 @@ public final class Constants
         public static final double          DRIVE_SIM_D                   = 0.0;
         public static final double          DRIVE_SIM_KS                  = 0.0;
         public static final double          DRIVE_SIM_KV                  = 0.0789;
-        public static final boolean         TURN_INVERTED                 = false;
+        public static final boolean         TURN_INVERTED                 = true;
         public static final int             TURN_MOTOR_CURRENT_LIMIT      = 20;
-        public static final double          TURN_MOTOR_REDUCTION          = 12.0;
+        public static final double          TURN_MOTOR_REDUCTION          = 12.1;
         public static final DCMotor         TURN_GEARBOX                  = DCMotor.getNEO(1);
-        public static final boolean         TURN_ENCODER_INVERTED         = true;
         public static final double          TURN_ENCODER_POSITION_FACTOR  = 2 * Math.PI;
         public static final double          TURN_ENCODER_VELOCITY_FACTOR  = 2 * Math.PI / 60.0;
         public static final double          TURN_KP                       = 2.0;
@@ -119,18 +118,20 @@ public final class Constants
         public static final double  L3_HEIGHT                 = 47.625 - 12.7625; // 34.86
         public static final double  L4_HEIGHT                 = 72.0 - 12.7625; // 59.29
         public static final double  HANG_HEIGHT               = 31.875 - 12.7625; // 19.11
-        public static final double  EXTENSION_SCALE           = 1.757 * Math.PI;
+        public static final double  EXTENSION_SCALE           = 58.625 / -0.3141;
         public static final double  EXTENSION_MOTOR_REDUCTION = 5.0;
         public static final DCMotor ELEVATOR_GEARBOX          = DCMotor.getNeoVortex(2);
-        public static final double  EXTENSION_OFFSET          = 0.0;
+        public static final double  EXTENSION_OFFSET          = 0.9754 * EXTENSION_SCALE;
         public static final double  ELEVATOR_MASS             = 15.875;
         public static final double  ELEVATOR_DRUM_RADIUS      = 0.0223139;
+        public static final double  ELEVATOR_FEED_FORWARD     = 0.645;
     }
 
     public static class Funnel
     {
         public static final double FUNNEL_VOLTS   = 6.0;
         public static final double DROP_TIME_SECS = 2.0;
+        public static final double DEFAULT_VOLTS  = -3.0;
     }
 
     public static class LED
@@ -159,12 +160,12 @@ public final class Constants
     {
         public static final DCMotor MANIPULATOR_MOTOR = DCMotor.getVex775Pro(1);
         public static final double  MOTOR_REDUCTION   = 5.0;
-        public static final double  INTAKE_VOLTS      = 12.0;
-        public static final double  OUTPUT_VOLTS      = 12.0;
+        public static final double  INTAKE_VOLTS      = 3.0;
+        public static final double  OUTPUT_VOLTS      = 9.0;
     }
 
     public static class DIO
     {
-        public static final int MANIPULATOR_LIGHT_SENSOR = 1;
+        public static final int MANIPULATOR_LIGHT_SENSOR = 9;
     }
 }

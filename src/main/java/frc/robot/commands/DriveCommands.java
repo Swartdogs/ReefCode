@@ -86,6 +86,16 @@ public class DriveCommands
         }, drive).beforeStarting(() -> angleController.reset(drive.getRotation().getRadians()));
     }
 
+    public static Command setTurnOpenLoop(Drive drive, DoubleSupplier supplier)
+    {
+        return Commands.run(() -> drive.setTurnOpenLoop(supplier.getAsDouble()), drive);
+    }
+
+    public static Command setTurnPosition(Drive drive, Rotation2d angle)
+    {
+        return drive.runOnce(() -> drive.setTurnPosition(angle));
+    }
+
     public static Command feedforwardCharacterization(Drive drive)
     {
         List<Double> velocitySamples = new LinkedList<>();
