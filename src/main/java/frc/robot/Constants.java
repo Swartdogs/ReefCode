@@ -66,10 +66,10 @@ public final class Constants
         public static final double          DRIVE_BASE_RADIUS             = Math.hypot(TRACK_WIDTH / 2.0, WHEEL_BASE / 2.0);
         public static final Translation2d[] MODULE_TRANSLATIONS           = new Translation2d[] { new Translation2d(TRACK_WIDTH / 2.0, WHEEL_BASE / 2.0), new Translation2d(TRACK_WIDTH / 2.0, -WHEEL_BASE / 2.0),
                 new Translation2d(-TRACK_WIDTH / 2.0, WHEEL_BASE / 2.0), new Translation2d(-TRACK_WIDTH / 2.0, -WHEEL_BASE / 2.0), };
-        public static final Rotation2d      FL_ZERO_ROTATION              = Rotation2d.fromRotations(0.1559 + 0.125); // Raw reading + 1/8 for the 45 degree offset
-        public static final Rotation2d      FR_ZERO_ROTATION              = Rotation2d.fromRotations(0.5307 - 0.125);
-        public static final Rotation2d      BL_ZERO_ROTATION              = Rotation2d.fromRotations(0.1805 - 0.125);
-        public static final Rotation2d      BR_ZERO_ROTATION              = Rotation2d.fromRotations(0.7905 + 0.125);
+        public static final Rotation2d      FL_ZERO_ROTATION              = Rotation2d.fromDegrees(11.21 + 45); // Raw reading - 1/8 for the 45 degree offset
+        public static final Rotation2d      FR_ZERO_ROTATION              = Rotation2d.fromDegrees(60.92 - 45);
+        public static final Rotation2d      BL_ZERO_ROTATION              = Rotation2d.fromDegrees(-108.87 - 45);
+        public static final Rotation2d      BR_ZERO_ROTATION              = Rotation2d.fromDegrees(-66.17 + 45);
         public static final Current         DRIVE_MOTOR_CURRENT_LIMIT     = Amps.of(50);
         public static final double          WHEEL_RADIUS                  = Units.inchesToMeters(1.5);
         public static final double          DRIVE_MOTOR_REDUCTION         = 5.67;
@@ -89,14 +89,14 @@ public final class Constants
         public static final int             TURN_MOTOR_CURRENT_LIMIT      = 20;
         public static final double          TURN_MOTOR_REDUCTION          = 12.1;
         public static final DCMotor         TURN_GEARBOX                  = DCMotor.getNEO(1);
-        public static final double          TURN_ENCODER_POSITION_FACTOR  = 2 * Math.PI;
-        public static final double          TURN_ENCODER_VELOCITY_FACTOR  = 2 * Math.PI / 60.0;
+        public static final double          TURN_ENCODER_POSITION_FACTOR  = 1.0 / TURN_MOTOR_REDUCTION;
+        public static final double          TURN_ENCODER_VELOCITY_FACTOR  = 1;
         public static final double          TURN_KP                       = 2.0;
         public static final double          TURN_KD                       = 0.0;
         public static final double          TURN_SIM_P                    = 8.0;
         public static final double          TURN_SIM_D                    = 0.0;
         public static final double          TURN_PID_MIN_INPUT            = 0;
-        public static final double          TURN_PID_MAX_INPUT            = 2 * Math.PI;
+        public static final double          TURN_PID_MAX_INPUT            = 1;
         public static final double          WHEEL_COF                     = 1.2;
         public static final double          ODOMETRY_FREQUENCY            = 100.0; // ms
         public static final ModuleConfig    MODULE_CONFIG                 = new ModuleConfig(WHEEL_RADIUS, General.MAX_LINEAR_SPEED, WHEEL_COF, DRIVE_GEARBOX, DRIVE_MOTOR_REDUCTION, TURN_MOTOR_CURRENT_LIMIT, 1);
@@ -110,7 +110,7 @@ public final class Constants
         public static final double  EXTENSION_KP              = 0.4;
         public static final double  EXTENSION_KI              = 0.7;
         public static final double  EXTENSION_KD              = 0.15; // anything above 0.18 causes "shake"
-        public static final double  MAX_EXTENSION             = 68.0;
+        public static final double  MAX_EXTENSION             = 58.625;
         public static final double  EXTENSION_TOLERANCE       = 0.5;
         public static final double  STOW_HEIGHT               = 0.0;
         public static final double  L1_HEIGHT                 = 18.0 - 12.7625; // 12.7625 account for bottom of baseplate to bottom of carrige

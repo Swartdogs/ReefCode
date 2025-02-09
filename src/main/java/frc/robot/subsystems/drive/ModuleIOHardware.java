@@ -175,8 +175,8 @@ public class ModuleIOHardware implements ModuleIO
 
         ifOk(_turnSpark, _turnPot::get, (value) -> inputs.turnAbsolutePosition = Rotation2d.fromRotations(value).minus(_zeroRotation).getDegrees()); // TODO: Keep this in mind if zeroes don't behave the way we want them to -
         // Collin McIntyre
-        ifOk(_turnSpark, _turnEncoder::getPosition, (value) -> inputs.turnPosition = Rotation2d.fromRadians(value / Constants.Drive.TURN_MOTOR_REDUCTION));
-        ifOk(_turnSpark, _turnEncoder::getVelocity, (value) -> inputs.turnVelocityRadPerSec = value / Constants.Drive.TURN_MOTOR_REDUCTION);
+        ifOk(_turnSpark, _turnEncoder::getPosition, (value) -> inputs.turnPosition = Rotation2d.fromRotations(value));
+        ifOk(_turnSpark, _turnEncoder::getVelocity, (value) -> inputs.turnVelocityRadPerSec = value);
         ifOk(_turnSpark, new DoubleSupplier[] { _turnSpark::getAppliedOutput, _turnSpark::getBusVoltage }, (values) -> inputs.turnAppliedVolts = values[0] * values[1]);
         ifOk(_turnSpark, _turnSpark::getOutputCurrent, (value) -> inputs.turnCurrentAmps = value);
         inputs.turnConnected = _turnConnectedDebouncer.calculate(!sparkStickyFault);
@@ -212,7 +212,7 @@ public class ModuleIOHardware implements ModuleIO
     @Override
     public void setTurnPosition(Rotation2d rotation)
     {
-        double setpoint = MathUtil.inputModulus(rotation.plus(_zeroRotation).getRadians(), Constants.Drive.TURN_PID_MIN_INPUT, Constants.Drive.TURN_PID_MAX_INPUT);
+        double setpoint = MathUtil.inputModulus(rotation.minus(_zeroRotation).getRotations(), Constants.Drive.TURN_PID_MIN_INPUT, Constants.Drive.TURN_PID_MAX_INPUT);
 
         _turnController.setReference(setpoint, ControlType.kPosition);
     }

@@ -51,7 +51,7 @@ public class RobotContainer
         {
             case REAL:
                 // Real robot, instantiate hardware IO implementations
-                _drive = new Drive(new GyroIONavX(), new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim(), new ModuleIOHardware(3));
+                _drive = new Drive(new GyroIONavX(), new ModuleIOHardware(0), new ModuleIOHardware(1), new ModuleIOHardware(2), new ModuleIOHardware(3));
                 _elevator = new Elevator(new ElevatorIOHardware());
                 _manipulator = new Manipulator(new ManipulatorIOHardware());
                 _funnel = new Funnel(new FunnelIOHardware());
@@ -111,15 +111,17 @@ public class RobotContainer
         // Trigger _manipulatorRunning = new Trigger(() -> _manipulator.isRunning());
 
         // Default command, normal field-relative drive
-        // _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () ->
-        // -_controller.getLeftY(), () -> -_controller.getLeftX(), () ->
-        // -_controller.getRightX()));
+        _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_controller.getLeftY(), () -> -_controller.getLeftX(), () -> -_controller.getRightX()));
         // _drive.setDefaultCommand(DriveCommands.setTurnOpenLoop(_drive, () ->
         // MathUtil.applyDeadband(-_controller.getRightX(), 0.1) * 4.0));
-        _controller.a().onTrue(DriveCommands.setTurnPosition(_drive, Rotation2d.fromDegrees(0)));
-        _controller.b().onTrue(DriveCommands.setTurnPosition(_drive, Rotation2d.fromDegrees(90)));
-        _controller.y().onTrue(DriveCommands.setTurnPosition(_drive, Rotation2d.fromDegrees(180)));
-        _controller.x().onTrue(DriveCommands.setTurnPosition(_drive, Rotation2d.fromDegrees(270)));
+        // _controller.a().onTrue(DriveCommands.setTurnPosition(_drive,
+        // Rotation2d.fromDegrees(0)));
+        // _controller.b().onTrue(DriveCommands.setTurnPosition(_drive,
+        // Rotation2d.fromDegrees(90)));
+        // _controller.y().onTrue(DriveCommands.setTurnPosition(_drive,
+        // Rotation2d.fromDegrees(180)));
+        // _controller.x().onTrue(DriveCommands.setTurnPosition(_drive,
+        // Rotation2d.fromDegrees(270)));
 
         // Lock to 0° when A button is held
         // _controller.a().whileTrue(DriveCommands.joystickDriveAtAngle(_drive, () ->
