@@ -86,11 +86,11 @@ public final class Constants
         public static final double          DRIVE_SIM_KS                  = 0.0;
         public static final double          DRIVE_SIM_KV                  = 0.0789;
         public static final boolean         TURN_INVERTED                 = true;
-        public static final int             TURN_MOTOR_CURRENT_LIMIT      = 20;
+        public static final int             TURN_MOTOR_CURRENT_LIMIT      = 30;
         public static final double          TURN_MOTOR_REDUCTION          = 12.1;
         public static final DCMotor         TURN_GEARBOX                  = DCMotor.getNEO(1);
         public static final double          TURN_ENCODER_POSITION_FACTOR  = 1.0 / TURN_MOTOR_REDUCTION;
-        public static final double          TURN_ENCODER_VELOCITY_FACTOR  = 1;
+        public static final double          TURN_ENCODER_VELOCITY_FACTOR  = 1 / TURN_MOTOR_REDUCTION;
         public static final double          TURN_KP                       = 150.0;
         public static final double          TURN_KD                       = 0.0;
         public static final double          TURN_SIM_P                    = 8.0;

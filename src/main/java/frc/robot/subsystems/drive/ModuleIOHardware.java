@@ -174,7 +174,7 @@ public class ModuleIOHardware implements ModuleIO
         sparkStickyFault = false;
 
         ifOk(_turnSpark, _turnPot::get, (value) -> inputs.turnAbsolutePosition = Rotation2d.fromRotations(value).minus(_zeroRotation).getDegrees()); // TODO: Keep this in mind if zeroes don't behave the way we want them to -
-        // Collin McIntyre
+
         ifOk(_turnSpark, _turnEncoder::getPosition, (value) -> inputs.turnPosition = Rotation2d.fromRotations(value));
         ifOk(_turnSpark, _turnEncoder::getVelocity, (value) -> inputs.turnVelocityRadPerSec = value);
         ifOk(_turnSpark, new DoubleSupplier[] { _turnSpark::getAppliedOutput, _turnSpark::getBusVoltage }, (values) -> inputs.turnAppliedVolts = values[0] * values[1]);
@@ -189,6 +189,9 @@ public class ModuleIOHardware implements ModuleIO
         _timestampQueue.clear();
         _drivePositionQueue.clear();
         _turnPositionQueue.clear();
+
+        System.out.println(_turnSpark.getAppliedOutput());
+        System.out.println(_turnSpark.getBusVoltage());
     }
 
     @Override

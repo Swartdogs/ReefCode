@@ -102,7 +102,7 @@ public class RobotContainer
 
     private void configureButtonBindings()
     {
-        _drive.setDefaultCommand(DriveCommands.setTurnVolts(_drive, () -> _controller.getLeftX() * 12.0));
+        _drive.setDefaultCommand(DriveCommands.setTurnVolts(_drive, () -> _controller.getLeftX() * 144.0));
 
         // _funnel.setDefaultCommand(FunnelCommands.setVolts(_funnel, () ->
         // Constants.Funnel.DEFAULT_VOLTS));
