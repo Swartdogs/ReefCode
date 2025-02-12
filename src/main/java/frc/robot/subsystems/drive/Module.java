@@ -126,6 +126,6 @@ public class Module
 
     public void setTurnVolts(double volts)
     {
-        _io.setTurnPosition(BL_ZERO_ROTATION);
+        _io.setTurnVolts(volts);
     }
 }

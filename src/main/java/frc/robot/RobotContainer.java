@@ -148,23 +148,28 @@ public class RobotContainer
         // _controller.rightTrigger().whileTrue(ElevatorCommands.setVolts(_elevator, ()
         // -> -_controller.getRightY() * Constants.General.MOTOR_VOLTAGE));
 
-        // _controller.back().onTrue(ElevatorCommands.setHeight(_elevator, ElevatorHeight.Stow));
+        // _controller.back().onTrue(ElevatorCommands.setHeight(_elevator,
+        // ElevatorHeight.Stow));
         // // .alongWith(new DeferredCommand(() -> LEDCommandsetDefaultColor(_led,
         // // (_hasCoral.getAsBoolean() ? Constants.LED.GREEN : Constants.LED.RED)),
         // // Set.of())));
-        // _controller.povUp().onTrue(ElevatorCommands.setHeight(_elevator, ElevatorHeight.Level1));
+        // _controller.povUp().onTrue(ElevatorCommands.setHeight(_elevator,
+        // ElevatorHeight.Level1));
         // // .alongWith(new DeferredCommand(() -> LEDCommands.setDefaultColor(_led,
         // // (_hasCoral.getAsBoolean() ?
         // // Constants.LED.PURPLE : Constants.LED.RED)), Set.of())));
-        // _controller.povRight().onTrue(ElevatorCommands.setHeight(_elevator, ElevatorHeight.Level2));
+        // _controller.povRight().onTrue(ElevatorCommands.setHeight(_elevator,
+        // ElevatorHeight.Level2));
         // // .alongWith(new DeferredCommand(() -> LEDCommands.setDefaultColor(_led,
         // // (_hasCoral.getAsBoolean() ?
         // // Constants.LED.PINK : Constants.LED.RED)), Set.of())));
-        // _controller.povDown().onTrue(ElevatorCommands.setHeight(_elevator, ElevatorHeight.Level3));
+        // _controller.povDown().onTrue(ElevatorCommands.setHeight(_elevator,
+        // ElevatorHeight.Level3));
         // // .alongWith(new DeferredCommand(() -> LEDCommands.setDefaultColor(_led,
         // // (_hasCoral.getAsBoolean() ?
         // // Constants.LED.BLUE : Constants.LED.RED)), Set.of())));
-        // _controller.povLeft().onTrue(ElevatorCommands.setHeight(_elevator, ElevatorHeight.Level4));
+        // _controller.povLeft().onTrue(ElevatorCommands.setHeight(_elevator,
+        // ElevatorHeight.Level4));
         // // .alongWith(new DeferredCommand(() -> LEDCommands.setDefaultColor(_led,
         // // (_hasCoral.getAsBoolean() ?
         // // Constants.LED.ORANGE : Constants.LED.RED)), Set.of())));
