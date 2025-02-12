@@ -114,11 +114,11 @@ public class ModuleIOHardware implements ModuleIO
         // Configure drive motor
         var driveConfig = new TalonFXConfiguration();
         driveConfig.MotorOutput.NeutralMode                = NeutralModeValue.Brake;
-        driveConfig.Slot0.kP                               = 0.1;
+        driveConfig.Slot0.kP                               = 0.05;
         driveConfig.Slot0.kI                               = 0.0;
         driveConfig.Slot0.kD                               = 0.0;
-        driveConfig.Slot0.kS                               = 0.0;
-        driveConfig.Slot0.kV                               = 0.124;
+        driveConfig.Slot0.kS                               = 0.1;
+        driveConfig.Slot0.kV                               = 0.7;
         driveConfig.Feedback.SensorToMechanismRatio        = Constants.Drive.DRIVE_MOTOR_REDUCTION;
         driveConfig.TorqueCurrent.PeakForwardTorqueCurrent = Amps.of(120.0).magnitude(); // TODO: tune this. This is the current at which wheels start to slip
         driveConfig.TorqueCurrent.PeakReverseTorqueCurrent = Amps.of(-120.0).magnitude(); // TODO: tune this as well
@@ -141,7 +141,7 @@ public class ModuleIOHardware implements ModuleIO
         turnConfig.signals.primaryEncoderPositionAlwaysOn(true).primaryEncoderPositionPeriodMs((int)(1000.0 / Constants.Drive.ODOMETRY_FREQUENCY)).primaryEncoderVelocityAlwaysOn(true).primaryEncoderVelocityPeriodMs(20)
                 .appliedOutputPeriodMs(20).busVoltagePeriodMs(20).outputCurrentPeriodMs(20);
 
-        _turnEncoder.setPosition(0);
+        _turnEncoder.setPosition(_turnPot.get() - _zeroRotation.getRotations());
 
         tryUntilOk(_turnSpark, 5, () -> _turnSpark.configure(turnConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
 
@@ -212,8 +212,14 @@ public class ModuleIOHardware implements ModuleIO
     @Override
     public void setTurnPosition(Rotation2d rotation)
     {
-        double setpoint = MathUtil.inputModulus(rotation.minus(_zeroRotation).getRotations(), Constants.Drive.TURN_PID_MIN_INPUT, Constants.Drive.TURN_PID_MAX_INPUT);
+        double setpoint = MathUtil.inputModulus(rotation.getRotations(), Constants.Drive.TURN_PID_MIN_INPUT, Constants.Drive.TURN_PID_MAX_INPUT);
 
         _turnController.setReference(setpoint, ControlType.kPosition);
+    }
+
+    @Override
+    public void setTurnVolts(double volts)
+    {
+        _turnSpark.setVoltage(volts);
     }
 }

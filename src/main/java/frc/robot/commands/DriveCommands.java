@@ -208,4 +208,9 @@ public class DriveCommands
         Rotation2d lastAngle = new Rotation2d();
         double     gyroDelta = 0.0;
     }
+
+    public static Command setTurnVolts(Drive drive, DoubleSupplier volts)
+    {
+        return drive.run(() -> drive.setTurnVolts(volts.getAsDouble()));
+    }
 }

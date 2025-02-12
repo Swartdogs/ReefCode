@@ -61,15 +61,15 @@ public final class Constants
 
     public static class Drive
     {
-        public static final double          TRACK_WIDTH                   = Units.inchesToMeters(26.5);
-        public static final double          WHEEL_BASE                    = Units.inchesToMeters(26.5);
+        public static final double          TRACK_WIDTH                   = Units.inchesToMeters(22);
+        public static final double          WHEEL_BASE                    = Units.inchesToMeters(26);
         public static final double          DRIVE_BASE_RADIUS             = Math.hypot(TRACK_WIDTH / 2.0, WHEEL_BASE / 2.0);
         public static final Translation2d[] MODULE_TRANSLATIONS           = new Translation2d[] { new Translation2d(TRACK_WIDTH / 2.0, WHEEL_BASE / 2.0), new Translation2d(TRACK_WIDTH / 2.0, -WHEEL_BASE / 2.0),
                 new Translation2d(-TRACK_WIDTH / 2.0, WHEEL_BASE / 2.0), new Translation2d(-TRACK_WIDTH / 2.0, -WHEEL_BASE / 2.0), };
-        public static final Rotation2d      FL_ZERO_ROTATION              = Rotation2d.fromDegrees(11.21 + 45); // Raw reading - 1/8 for the 45 degree offset
-        public static final Rotation2d      FR_ZERO_ROTATION              = Rotation2d.fromDegrees(60.92 - 45);
-        public static final Rotation2d      BL_ZERO_ROTATION              = Rotation2d.fromDegrees(-108.87 - 45);
-        public static final Rotation2d      BR_ZERO_ROTATION              = Rotation2d.fromDegrees(-66.17 + 45);
+        public static final Rotation2d      FL_ZERO_ROTATION              = Rotation2d.fromDegrees(57.45 + 45.0); // Raw reading - 1/8 for the 45 degree offset
+        public static final Rotation2d      FR_ZERO_ROTATION              = Rotation2d.fromDegrees(11.29 - 45.0);
+        public static final Rotation2d      BL_ZERO_ROTATION              = Rotation2d.fromDegrees(65.26 - 45.0);
+        public static final Rotation2d      BR_ZERO_ROTATION              = Rotation2d.fromDegrees(114.1 + 45.0);
         public static final Current         DRIVE_MOTOR_CURRENT_LIMIT     = Amps.of(50);
         public static final double          WHEEL_RADIUS                  = Units.inchesToMeters(1.5);
         public static final double          DRIVE_MOTOR_REDUCTION         = 5.67;
@@ -91,7 +91,7 @@ public final class Constants
         public static final DCMotor         TURN_GEARBOX                  = DCMotor.getNEO(1);
         public static final double          TURN_ENCODER_POSITION_FACTOR  = 1.0 / TURN_MOTOR_REDUCTION;
         public static final double          TURN_ENCODER_VELOCITY_FACTOR  = 1;
-        public static final double          TURN_KP                       = 2.0;
+        public static final double          TURN_KP                       = 150.0;
         public static final double          TURN_KD                       = 0.0;
         public static final double          TURN_SIM_P                    = 8.0;
         public static final double          TURN_SIM_D                    = 0.0;
@@ -107,16 +107,16 @@ public final class Constants
 
     public static class Elevator
     {
-        public static final double  EXTENSION_KP              = 0.4;
-        public static final double  EXTENSION_KI              = 0.7;
-        public static final double  EXTENSION_KD              = 0.15; // anything above 0.18 causes "shake"
+        public static final double  EXTENSION_KP              = 0.1;
+        public static final double  EXTENSION_KI              = 0.0;
+        public static final double  EXTENSION_KD              = 0.0; // anything above 0.18 causes "shake"
         public static final double  MAX_EXTENSION             = 58.625;
         public static final double  EXTENSION_TOLERANCE       = 0.5;
         public static final double  STOW_HEIGHT               = 0.0;
-        public static final double  L1_HEIGHT                 = 18.0 - 12.7625; // 12.7625 account for bottom of baseplate to bottom of carrige
-        public static final double  L2_HEIGHT                 = 31.875 - 12.7625; // 19.11
-        public static final double  L3_HEIGHT                 = 47.625 - 12.7625; // 34.86
-        public static final double  L4_HEIGHT                 = 72.0 - 12.7625; // 59.29
+        public static final double  L1_HEIGHT                 = 9.6; // 12.7625 account for bottom of baseplate to bottom of carrige
+        public static final double  L2_HEIGHT                 = 16.8; // 19.11
+        public static final double  L3_HEIGHT                 = 35.1; // 34.86
+        public static final double  L4_HEIGHT                 = 61.0; // 59.29
         public static final double  HANG_HEIGHT               = 31.875 - 12.7625; // 19.11
         public static final double  EXTENSION_SCALE           = 58.625 / -0.3141;
         public static final double  EXTENSION_MOTOR_REDUCTION = 5.0;
@@ -131,7 +131,7 @@ public final class Constants
     {
         public static final double FUNNEL_VOLTS   = 6.0;
         public static final double DROP_TIME_SECS = 2.0;
-        public static final double DEFAULT_VOLTS  = -3.0;
+        public static final double DEFAULT_VOLTS  = -4.5;
     }
 
     public static class LED

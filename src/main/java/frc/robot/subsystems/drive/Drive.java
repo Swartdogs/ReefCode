@@ -329,4 +329,12 @@ public class Drive extends SubsystemBase
     {
         return MAX_LINEAR_SPEED / DRIVE_BASE_RADIUS;
     }
+
+    public void setTurnVolts(double volts)
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            _modules[i].setTurnVolts(volts);
+        }
+    }
 }

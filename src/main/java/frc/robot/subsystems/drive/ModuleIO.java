@@ -44,4 +44,8 @@ public interface ModuleIO
     public default void setTurnPosition(Rotation2d rotation)
     {
     }
+
+    public default void setTurnVolts(double volts)
+    {
+    }
 }

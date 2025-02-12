@@ -123,4 +123,9 @@ public class Module
     {
         _io.setTurnPosition(angle);
     }
+
+    public void setTurnVolts(double volts)
+    {
+        _io.setTurnPosition(BL_ZERO_ROTATION);
+    }
 }
