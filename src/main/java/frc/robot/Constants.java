@@ -8,6 +8,8 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.RobotConfig;
 
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -124,6 +126,34 @@ public final class Constants
         public static final double          MIN_SPEED_ELEVATOR_HEIGHT     = 60;
         public static final double          SPEED_ELEVATOR_M              = (MAX_SPEED_ELEVATOR - MIN_SPEED_ELEVATOR) / (MIN_SPEED_ELEVATOR_HEIGHT - MAX_SPEED_ELEVATOR_HEIGHT);
         public static final double          SPEED_ELEVATOR_B              = MAX_SPEED_ELEVATOR - SPEED_ELEVATOR_M * MAX_SPEED_ELEVATOR_HEIGHT;
+    }
+
+    public static class Field
+    {
+        public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT   = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
+        public static final Rotation2d          BLUE_REEF_ANGLE_ONE      = getTagAngle(18);
+        public static final Rotation2d          BLUE_REEF_ANGLE_TWO      = getTagAngle(17);
+        public static final Rotation2d          BLUE_REEF_ANGLE_THREE    = getTagAngle(22);
+        public static final Rotation2d          BLUE_REEF_ANGLE_FOUR     = getTagAngle(21);
+        public static final Rotation2d          BLUE_REEF_ANGLE_FIVE     = getTagAngle(20);
+        public static final Rotation2d          BLUE_REEF_ANGLE_SIX      = getTagAngle(19);
+        public static final Rotation2d          RED_REEF_ANGLE_ONE       = getTagAngle(7);
+        public static final Rotation2d          RED_REEF_ANGLE_TWO       = getTagAngle(8);
+        public static final Rotation2d          RED_REEF_ANGLE_THREE     = getTagAngle(9);
+        public static final Rotation2d          RED_REEF_ANGLE_FOUR      = getTagAngle(10);
+        public static final Rotation2d          RED_REEF_ANGLE_FIVE      = getTagAngle(11);
+        public static final Rotation2d          RED_REEF_ANGLE_SIX       = getTagAngle(6);
+        public static final Rotation2d          BLUE_LEFT_STATION_ANGLE  = getTagAngle(13);
+        public static final Rotation2d          BLUE_RIGHT_STATION_ANGLE = getTagAngle(12);
+        public static final Rotation2d          RED_LEFT_STATION_ANGLE   = getTagAngle(1);
+        public static final Rotation2d          RED_RIGHT_STATION_ANGLE  = getTagAngle(2);
+        public static final Rotation2d          BLUE_PROCESSOR_ANGLE     = getTagAngle(16);
+        public static final Rotation2d          RED_PROCESSOR_ANGLE      = getTagAngle(3);
+
+        private static Rotation2d getTagAngle(int tagID)
+        {
+            return APRIL_TAG_FIELD_LAYOUT.getTagPose(tagID).get().getRotation().toRotation2d().rotateBy(new Rotation2d(Math.PI));
+        }
     }
 
     public static class Elevator

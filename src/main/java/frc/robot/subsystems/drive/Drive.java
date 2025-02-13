@@ -83,7 +83,6 @@ public class Drive extends SubsystemBase
 
         OdometryThread.getInstance().start();
 
-        // TODO: Auto builder stuff?
         AutoBuilder.configure(
                 this::getPose, this::setPose, this::getChassisSpeeds, (speeds, feedforwards) -> runVelocity(speeds),
                 new PPHolonomicDriveController(new PIDConstants(Constants.Drive.DRIVE_KP, Constants.Drive.DRIVE_KD), new PIDConstants(Constants.Drive.TURN_KP, Constants.Drive.TURN_KD)), config,

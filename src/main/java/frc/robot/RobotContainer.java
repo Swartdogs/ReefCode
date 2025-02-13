@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.ElevatorCommands;
 import frc.robot.commands.FunnelCommands;
@@ -54,7 +55,9 @@ public class RobotContainer
     // private final LED         _led;
 
     // Controller
-    private final CommandXboxController _controller = new CommandXboxController(0);
+    private final CommandJoystick _driverJoystick  = new CommandJoystick(0);
+    private final CommandJoystick _driverButtons   = new CommandJoystick(1);
+    private final CommandJoystick _operatorButtons = new CommandJoystick(2);
 
     // Dashboard inputs
     private final LoggedDashboardChooser<String>  _startingPositionChooser;
@@ -88,7 +91,7 @@ public class RobotContainer
                 // Sim robot, instantiate physics sim IO implementations
                 _drive = new Drive(new GyroIO() {}, new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim());
                 _elevator = new Elevator(new ElevatorIOSim());
-                _manipulator = new Manipulator(new ManipulatorIOSim(() -> _controller.leftTrigger().getAsBoolean()));
+                _manipulator = new Manipulator(new ManipulatorIOSim(() -> _driverJoystick.button(7).getAsBoolean()));
                 _funnel = new Funnel(new FunnelIOSim());
                 _dashboard = new Dashboard(new DashboardIONetwork());
                 // _led = new LED(new LEDIOSim());
@@ -201,7 +204,7 @@ public class RobotContainer
         // Trigger _manipulatorRunning = new Trigger(() -> _manipulator.isRunning());
 
         // Default command, normal field-relative drive
-        _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_controller.getLeftY(), () -> -_controller.getLeftX(), () -> -_controller.getRightX()));
+        _drive.setDefaultCommand(DriveCommands.joystickFieldCentricDrive(_drive, () -> -_controller.getLeftY(), () -> -_controller.getLeftX(), () -> -_controller.getRightX()));
         // _drive.setDefaultCommand(DriveCommands.setTurnOpenLoop(_drive, () ->
         // MathUtil.applyDeadband(-_controller.getRightX(), 0.1) * 4.0));
         // _controller.a().onTrue(DriveCommands.setTurnPosition(_drive,
@@ -280,11 +283,11 @@ public class RobotContainer
         _nullAuto.set(_selectedAuto == null);
     }
 
-    /**
-     * Use this to pass the autonomous command to the main {@link Robot} class.
-     *
-     * @return the command to run in autonomous
-     */
+    public boolean isRedAlliance()
+    {
+        return DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Red;
+    }
+
     public Command getAutonomousCommand()
     {
         return _selectedAuto;

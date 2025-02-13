@@ -30,4 +30,9 @@ public class ElevatorCommands
     {
         return elevator.run(() -> elevator.setVolts(voltsSupplier.getAsDouble()));
     }
+
+    public static Command modifyHeight(Elevator elevator, double modification)
+    {
+        return elevator.runOnce(() -> elevator.modifySetpoint(modification));
+    }
 }

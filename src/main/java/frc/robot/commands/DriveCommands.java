@@ -4,6 +4,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
@@ -52,7 +53,7 @@ public class DriveCommands
         return new Pose2d(new Translation2d(), linearDirection).transformBy(new Transform2d(linearMagnitude, 0.0, new Rotation2d())).getTranslation();
     }
 
-    public static Command joystickDrive(Drive drive, DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier omegaSupplier, Elevator elevator)
+    public static Command joystickFieldCentricDrive(Drive drive, DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier omegaSupplier, Elevator elevator)
     {
         return Commands.run(() ->
         {
@@ -99,6 +100,29 @@ public class DriveCommands
     public static Command setTurnPosition(Drive drive, Rotation2d angle)
     {
         return drive.runOnce(() -> drive.setTurnPosition(angle));
+    }
+
+    public static Command joystickRobotCentricDrive(Drive drive, DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier omegaSupplier)
+    {
+        return Commands.run(() ->
+        {
+            double omega = MathUtil.applyDeadband(omegaSupplier.getAsDouble(), DEADBAND);
+
+            omega = Math.copySign(omega * omega, omega);
+
+            ChassisSpeeds speeds = new ChassisSpeeds(xSupplier.getAsDouble() * drive.getMaxLinearSpeedMetersPerSec(), ySupplier.getAsDouble() * drive.getMaxLinearSpeedMetersPerSec(), omega * drive.getMaxAngularSpeedRadPerSec());
+
+            drive.runVelocity(speeds);
+        }, drive);
+    }
+
+    public static Command resetGyro(Drive drive, BooleanSupplier isRedAlliance)
+    {
+        return Commands.runOnce(() ->
+        {
+            var pose = drive.getPose();
+            drive.setPose(new Pose2d(pose.getX(), pose.getY(), Rotation2d.fromDegrees(isRedAlliance.getAsBoolean() ? 180 : 0)));
+        }).ignoringDisable(true);
     }
 
     public static Command feedforwardCharacterization(Drive drive)
