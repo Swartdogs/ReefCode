@@ -68,12 +68,12 @@ public final class Constants
     public static class Dashboard
     {
         public static final double LOW_BATTERY_VOLTAGE      = 11.5;
-        public static final double CAN_ERROR_TIME_THRESHOLD = 2.0; // HI COLLIN!TIME TO WAIT BEFORE REMOVING CAN ERROR.
+        public static final double CAN_ERROR_TIME_THRESHOLD = 2.0;
     }
 
     public static class DIO
     {
-        public static final int MANIPULATOR_LIGHT_SENSOR = 0;
+        public static final int MANIPULATOR_LIGHT_SENSOR = 9;
     }
 
     public static class Drive
@@ -237,10 +237,5 @@ public final class Constants
         public static final double  MOTOR_REDUCTION   = 5.0;
         public static final double  INTAKE_VOLTS      = 3.0;
         public static final double  OUTPUT_VOLTS      = 9.0;
-    }
-
-    public static class DIO
-    {
-        public static final int MANIPULATOR_LIGHT_SENSOR = 9;
     }
 }

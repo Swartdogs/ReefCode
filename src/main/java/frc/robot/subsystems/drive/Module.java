@@ -48,14 +48,14 @@ public class Module
             _odometryPositions[i] = new SwerveModulePosition(positionMeters, angle);
         }
 
-        if (_inputs.turnAppliedVolts != 0 && _inputs.turnAbsolutePosition == _lastTurnPosition)
+        if (_inputs.turnAppliedVolts != 0 && _inputs.turnAbsolutePosition == _lastTurnPosition.getDegrees())
         {
             _swervePotError.set(true);
         }
 
         _driveDisconnectedAlert.set(!_inputs.driveConnected);
         _turnDisconnectedAlert.set(!_inputs.turnConnected);
-        _lastTurnPosition = _inputs.turnAbsolutePosition;
+        _lastTurnPosition = Rotation2d.fromDegrees(_inputs.turnAbsolutePosition);
     }
 
     public void runSetpoint(SwerveModuleState state)

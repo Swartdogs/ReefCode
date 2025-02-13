@@ -53,7 +53,7 @@ public class DriveCommands
         return new Pose2d(new Translation2d(), linearDirection).transformBy(new Transform2d(linearMagnitude, 0.0, new Rotation2d())).getTranslation();
     }
 
-    public static Command joystickFieldCentricDrive(Drive drive, DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier omegaSupplier, Elevator elevator)
+    public static Command joystickFieldCentricDrive(Drive drive, Elevator elevator, DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier omegaSupplier)
     {
         return Commands.run(() ->
         {

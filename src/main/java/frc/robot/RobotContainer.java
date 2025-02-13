@@ -8,8 +8,11 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Alert.AlertType;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -52,12 +55,13 @@ public class RobotContainer
     private final Manipulator _manipulator;
     private final Funnel      _funnel;
     private final Dashboard   _dashboard;
-    // private final LED         _led;
+    // private final LED _led;
 
     // Controller
-    private final CommandJoystick _driverJoystick  = new CommandJoystick(0);
-    private final CommandJoystick _driverButtons   = new CommandJoystick(1);
-    private final CommandJoystick _operatorButtons = new CommandJoystick(2);
+    private final CommandJoystick       _driverJoystick  = new CommandJoystick(0);
+    private final CommandJoystick       _driverButtons   = new CommandJoystick(1);
+    private final CommandJoystick       _operatorButtons = new CommandJoystick(2);
+    private final CommandXboxController _controller      = new CommandXboxController(3); // This is just for testing
 
     // Dashboard inputs
     private final LoggedDashboardChooser<String>  _startingPositionChooser;
@@ -204,7 +208,7 @@ public class RobotContainer
         // Trigger _manipulatorRunning = new Trigger(() -> _manipulator.isRunning());
 
         // Default command, normal field-relative drive
-        _drive.setDefaultCommand(DriveCommands.joystickFieldCentricDrive(_drive, () -> -_controller.getLeftY(), () -> -_controller.getLeftX(), () -> -_controller.getRightX()));
+        _drive.setDefaultCommand(DriveCommands.joystickFieldCentricDrive(_drive, _elevator, () -> -_controller.getLeftY(), () -> -_controller.getLeftX(), () -> -_controller.getRightX()));
         // _drive.setDefaultCommand(DriveCommands.setTurnOpenLoop(_drive, () ->
         // MathUtil.applyDeadband(-_controller.getRightX(), 0.1) * 4.0));
         // _controller.a().onTrue(DriveCommands.setTurnPosition(_drive,
