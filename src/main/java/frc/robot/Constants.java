@@ -86,12 +86,12 @@ public final class Constants
         public static final double          DRIVE_SIM_KS                  = 0.0;
         public static final double          DRIVE_SIM_KV                  = 0.0789;
         public static final boolean         TURN_INVERTED                 = true;
-        public static final int             TURN_MOTOR_CURRENT_LIMIT      = 30;
+        public static final int             TURN_MOTOR_CURRENT_LIMIT      = 80;
         public static final double          TURN_MOTOR_REDUCTION          = 12.1;
         public static final DCMotor         TURN_GEARBOX                  = DCMotor.getNEO(1);
         public static final double          TURN_ENCODER_POSITION_FACTOR  = 1.0 / TURN_MOTOR_REDUCTION;
         public static final double          TURN_ENCODER_VELOCITY_FACTOR  = 1 / TURN_MOTOR_REDUCTION;
-        public static final double          TURN_KP                       = 150.0;
+        public static final double          TURN_KP                       = 7.0;
         public static final double          TURN_KD                       = 0.0;
         public static final double          TURN_SIM_P                    = 8.0;
         public static final double          TURN_SIM_D                    = 0.0;
@@ -103,25 +103,35 @@ public final class Constants
         public static final RobotConfig     PP_CONFIG                     = new RobotConfig(
                 General.ROBOT_MASS, General.ROBOT_MOI, new ModuleConfig(WHEEL_RADIUS, General.MAX_LINEAR_SPEED, WHEEL_COF, DRIVE_GEARBOX.withReduction(DRIVE_MOTOR_REDUCTION), DRIVE_MOTOR_CURRENT_LIMIT.magnitude(), 1), MODULE_TRANSLATIONS
         );
+        public static final double          MAX_SPEED_ELEVATOR            = 1;
+        public static final double          MIN_SPEED_ELEVATOR            = 0.2;
+        public static final double          MAX_SPEED_ELEVATOR_HEIGHT     = 24;
+        public static final double          MIN_SPEED_ELEVATOR_HEIGHT     = 60;
+        public static final double          SPEED_ELEVATOR_M              = (MAX_SPEED_ELEVATOR - MIN_SPEED_ELEVATOR) / (MIN_SPEED_ELEVATOR_HEIGHT - MAX_SPEED_ELEVATOR_HEIGHT);
+        public static final double          SPEED_ELEVATOR_B              = MAX_SPEED_ELEVATOR - SPEED_ELEVATOR_M * MAX_SPEED_ELEVATOR_HEIGHT;
     }
 
     public static class Elevator
     {
+        public static final double  RAW_SENSOR_MIN            = 0.987;
+        public static final double  RAW_SENSOR_MAX            = 0.639;
+        public static final double  SCALED_MIN                = 21.5;
+        public static final double  SCALED_MAX                = 80.25;
         public static final double  EXTENSION_KP              = 0.1;
         public static final double  EXTENSION_KI              = 0.0;
         public static final double  EXTENSION_KD              = 0.0; // anything above 0.18 causes "shake"
-        public static final double  MAX_EXTENSION             = 58.625;
+        public static final double  MAX_EXTENSION             = SCALED_MAX - SCALED_MIN;
         public static final double  EXTENSION_TOLERANCE       = 0.5;
         public static final double  STOW_HEIGHT               = 0.0;
         public static final double  L1_HEIGHT                 = 9.6; // 12.7625 account for bottom of baseplate to bottom of carrige
         public static final double  L2_HEIGHT                 = 16.8; // 19.11
         public static final double  L3_HEIGHT                 = 35.1; // 34.86
-        public static final double  L4_HEIGHT                 = 61.0; // 59.29
+        public static final double  L4_HEIGHT                 = 65.0; // 59.29
         public static final double  HANG_HEIGHT               = 31.875 - 12.7625; // 19.11
-        public static final double  EXTENSION_SCALE           = 58.625 / -0.3141;
+        public static final double  EXTENSION_SCALE           = (SCALED_MAX - SCALED_MIN) / (RAW_SENSOR_MAX - RAW_SENSOR_MIN);
         public static final double  EXTENSION_MOTOR_REDUCTION = 5.0;
         public static final DCMotor ELEVATOR_GEARBOX          = DCMotor.getNeoVortex(2);
-        public static final double  EXTENSION_OFFSET          = 0.9754 * EXTENSION_SCALE;
+        public static final double  EXTENSION_OFFSET          = SCALED_MIN - EXTENSION_SCALE * RAW_SENSOR_MIN;
         public static final double  ELEVATOR_MASS             = 15.875;
         public static final double  ELEVATOR_DRUM_RADIUS      = 0.0223139;
         public static final double  ELEVATOR_FEED_FORWARD     = 0.645;

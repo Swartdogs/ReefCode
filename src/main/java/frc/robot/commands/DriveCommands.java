@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.Constants;
 
 public class DriveCommands
@@ -51,7 +52,7 @@ public class DriveCommands
         return new Pose2d(new Translation2d(), linearDirection).transformBy(new Transform2d(linearMagnitude, 0.0, new Rotation2d())).getTranslation();
     }
 
-    public static Command joystickDrive(Drive drive, DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier omegaSupplier)
+    public static Command joystickDrive(Drive drive, DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier omegaSupplier, Elevator elevator)
     {
         return Commands.run(() ->
         {
@@ -60,7 +61,11 @@ public class DriveCommands
 
             omega = Math.copySign(omega * omega, omega);
 
-            ChassisSpeeds speeds = new ChassisSpeeds(linearVelocity.getX() * drive.getMaxLinearSpeedMetersPerSec(), linearVelocity.getY() * drive.getMaxLinearSpeedMetersPerSec(), omega * drive.getMaxAngularSpeedRadPerSec());
+            double clamp = MathUtil.clamp((Constants.Drive.SPEED_ELEVATOR_M * elevator.getExtension() + Constants.Drive.SPEED_ELEVATOR_B), Constants.Drive.MIN_SPEED_ELEVATOR, Constants.Drive.MAX_SPEED_ELEVATOR);
+
+            ChassisSpeeds speeds = new ChassisSpeeds(
+                    linearVelocity.getX() * drive.getMaxLinearSpeedMetersPerSec() * clamp, linearVelocity.getY() * drive.getMaxLinearSpeedMetersPerSec() * clamp, omega * drive.getMaxAngularSpeedRadPerSec() * clamp
+            );
 
             boolean isFlipped = DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red;
 

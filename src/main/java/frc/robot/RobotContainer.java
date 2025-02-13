@@ -102,8 +102,6 @@ public class RobotContainer
 
     private void configureButtonBindings()
     {
-        _drive.setDefaultCommand(DriveCommands.setTurnVolts(_drive, () -> _controller.getLeftX() * 144.0));
-
         // _funnel.setDefaultCommand(FunnelCommands.setVolts(_funnel, () ->
         // Constants.Funnel.DEFAULT_VOLTS));
         // _elevator.setDefaultCommand(ElevatorCommands.setVolts(_elevator, () ->
@@ -114,9 +112,7 @@ public class RobotContainer
         // Trigger _manipulatorRunning = new Trigger(() -> _manipulator.isRunning());
 
         // Default command, normal field-relative drive
-        // _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () ->
-        // -_controller.getLeftY(), () -> -_controller.getLeftX(), () ->
-        // -_controller.getRightX()));
+        _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_controller.getLeftY(), () -> -_controller.getLeftX(), () -> -_controller.getRightX()));
         // _drive.setDefaultCommand(DriveCommands.setTurnOpenLoop(_drive, () ->
         // MathUtil.applyDeadband(-_controller.getRightX(), 0.1) * 4.0));
         // _controller.a().onTrue(DriveCommands.setTurnPosition(_drive,
@@ -148,35 +144,30 @@ public class RobotContainer
         // _controller.rightTrigger().whileTrue(ElevatorCommands.setVolts(_elevator, ()
         // -> -_controller.getRightY() * Constants.General.MOTOR_VOLTAGE));
 
-        // _controller.back().onTrue(ElevatorCommands.setHeight(_elevator,
-        // ElevatorHeight.Stow));
+        _controller.back().onTrue(ElevatorCommands.setHeight(_elevator, ElevatorHeight.Stow));
         // // .alongWith(new DeferredCommand(() -> LEDCommandsetDefaultColor(_led,
         // // (_hasCoral.getAsBoolean() ? Constants.LED.GREEN : Constants.LED.RED)),
         // // Set.of())));
-        // _controller.povUp().onTrue(ElevatorCommands.setHeight(_elevator,
-        // ElevatorHeight.Level1));
+        _controller.povUp().onTrue(ElevatorCommands.setHeight(_elevator, ElevatorHeight.Level1));
         // // .alongWith(new DeferredCommand(() -> LEDCommands.setDefaultColor(_led,
         // // (_hasCoral.getAsBoolean() ?
         // // Constants.LED.PURPLE : Constants.LED.RED)), Set.of())));
-        // _controller.povRight().onTrue(ElevatorCommands.setHeight(_elevator,
-        // ElevatorHeight.Level2));
+        _controller.povRight().onTrue(ElevatorCommands.setHeight(_elevator, ElevatorHeight.Level2));
         // // .alongWith(new DeferredCommand(() -> LEDCommands.setDefaultColor(_led,
         // // (_hasCoral.getAsBoolean() ?
         // // Constants.LED.PINK : Constants.LED.RED)), Set.of())));
-        // _controller.povDown().onTrue(ElevatorCommands.setHeight(_elevator,
-        // ElevatorHeight.Level3));
+        _controller.povDown().onTrue(ElevatorCommands.setHeight(_elevator, ElevatorHeight.Level3));
         // // .alongWith(new DeferredCommand(() -> LEDCommands.setDefaultColor(_led,
         // // (_hasCoral.getAsBoolean() ?
         // // Constants.LED.BLUE : Constants.LED.RED)), Set.of())));
-        // _controller.povLeft().onTrue(ElevatorCommands.setHeight(_elevator,
-        // ElevatorHeight.Level4));
+        _controller.povLeft().onTrue(ElevatorCommands.setHeight(_elevator, ElevatorHeight.Level4));
         // // .alongWith(new DeferredCommand(() -> LEDCommands.setDefaultColor(_led,
         // // (_hasCoral.getAsBoolean() ?
         // // Constants.LED.ORANGE : Constants.LED.RED)), Set.of())));
 
-        // _controller.leftTrigger().onTrue(ManipulatorCommands.intake(_manipulator));
-        // _controller.start().onTrue(ManipulatorCommands.output(_manipulator));
-        // _controller.rightStick().onTrue(ManipulatorCommands.stop(_manipulator));
+        _controller.leftTrigger().onTrue(ManipulatorCommands.intake(_manipulator));
+        _controller.start().onTrue(ManipulatorCommands.output(_manipulator));
+        _controller.rightStick().onTrue(ManipulatorCommands.stop(_manipulator));
 
         // _hasCoral.onTrue(LEDCommands.setDefaultColor(_led, Constants.LED.GREEN));
         // _hasCoral.onFalse(LEDCommands.setDefaultColor(_led, Constants.LED.RED));
