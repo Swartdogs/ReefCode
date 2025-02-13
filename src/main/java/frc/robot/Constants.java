@@ -2,6 +2,9 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.Amps;
 
+import java.util.HashMap;
+
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.RobotConfig;
 
@@ -12,6 +15,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj2.command.Command;
 
 public final class Constants
 {
@@ -59,6 +63,17 @@ public final class Constants
         public static final int FUNNEL_SOLENOID   = 13;
     }
 
+    public static class Dashboard
+    {
+        public static final double LOW_BATTERY_VOLTAGE      = 11.5;
+        public static final double CAN_ERROR_TIME_THRESHOLD = 2.0; // HI COLLIN!TIME TO WAIT BEFORE REMOVING CAN ERROR.
+    }
+
+    public static class DIO
+    {
+        public static final int MANIPULATOR_LIGHT_SENSOR = 0;
+    }
+
     public static class Drive
     {
         public static final double          TRACK_WIDTH                   = Units.inchesToMeters(22);
@@ -71,13 +86,13 @@ public final class Constants
         public static final Rotation2d      BL_ZERO_ROTATION              = Rotation2d.fromDegrees(65.26 - 45.0);
         public static final Rotation2d      BR_ZERO_ROTATION              = Rotation2d.fromDegrees(114.1 + 45.0);
         public static final Current         DRIVE_MOTOR_CURRENT_LIMIT     = Amps.of(50);
-        public static final double          WHEEL_RADIUS                  = Units.inchesToMeters(1.5);
+        public static final double          WHEEL_RADIUS                  = Units.inchesToMeters(2);
         public static final double          DRIVE_MOTOR_REDUCTION         = 5.67;
         public static final boolean         DRIVE_INVERTED                = false;
         public static final DCMotor         DRIVE_GEARBOX                 = DCMotor.getKrakenX60(1);
         public static final double          DRIVE_ENCODER_POSITION_FACTOR = 2 * Math.PI / DRIVE_MOTOR_REDUCTION;
         public static final double          DRIVE_ENCODER_VELOCITY_FACTOR = 2 * Math.PI / 60.0 / DRIVE_MOTOR_REDUCTION;
-        public static final double          DRIVE_KP                      = 0.0;
+        public static final double          DRIVE_KP                      = 5.0;
         public static final double          DRIVE_KD                      = 0.0;
         public static final double          DRIVE_KS                      = 0.0;
         public static final double          DRIVE_KV                      = 0.1;
@@ -164,6 +179,26 @@ public final class Constants
         public static final double ROBOT_MASS       = 74.088;
         public static final double ROBOT_MOI        = 6.883;
         public static final double MOTOR_VOLTAGE    = 12.0;
+    }
+
+    public static class Lookups
+    {
+        public static final HashMap<String, Command> _lookup = new HashMap<String, Command>() {
+            {
+                put("LeftIKL", AutoBuilder.buildAuto("Left_IK"));
+                put("LeftILK", AutoBuilder.buildAuto("Left_IL"));
+                put("LeftJKL", AutoBuilder.buildAuto("Left_JK"));
+                put("LeftJLK", AutoBuilder.buildAuto("Left_JL"));
+                put("MiddleGAB", AutoBuilder.buildAuto("Middle_GA"));
+                put("MiddleGBA", AutoBuilder.buildAuto("Middle_GB"));
+                put("MiddleHAB", AutoBuilder.buildAuto("Middle_HA"));
+                put("MiddleHBA", AutoBuilder.buildAuto("Middle_HB"));
+                put("RightECD", AutoBuilder.buildAuto("Right_EC"));
+                put("RightEDC", AutoBuilder.buildAuto("Right_ED"));
+                put("RightFCD", AutoBuilder.buildAuto("Right_FC"));
+                put("RightFDC", AutoBuilder.buildAuto("Right_FD"));
+            }
+        };
     }
 
     public static class Manipulator

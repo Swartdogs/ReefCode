@@ -1,0 +1,79 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "Delay"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RightToE"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Output"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "EToRightCS"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RightCSToC"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Output"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "CToRightCS"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RightCSToD"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Output"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "3-Coral Auto",
+  "choreoAuto": false
+}

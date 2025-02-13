@@ -1,13 +1,24 @@
 package frc.robot;
 
+import com.pathplanner.lib.auto.NamedCommands;
+
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.Alert;
+import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.Alert.AlertType;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.ElevatorCommands;
 import frc.robot.commands.FunnelCommands;
 import frc.robot.commands.ManipulatorCommands;
+import frc.robot.subsystems.dashboard.Dashboard;
+import frc.robot.subsystems.dashboard.DashboardIO;
+import frc.robot.subsystems.dashboard.DashboardIONetwork;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIONavX;
@@ -28,6 +39,10 @@ import frc.robot.subsystems.manipulator.ManipulatorIO;
 import frc.robot.subsystems.manipulator.ManipulatorIOHardware;
 import frc.robot.subsystems.manipulator.ManipulatorIOSim;
 
+import java.util.Set;
+
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+
 public class RobotContainer
 {
     // Subsystems
@@ -35,13 +50,22 @@ public class RobotContainer
     private final Elevator    _elevator;
     private final Manipulator _manipulator;
     private final Funnel      _funnel;
-    // private final LED _led;
+    private final Dashboard   _dashboard;
+    // private final LED         _led;
 
     // Controller
     private final CommandXboxController _controller = new CommandXboxController(0);
 
     // Dashboard inputs
-    // private final LoggedDashboardChooser<Command> _autoChooser;
+    private final LoggedDashboardChooser<String>  _startingPositionChooser;
+    private final LoggedDashboardChooser<String>  _firstCoralChooser;
+    private final LoggedDashboardChooser<String>  _secondCoralChooser;
+    private final LoggedDashboardChooser<String>  _thirdCoralChooser;
+    private final LoggedDashboardChooser<Integer> _autoDelayChooser;
+
+    //
+    private final Alert _nullAuto;
+    private Command     _selectedAuto;
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -56,6 +80,7 @@ public class RobotContainer
                 _elevator = new Elevator(new ElevatorIOHardware());
                 _manipulator = new Manipulator(new ManipulatorIOHardware());
                 _funnel = new Funnel(new FunnelIOHardware());
+                _dashboard = new Dashboard(new DashboardIONetwork());
                 // _led = new LED(new LEDIOHardware());
                 break;
 
@@ -65,6 +90,7 @@ public class RobotContainer
                 _elevator = new Elevator(new ElevatorIOSim());
                 _manipulator = new Manipulator(new ManipulatorIOSim(() -> _controller.leftTrigger().getAsBoolean()));
                 _funnel = new Funnel(new FunnelIOSim());
+                _dashboard = new Dashboard(new DashboardIONetwork());
                 // _led = new LED(new LEDIOSim());
                 break;
 
@@ -74,27 +100,90 @@ public class RobotContainer
                 _elevator = new Elevator(new ElevatorIO() {});
                 _manipulator = new Manipulator(new ManipulatorIO() {});
                 _funnel = new Funnel(new FunnelIO() {});
+                _dashboard = new Dashboard(new DashboardIO() {});
                 // _led = new LED(new LEDIO() {});
                 break;
         }
 
-        // Set up auto routines
-        // _autoChooser = new LoggedDashboardChooser<>("Auto Choices",
-        // AutoBuilder.buildAutoChooser());
+        NamedCommands.registerCommand("ExtendToL1", ElevatorCommands.setHeight(_elevator, Constants.Elevator.L1_HEIGHT));
+        NamedCommands.registerCommand("ExtendToL2", ElevatorCommands.setHeight(_elevator, Constants.Elevator.L2_HEIGHT));
+        NamedCommands.registerCommand("ExtendToL3", ElevatorCommands.setHeight(_elevator, Constants.Elevator.L3_HEIGHT));
+        NamedCommands.registerCommand("ExtendToL4", ElevatorCommands.setHeight(_elevator, Constants.Elevator.L4_HEIGHT));
+        NamedCommands.registerCommand("Stow", ElevatorCommands.setHeight(_elevator, Constants.Elevator.STOW_HEIGHT));
 
-        // Set up SysId routines
-        // _autoChooser.addOption("Drive Wheel Radius Characterization",
-        // DriveCommands.wheelRadiusCharacterization(_drive));
-        // _autoChooser.addOption("Drive Simple FF Characterization",
-        // DriveCommands.feedforwardCharacterization(_drive));
-        // _autoChooser.addOption("Drive SysId (Quasistatic Forward)",
-        // _drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-        // _autoChooser.addOption("Drive SysId (Quasistatic Reverse)",
-        // _drive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-        // _autoChooser.addOption("Drive SysId (Dynamic Forward)",
-        // _drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
-        // _autoChooser.addOption("Drive SysId (Dynamic Reverse)",
-        // _drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+        if (RobotBase.isSimulation())
+        {
+            NamedCommands.registerCommand("Intake", Commands.none());
+        }
+        else
+        {
+            NamedCommands.registerCommand("Intake", ManipulatorCommands.intake(_manipulator));
+        }
+
+        NamedCommands.registerCommand("Output", ManipulatorCommands.output(_manipulator));
+        NamedCommands.registerCommand("Delay", Commands.defer(() -> Commands.waitSeconds(autoDelayTime()), Set.of()));
+
+        var delayChooser = new SendableChooser<Integer>();
+        delayChooser.setDefaultOption("0", 0);
+        delayChooser.addOption("1", 1);
+        delayChooser.addOption("2", 2);
+        delayChooser.addOption("3", 3);
+        delayChooser.addOption("4", 4);
+        delayChooser.addOption("5", 5);
+        _autoDelayChooser = new LoggedDashboardChooser<>("Auto Delay", delayChooser);
+
+        var startingPositionChooser = new SendableChooser<String>();
+        startingPositionChooser.addOption("Right", "Right");
+        startingPositionChooser.addOption("Middle", "Middle");
+        startingPositionChooser.addOption("Left", "Left");
+        _startingPositionChooser = new LoggedDashboardChooser<>("Starting Position", startingPositionChooser);
+
+        var firstCoralChooser = new SendableChooser<String>();
+        firstCoralChooser.addOption("A", "A");
+        firstCoralChooser.addOption("B", "B");
+        firstCoralChooser.addOption("C", "C");
+        firstCoralChooser.addOption("D", "D");
+        firstCoralChooser.addOption("E", "E");
+        firstCoralChooser.addOption("F", "F");
+        firstCoralChooser.addOption("G", "G");
+        firstCoralChooser.addOption("H", "H");
+        firstCoralChooser.addOption("I", "I");
+        firstCoralChooser.addOption("J", "J");
+        firstCoralChooser.addOption("K", "K");
+        firstCoralChooser.addOption("L", "L");
+        _firstCoralChooser = new LoggedDashboardChooser<>("First Coral", firstCoralChooser);
+
+        var secondCoralChooser = new SendableChooser<String>();
+        secondCoralChooser.addOption("A", "A");
+        secondCoralChooser.addOption("B", "B");
+        secondCoralChooser.addOption("C", "C");
+        secondCoralChooser.addOption("D", "D");
+        secondCoralChooser.addOption("E", "E");
+        secondCoralChooser.addOption("F", "F");
+        secondCoralChooser.addOption("G", "G");
+        secondCoralChooser.addOption("H", "H");
+        secondCoralChooser.addOption("I", "I");
+        secondCoralChooser.addOption("J", "J");
+        secondCoralChooser.addOption("K", "K");
+        secondCoralChooser.addOption("L", "L");
+        _secondCoralChooser = new LoggedDashboardChooser<>("Second Coral", secondCoralChooser);
+
+        var thirdCoralChooser = new SendableChooser<String>();
+        thirdCoralChooser.addOption("A", "A");
+        thirdCoralChooser.addOption("B", "B");
+        thirdCoralChooser.addOption("C", "C");
+        thirdCoralChooser.addOption("D", "D");
+        thirdCoralChooser.addOption("E", "E");
+        thirdCoralChooser.addOption("F", "F");
+        thirdCoralChooser.addOption("G", "G");
+        thirdCoralChooser.addOption("H", "H");
+        thirdCoralChooser.addOption("I", "I");
+        thirdCoralChooser.addOption("J", "J");
+        thirdCoralChooser.addOption("K", "K");
+        thirdCoralChooser.addOption("L", "L");
+        _thirdCoralChooser = new LoggedDashboardChooser<>("Third Coral", thirdCoralChooser);
+
+        _nullAuto = new Alert("No Auto Detected", AlertType.kWarning);
 
         // Configure the button bindings
         configureButtonBindings();
@@ -165,7 +254,7 @@ public class RobotContainer
         // // (_hasCoral.getAsBoolean() ?
         // // Constants.LED.ORANGE : Constants.LED.RED)), Set.of())));
 
-        _controller.leftTrigger().onTrue(ManipulatorCommands.intake(_manipulator));
+        _controller.leftStick().onTrue(ManipulatorCommands.intake(_manipulator));
         _controller.start().onTrue(ManipulatorCommands.output(_manipulator));
         _controller.rightStick().onTrue(ManipulatorCommands.stop(_manipulator));
 
@@ -176,6 +265,21 @@ public class RobotContainer
         // Constants.LED.YELLOW));
     }
 
+    public boolean getFunnelIsDropped()
+    {
+        return _funnel.isDropped();
+    }
+
+    public void periodic()
+    {
+        // var cedricAuto = _dashboard.getPaths("Left_JL");
+        // _dashboard.setAuto(cedricAuto);
+        // _dashboard.setRobotPosition(cedricAuto.get(0).getStartingHolonomicPose().get());
+
+        _selectedAuto = Constants.Lookups._lookup.get(_startingPositionChooser.get() + _firstCoralChooser.get() + _secondCoralChooser.get() + _thirdCoralChooser.get());
+        _nullAuto.set(_selectedAuto == null);
+    }
+
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.
      *
@@ -183,6 +287,11 @@ public class RobotContainer
      */
     public Command getAutonomousCommand()
     {
-        return null;
+        return _selectedAuto;
+    }
+
+    public Integer autoDelayTime()
+    {
+        return _autoDelayChooser.get();
     }
 }
