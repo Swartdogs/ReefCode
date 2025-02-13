@@ -180,6 +180,7 @@ public final class Constants
         public static final double  ELEVATOR_MASS             = 15.875;
         public static final double  ELEVATOR_DRUM_RADIUS      = 0.0223139;
         public static final double  ELEVATOR_FEED_FORWARD     = 0.645;
+        public static final double  ELEVATOR_MODIFICATION_HEIGHT = 0.5;
     }
 
     public static class Funnel

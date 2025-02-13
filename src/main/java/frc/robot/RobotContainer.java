@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -19,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.ElevatorCommands;
 import frc.robot.commands.FunnelCommands;
+import frc.robot.commands.LEDCommands;
 import frc.robot.commands.ManipulatorCommands;
 import frc.robot.subsystems.dashboard.Dashboard;
 import frc.robot.subsystems.dashboard.DashboardIO;
@@ -38,6 +40,10 @@ import frc.robot.subsystems.funnel.Funnel;
 import frc.robot.subsystems.funnel.FunnelIO;
 import frc.robot.subsystems.funnel.FunnelIOHardware;
 import frc.robot.subsystems.funnel.FunnelIOSim;
+import frc.robot.subsystems.leds.LED;
+import frc.robot.subsystems.leds.LEDIO;
+import frc.robot.subsystems.leds.LEDIOHardware;
+import frc.robot.subsystems.leds.LEDIOSim;
 import frc.robot.subsystems.manipulator.Manipulator;
 import frc.robot.subsystems.manipulator.ManipulatorIO;
 import frc.robot.subsystems.manipulator.ManipulatorIOHardware;
@@ -55,7 +61,7 @@ public class RobotContainer
     private final Manipulator _manipulator;
     private final Funnel      _funnel;
     private final Dashboard   _dashboard;
-    // private final LED _led;
+    private final LED _led;
 
     // Controller
     private final CommandJoystick       _driverJoystick  = new CommandJoystick(0);
@@ -88,7 +94,7 @@ public class RobotContainer
                 _manipulator = new Manipulator(new ManipulatorIOHardware());
                 _funnel = new Funnel(new FunnelIOHardware());
                 _dashboard = new Dashboard(new DashboardIONetwork());
-                // _led = new LED(new LEDIOHardware());
+                _led = new LED(new LEDIOHardware());
                 break;
 
             case SIM:
@@ -98,7 +104,7 @@ public class RobotContainer
                 _manipulator = new Manipulator(new ManipulatorIOSim(() -> _driverJoystick.button(7).getAsBoolean()));
                 _funnel = new Funnel(new FunnelIOSim());
                 _dashboard = new Dashboard(new DashboardIONetwork());
-                // _led = new LED(new LEDIOSim());
+                _led = new LED(new LEDIOSim());
                 break;
 
             default:
@@ -108,7 +114,7 @@ public class RobotContainer
                 _manipulator = new Manipulator(new ManipulatorIO() {});
                 _funnel = new Funnel(new FunnelIO() {});
                 _dashboard = new Dashboard(new DashboardIO() {});
-                // _led = new LED(new LEDIO() {});
+                _led = new LED(new LEDIO() {});
                 break;
         }
 
@@ -193,10 +199,11 @@ public class RobotContainer
         _nullAuto = new Alert("No Auto Detected", AlertType.kWarning);
 
         // Configure the button bindings
-        configureButtonBindings();
+        configureTestBindings();
     }
 
-    private void configureButtonBindings()
+    @SuppressWarnings("unused")
+    private void configureTestBindings()
     {
         // _funnel.setDefaultCommand(FunnelCommands.setVolts(_funnel, () ->
         // Constants.Funnel.DEFAULT_VOLTS));
@@ -270,6 +277,76 @@ public class RobotContainer
 
         // _manipulatorRunning.whileTrue(LEDCommands.flashColor(_led,
         // Constants.LED.YELLOW));
+    }
+
+    @SuppressWarnings("unused")
+    private void configureButtonBindings()
+    {
+        Trigger _hasCoral           = new Trigger(() -> _manipulator.hasCoral());
+        Trigger _manipulatorRunning = new Trigger(() -> _manipulator.isRunning());
+        Trigger _operatorButton12 = _operatorButtons.axisGreaterThan(0, 0.5);
+        Trigger _operatorButton13 = _operatorButtons.axisGreaterThan(1, 0.5);
+        Trigger _operatorButton14 = _operatorButtons.axisLessThan(1, -0.5);
+
+        // Default command, normal field-relative drive
+        _drive.setDefaultCommand(DriveCommands.joystickFieldCentricDrive(_drive, _elevator, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> -_driverJoystick.getZ()));
+
+        //Driver Controls
+        _driverJoystick.button(1).whileTrue(DriveCommands.joystickRobotCentricDrive(_drive, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> -_driverJoystick.getZ()));
+        _driverJoystick.button(2).onTrue(null); // replace this with switching cameras
+        _driverJoystick.button(11).onTrue(DriveCommands.resetGyro(_drive, () -> isRedAlliance()));
+
+        _driverButtons.button(0)
+                .whileTrue(DriveCommands.joystickDriveAtAngle(_drive, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> isRedAlliance() ? Constants.Field.RED_REEF_ANGLE_ONE : Constants.Field.BLUE_REEF_ANGLE_ONE));
+        _driverButtons.button(1)
+                .whileTrue(DriveCommands.joystickDriveAtAngle(_drive, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> isRedAlliance() ? Constants.Field.RED_REEF_ANGLE_TWO : Constants.Field.BLUE_REEF_ANGLE_TWO));
+        _driverButtons.button(2)
+                .whileTrue(DriveCommands.joystickDriveAtAngle(_drive, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> isRedAlliance() ? Constants.Field.RED_REEF_ANGLE_THREE : Constants.Field.BLUE_REEF_ANGLE_THREE));
+        _driverButtons.button(3)
+                .whileTrue(DriveCommands.joystickDriveAtAngle(_drive, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> isRedAlliance() ? Constants.Field.RED_REEF_ANGLE_FOUR : Constants.Field.BLUE_REEF_ANGLE_FOUR));
+        _driverButtons.button(4)
+                .whileTrue(DriveCommands.joystickDriveAtAngle(_drive, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> isRedAlliance() ? Constants.Field.RED_REEF_ANGLE_FIVE : Constants.Field.BLUE_REEF_ANGLE_FIVE));
+        _driverButtons.button(5)
+                .whileTrue(DriveCommands.joystickDriveAtAngle(_drive, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> isRedAlliance() ? Constants.Field.RED_REEF_ANGLE_SIX : Constants.Field.BLUE_REEF_ANGLE_SIX));
+        _driverButtons.button(6)
+                .whileTrue(DriveCommands.joystickDriveAtAngle(_drive, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> isRedAlliance() ? Constants.Field.RED_LEFT_STATION_ANGLE : Constants.Field.BLUE_LEFT_STATION_ANGLE));
+        _driverButtons.button(7).whileTrue(
+                DriveCommands.joystickDriveAtAngle(_drive, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> isRedAlliance() ? Constants.Field.RED_RIGHT_STATION_ANGLE : Constants.Field.BLUE_RIGHT_STATION_ANGLE)
+        );
+        _driverButtons.button(8)
+                .whileTrue(DriveCommands.joystickDriveAtAngle(_drive, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> isRedAlliance() ? Constants.Field.RED_PROCESSOR_ANGLE : Constants.Field.BLUE_PROCESSOR_ANGLE));
+
+
+        //Operator Controls
+        _operatorButtons.button(0)
+                .onTrue(ElevatorCommands.setHeight(_elevator, ElevatorHeight.Level1).alongWith(new DeferredCommand(() -> LEDCommands.setDefaultColor(_led, (_hasCoral.getAsBoolean() ? Constants.LED.PURPLE : Constants.LED.RED)), Set.of())));
+        _operatorButtons.button(1)
+                .onTrue(ElevatorCommands.setHeight(_elevator, ElevatorHeight.Level2).alongWith(new DeferredCommand(() -> LEDCommands.setDefaultColor(_led, (_hasCoral.getAsBoolean() ? Constants.LED.PINK : Constants.LED.RED)), Set.of())));
+        _operatorButtons.button(2)
+                .onTrue(ElevatorCommands.setHeight(_elevator, ElevatorHeight.Level3).alongWith(new DeferredCommand(() -> LEDCommands.setDefaultColor(_led, (_hasCoral.getAsBoolean() ? Constants.LED.BLUE : Constants.LED.RED)), Set.of())));
+        _operatorButtons.button(3)
+                .onTrue(ElevatorCommands.setHeight(_elevator, ElevatorHeight.Level4).alongWith(new DeferredCommand(() -> LEDCommands.setDefaultColor(_led, (_hasCoral.getAsBoolean() ? Constants.LED.ORANGE : Constants.LED.RED)), Set.of())));
+        _operatorButtons.button(4)
+                .onTrue(ElevatorCommands.setHeight(_elevator, ElevatorHeight.Stow).alongWith(new DeferredCommand(() -> LEDCommands.setDefaultColor(_led, (_hasCoral.getAsBoolean() ? Constants.LED.GREEN : Constants.LED.RED)), Set.of())));
+        _operatorButtons.button(5).onTrue(ManipulatorCommands.intake(_manipulator));
+        _operatorButtons.button(6).onTrue(ManipulatorCommands.output(_manipulator));
+        _operatorButtons.button(7).onTrue(ManipulatorCommands.stop(_manipulator));
+        _operatorButtons.button(8).and(_driverJoystick.button(3)).onTrue(
+                FunnelCommands.drop(_funnel).alongWith(ElevatorCommands.setHeight(_elevator, ElevatorHeight.Hang)).alongWith(LEDCommands.flashColor(_led, Constants.LED.RED)).until(() -> _elevator.atSetpoint())
+                        .andThen(LEDCommands.setDefaultColor(_led, Constants.LED.YELLOW))
+        ); // replace with hang prep
+        _operatorButtons.button(9).onTrue(null);// replace with hang execute
+        _operatorButtons.button(10).onTrue(null);// replace with algae intake
+        _operatorButtons.button(11).onTrue(null);// replace with algae output
+
+        _operatorButton12.onTrue(null);// replace with algae stop
+        _operatorButton13.onTrue(ElevatorCommands.modifyHeight(_elevator, Constants.Elevator.ELEVATOR_MODIFICATION_HEIGHT));
+        _operatorButton14.onTrue(ElevatorCommands.modifyHeight(_elevator, -Constants.Elevator.ELEVATOR_MODIFICATION_HEIGHT));
+
+        _hasCoral.onTrue(LEDCommands.setDefaultColor(_led, Constants.LED.GREEN));
+        _hasCoral.onFalse(LEDCommands.setDefaultColor(_led, Constants.LED.RED));
+
+        _manipulatorRunning.whileTrue(LEDCommands.flashColor(_led, Constants.LED.YELLOW));
     }
 
     public boolean getFunnelIsDropped()
