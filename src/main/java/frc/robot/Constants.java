@@ -98,8 +98,8 @@ public final class Constants
         public static final double          DRIVE_KD                      = 0.0;
         public static final double          DRIVE_KS                      = 0.0;
         public static final double          DRIVE_KV                      = 0.1;
-        public static final double          DRIVE_SIM_P                   = 0.05;
-        public static final double          DRIVE_SIM_D                   = 0.0;
+        public static final double          DRIVE_SIM_KP                   = 0.05;
+        public static final double          DRIVE_SIM_KD                   = 0.0;
         public static final double          DRIVE_SIM_KS                  = 0.0;
         public static final double          DRIVE_SIM_KV                  = 0.0789;
         public static final boolean         TURN_INVERTED                 = true;
@@ -110,8 +110,8 @@ public final class Constants
         public static final double          TURN_ENCODER_VELOCITY_FACTOR  = 1 / TURN_MOTOR_REDUCTION;
         public static final double          TURN_KP                       = 7.0;
         public static final double          TURN_KD                       = 0.0;
-        public static final double          TURN_SIM_P                    = 8.0;
-        public static final double          TURN_SIM_D                    = 0.0;
+        public static final double          TURN_SIM_KP                    = 8.0;
+        public static final double          TURN_SIM_KD                    = 0.0;
         public static final double          TURN_PID_MIN_INPUT            = 0;
         public static final double          TURN_PID_MAX_INPUT            = 1;
         public static final double          WHEEL_COF                     = 1.2;
@@ -120,6 +120,8 @@ public final class Constants
         public static final RobotConfig     PP_CONFIG                     = new RobotConfig(
                 General.ROBOT_MASS, General.ROBOT_MOI, new ModuleConfig(WHEEL_RADIUS, General.MAX_LINEAR_SPEED, WHEEL_COF, DRIVE_GEARBOX.withReduction(DRIVE_MOTOR_REDUCTION), DRIVE_MOTOR_CURRENT_LIMIT.magnitude(), 1), MODULE_TRANSLATIONS
         );
+        public static final double          ROTATE_KP                     = 0;
+        public static final double          ROTATE_KD                     = 0;
         public static final double          MAX_SPEED_ELEVATOR            = 1;
         public static final double          MIN_SPEED_ELEVATOR            = 0.2;
         public static final double          MAX_SPEED_ELEVATOR_HEIGHT     = Constants.Elevator.L2_HEIGHT;
