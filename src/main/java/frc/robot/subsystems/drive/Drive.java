@@ -56,8 +56,7 @@ public class Drive extends SubsystemBase
     private final Alert                  _gyroDisconnectedAlert = new Alert("Disconnected gyro, using kinematics as a fallback.", AlertType.kError);
     private SwerveDriveKinematics        _kinematics            = new SwerveDriveKinematics(MODULE_TRANSLATIONS);
     private Rotation2d                   _rawGyroRotation       = new Rotation2d();
-    private SwerveModulePosition[]       _lastModulePositions   = new SwerveModulePosition[] { new SwerveModulePosition(), new SwerveModulePosition(), new SwerveModulePosition(), new SwerveModulePosition() };
-    private SwerveDrivePoseEstimator     _poseEstimator         = new SwerveDrivePoseEstimator(_kinematics, _rawGyroRotation, _lastModulePositions, new Pose2d());
+    private SwerveDrivePoseEstimator     _poseEstimator;
 
     public Drive(GyroIO gyroIO, ModuleIO flModuleIO, ModuleIO frModuleIO, ModuleIO blModuleIO, ModuleIO brModuleIO)
     {
@@ -145,6 +144,8 @@ public class Drive extends SubsystemBase
         double[] sampleTimestamps = _modules[0].getOdometryTimestamps();
         int      sampleCount      = sampleTimestamps.length;
 
+        // Idk if this for loop is necessary, leaving it in right now because it doesn't
+        // seem to hurt?
         for (int i = 0; i < sampleCount; i++)
         {
             SwerveModulePosition[] modulePositions = new SwerveModulePosition[4];
@@ -152,9 +153,7 @@ public class Drive extends SubsystemBase
 
             for (int moduleIndex = 0; moduleIndex < 4; moduleIndex++)
             {
-                modulePositions[moduleIndex]      = _modules[moduleIndex].getOdometryPositions()[i];
-                moduleDeltas[moduleIndex]         = new SwerveModulePosition(modulePositions[moduleIndex].distanceMeters - _lastModulePositions[moduleIndex].distanceMeters, modulePositions[moduleIndex].angle);
-                _lastModulePositions[moduleIndex] = modulePositions[moduleIndex];
+                modulePositions[moduleIndex] = _modules[moduleIndex].getOdometryPositions()[i];
             }
 
             if (_gyroInputs.connected)
@@ -166,9 +165,9 @@ public class Drive extends SubsystemBase
                 Twist2d twist = _kinematics.toTwist2d(moduleDeltas);
                 _rawGyroRotation = _rawGyroRotation.plus(new Rotation2d(twist.dtheta));
             }
-
-            _poseEstimator.updateWithTime(sampleTimestamps[i], _rawGyroRotation, modulePositions);
         }
+
+        _poseEstimator.update(_gyroInputs.yawPosition, getModulePositions()); // maybe possible to replace _gyroInputs.yawPosition with _rawGyroRotation
 
         _gyroDisconnectedAlert.set(!_gyroInputs.connected && Constants.AdvantageKit.CURRENT_MODE != Constants.AdvantageKit.Mode.SIM);
     }
@@ -311,7 +310,7 @@ public class Drive extends SubsystemBase
 
     public void setPose(Pose2d pose)
     {
-        _poseEstimator.resetPosition(_rawGyroRotation, getModulePositions(), pose);
+        _poseEstimator.resetPosition(_gyroInputs.yawPosition, getModulePositions(), pose);
     }
 
     public void addVisionMeasurement(Pose2d visionRobotPoseMeters, double timestampSeconds, Matrix<N3, N1> visionMeasurementStdDevs)
