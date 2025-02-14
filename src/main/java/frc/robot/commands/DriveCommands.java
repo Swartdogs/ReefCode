@@ -242,4 +242,9 @@ public class DriveCommands
     {
         return drive.run(() -> drive.setTurnVolts(volts.getAsDouble()));
     }
+
+    public static Command odometerReset(Drive drive, Pose2d pos)
+    {
+        return drive.runOnce(() -> drive.setPose(pos));
+    }
 }

@@ -5,6 +5,7 @@ import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Alert.AlertType;
@@ -16,7 +17,7 @@ import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-
+import frc.robot.commands.CompositeCommands;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.ElevatorCommands;
 import frc.robot.commands.FunnelCommands;
@@ -61,7 +62,7 @@ public class RobotContainer
     private final Manipulator _manipulator;
     private final Funnel      _funnel;
     private final Dashboard   _dashboard;
-    private final LED _led;
+    private final LED         _led;
 
     // Controller
     private final CommandJoystick       _driverJoystick  = new CommandJoystick(0);
@@ -226,6 +227,7 @@ public class RobotContainer
         // Rotation2d.fromDegrees(180)));
         // _controller.x().onTrue(DriveCommands.setTurnPosition(_drive,
         // Rotation2d.fromDegrees(270)));
+        _controller.a().onTrue(DriveCommands.odometerReset(_drive, new Pose2d(Units.inchesToMeters(297.5), Units.inchesToMeters(158.5), Rotation2d.fromDegrees(0))));
 
         // Lock to 0° when A button is held
         // _controller.a().whileTrue(DriveCommands.joystickDriveAtAngle(_drive, () ->
@@ -269,7 +271,7 @@ public class RobotContainer
         // // Constants.LED.ORANGE : Constants.LED.RED)), Set.of())));
 
         _controller.leftStick().onTrue(ManipulatorCommands.intake(_manipulator));
-        _controller.start().onTrue(ManipulatorCommands.output(_manipulator));
+        _controller.start().onTrue(CompositeCommands.output(_elevator, _manipulator));
         _controller.rightStick().onTrue(ManipulatorCommands.stop(_manipulator));
 
         // _hasCoral.onTrue(LEDCommands.setDefaultColor(_led, Constants.LED.GREEN));
@@ -284,14 +286,14 @@ public class RobotContainer
     {
         Trigger _hasCoral           = new Trigger(() -> _manipulator.hasCoral());
         Trigger _manipulatorRunning = new Trigger(() -> _manipulator.isRunning());
-        Trigger _operatorButton12 = _operatorButtons.axisGreaterThan(0, 0.5);
-        Trigger _operatorButton13 = _operatorButtons.axisGreaterThan(1, 0.5);
-        Trigger _operatorButton14 = _operatorButtons.axisLessThan(1, -0.5);
+        Trigger _operatorButton12   = _operatorButtons.axisGreaterThan(0, 0.5);
+        Trigger _operatorButton13   = _operatorButtons.axisGreaterThan(1, 0.5);
+        Trigger _operatorButton14   = _operatorButtons.axisLessThan(1, -0.5);
 
         // Default command, normal field-relative drive
         _drive.setDefaultCommand(DriveCommands.joystickFieldCentricDrive(_drive, _elevator, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> -_driverJoystick.getZ()));
 
-        //Driver Controls
+        // Driver Controls
         _driverJoystick.button(1).whileTrue(DriveCommands.joystickRobotCentricDrive(_drive, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> -_driverJoystick.getZ()));
         _driverJoystick.button(2).onTrue(null); // replace this with switching cameras
         _driverJoystick.button(11).onTrue(DriveCommands.resetGyro(_drive, () -> isRedAlliance()));
@@ -316,8 +318,7 @@ public class RobotContainer
         _driverButtons.button(8)
                 .whileTrue(DriveCommands.joystickDriveAtAngle(_drive, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> isRedAlliance() ? Constants.Field.RED_PROCESSOR_ANGLE : Constants.Field.BLUE_PROCESSOR_ANGLE));
 
-
-        //Operator Controls
+        // Operator Controls
         _operatorButtons.button(0)
                 .onTrue(ElevatorCommands.setHeight(_elevator, ElevatorHeight.Level1).alongWith(new DeferredCommand(() -> LEDCommands.setDefaultColor(_led, (_hasCoral.getAsBoolean() ? Constants.LED.PURPLE : Constants.LED.RED)), Set.of())));
         _operatorButtons.button(1)

@@ -122,8 +122,8 @@ public final class Constants
         );
         public static final double          MAX_SPEED_ELEVATOR            = 1;
         public static final double          MIN_SPEED_ELEVATOR            = 0.2;
-        public static final double          MAX_SPEED_ELEVATOR_HEIGHT     = 24;
-        public static final double          MIN_SPEED_ELEVATOR_HEIGHT     = 60;
+        public static final double          MAX_SPEED_ELEVATOR_HEIGHT     = Constants.Elevator.L2_HEIGHT;
+        public static final double          MIN_SPEED_ELEVATOR_HEIGHT     = Constants.Elevator.L3_HEIGHT;
         public static final double          SPEED_ELEVATOR_M              = (MAX_SPEED_ELEVATOR - MIN_SPEED_ELEVATOR) / (MIN_SPEED_ELEVATOR_HEIGHT - MAX_SPEED_ELEVATOR_HEIGHT);
         public static final double          SPEED_ELEVATOR_B              = MAX_SPEED_ELEVATOR - SPEED_ELEVATOR_M * MAX_SPEED_ELEVATOR_HEIGHT;
     }
@@ -158,28 +158,28 @@ public final class Constants
 
     public static class Elevator
     {
-        public static final double  RAW_SENSOR_MIN            = 0.987;
-        public static final double  RAW_SENSOR_MAX            = 0.639;
-        public static final double  SCALED_MIN                = 21.5;
-        public static final double  SCALED_MAX                = 80.25;
-        public static final double  EXTENSION_KP              = 0.1;
-        public static final double  EXTENSION_KI              = 0.0;
-        public static final double  EXTENSION_KD              = 0.0; // anything above 0.18 causes "shake"
-        public static final double  MAX_EXTENSION             = SCALED_MAX - SCALED_MIN;
-        public static final double  EXTENSION_TOLERANCE       = 0.5;
-        public static final double  STOW_HEIGHT               = 0.0;
-        public static final double  L1_HEIGHT                 = 9.6; // 12.7625 account for bottom of baseplate to bottom of carrige
-        public static final double  L2_HEIGHT                 = 16.8; // 19.11
-        public static final double  L3_HEIGHT                 = 35.1; // 34.86
-        public static final double  L4_HEIGHT                 = 65.0; // 59.29
-        public static final double  HANG_HEIGHT               = 31.875 - 12.7625; // 19.11
-        public static final double  EXTENSION_SCALE           = (SCALED_MAX - SCALED_MIN) / (RAW_SENSOR_MAX - RAW_SENSOR_MIN);
-        public static final double  EXTENSION_MOTOR_REDUCTION = 5.0;
-        public static final DCMotor ELEVATOR_GEARBOX          = DCMotor.getNeoVortex(2);
-        public static final double  EXTENSION_OFFSET          = SCALED_MIN - EXTENSION_SCALE * RAW_SENSOR_MIN;
-        public static final double  ELEVATOR_MASS             = 15.875;
-        public static final double  ELEVATOR_DRUM_RADIUS      = 0.0223139;
-        public static final double  ELEVATOR_FEED_FORWARD     = 0.645;
+        public static final double  RAW_SENSOR_MIN               = 0.989;
+        public static final double  RAW_SENSOR_MAX               = 0.631;
+        public static final double  SCALED_MIN                   = 15.5;
+        public static final double  SCALED_MAX                   = 74.75;
+        public static final double  EXTENSION_KP                 = 0.1;
+        public static final double  EXTENSION_KI                 = 0.0;
+        public static final double  EXTENSION_KD                 = 0.0; // anything above 0.18 causes "shake"
+        public static final double  MAX_EXTENSION                = SCALED_MAX - SCALED_MIN;
+        public static final double  EXTENSION_TOLERANCE          = 0.5;
+        public static final double  STOW_HEIGHT                  = 15.6;
+        public static final double  L1_HEIGHT                    = 23.8; // 12.7625 account for bottom of baseplate to bottom of carrige
+        public static final double  L2_HEIGHT                    = 32.1; // 19.11
+        public static final double  L3_HEIGHT                    = 47.9; // 34.86
+        public static final double  L4_HEIGHT                    = 73.3; // 59.29
+        public static final double  HANG_HEIGHT                  = L3_HEIGHT; // 19.11
+        public static final double  EXTENSION_SCALE              = (SCALED_MAX - SCALED_MIN) / (RAW_SENSOR_MAX - RAW_SENSOR_MIN);
+        public static final double  EXTENSION_MOTOR_REDUCTION    = 5.0;
+        public static final DCMotor ELEVATOR_GEARBOX             = DCMotor.getNeoVortex(2);
+        public static final double  EXTENSION_OFFSET             = SCALED_MIN - EXTENSION_SCALE * RAW_SENSOR_MIN;
+        public static final double  ELEVATOR_MASS                = 15.875;
+        public static final double  ELEVATOR_DRUM_RADIUS         = 0.0223139;
+        public static final double  ELEVATOR_FEED_FORWARD        = 0.645;
         public static final double  ELEVATOR_MODIFICATION_HEIGHT = 0.5;
     }
 

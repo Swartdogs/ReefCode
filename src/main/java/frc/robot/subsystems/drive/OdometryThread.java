@@ -180,13 +180,13 @@ public class OdometryThread
                 }
             }
 
+            for (int i = 0; i < _phoenixSignals.length; i++)
+            {
+                _phoenixQueues.get(i).offer(_phoenixSignals[i].getValueAsDouble());
+            }
+
             if (isValid)
             {
-                for (int i = 0; i < _phoenixSignals.length; i++)
-                {
-                    _phoenixQueues.get(i).offer(_phoenixSignals[i].getValueAsDouble());
-                }
-
                 for (int i = 0; i < _sparkSignals.size(); i++)
                 {
                     _sparkQueues.get(i).offer(sparkValues[i]);
@@ -201,18 +201,6 @@ public class OdometryThread
                 {
                     _timestampQueues.get(i).offer((timestamp + phoenixTimestamp) / 2.0);
                 }
-            }
-            for (int i = 0; i < _phoenixSignals.length; i++)
-            {
-                _phoenixQueues.get(i).offer(_phoenixSignals[i].getValueAsDouble());
-            }
-            for (int i = 0; i < _genericSignals.size(); i++)
-            {
-                _genericQueues.get(i).offer(_genericSignals.get(i).getAsDouble());
-            }
-            for (int i = 0; i < _timestampQueues.size(); i++)
-            {
-                _timestampQueues.get(i).offer(timestamp);
             }
         }
         finally
