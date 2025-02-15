@@ -104,7 +104,7 @@ public class Drive extends SubsystemBase
         ChassisSpeeds discreteSpeeds = ChassisSpeeds.discretize(speeds, Constants.General.LOOP_PERIOD_SECS);
         SwerveModuleState[] setpointStates = _kinematics.toSwerveModuleStates(discreteSpeeds);
 
-        SwerveDriveKinematics.desaturateWheelSpeeds(setpointStates, Constants.General.MAX_LINEAR_SPEED);
+        SwerveDriveKinematics.desaturateWheelSpeeds(setpointStates, Constants.Drive.MAX_LINEAR_SPEED);
 
         // Log setpoint states
         Logger.recordOutput("SwerveStates/Setpoints", setpointStates);

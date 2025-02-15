@@ -116,10 +116,6 @@ public final class Constants
         public static final double          TURN_PID_MAX_INPUT            = 1;
         public static final double          WHEEL_COF                     = 1.2;
         public static final double          ODOMETRY_FREQUENCY            = 100.0; // ms
-        public static final ModuleConfig    MODULE_CONFIG                 = new ModuleConfig(WHEEL_RADIUS, General.MAX_LINEAR_SPEED, WHEEL_COF, DRIVE_GEARBOX, DRIVE_MOTOR_REDUCTION, TURN_MOTOR_CURRENT_LIMIT, 1);
-        public static final RobotConfig     PP_CONFIG                     = new RobotConfig(
-                General.ROBOT_MASS, General.ROBOT_MOI, new ModuleConfig(WHEEL_RADIUS, General.MAX_LINEAR_SPEED, WHEEL_COF, DRIVE_GEARBOX.withReduction(DRIVE_MOTOR_REDUCTION), DRIVE_MOTOR_CURRENT_LIMIT.magnitude(), 1), MODULE_TRANSLATIONS
-        );
         public static final double          ROTATE_KP                     = 0;
         public static final double          ROTATE_KD                     = 0;
         public static final double          MAX_SPEED_ELEVATOR            = 1;
@@ -128,6 +124,12 @@ public final class Constants
         public static final double          MIN_SPEED_ELEVATOR_HEIGHT     = Constants.Elevator.L3_HEIGHT;
         public static final double          SPEED_ELEVATOR_M              = (MAX_SPEED_ELEVATOR - MIN_SPEED_ELEVATOR) / (MIN_SPEED_ELEVATOR_HEIGHT - MAX_SPEED_ELEVATOR_HEIGHT);
         public static final double          SPEED_ELEVATOR_B              = MAX_SPEED_ELEVATOR - SPEED_ELEVATOR_M * MAX_SPEED_ELEVATOR_HEIGHT;
+        public static final double MAX_LINEAR_SPEED = 4.8; // m/s
+        public static final double MAX_ANGULAR_SPEED = MAX_LINEAR_SPEED / DRIVE_BASE_RADIUS;
+        public static final ModuleConfig    MODULE_CONFIG                 = new ModuleConfig(WHEEL_RADIUS, MAX_LINEAR_SPEED, WHEEL_COF, DRIVE_GEARBOX, DRIVE_MOTOR_REDUCTION, TURN_MOTOR_CURRENT_LIMIT, 1);
+        public static final RobotConfig     PP_CONFIG                     = new RobotConfig(
+                General.ROBOT_MASS, General.ROBOT_MOI, new ModuleConfig(WHEEL_RADIUS, MAX_LINEAR_SPEED, WHEEL_COF, DRIVE_GEARBOX.withReduction(DRIVE_MOTOR_REDUCTION), DRIVE_MOTOR_CURRENT_LIMIT.magnitude(), 1), MODULE_TRANSLATIONS
+        );
     }
 
     public static class Field
@@ -208,7 +210,6 @@ public final class Constants
     public static class General
     {
         public static final double LOOP_PERIOD_SECS = 0.02;
-        public static final double MAX_LINEAR_SPEED = 4.8; // m/s
         public static final double ROBOT_MASS       = 74.088;
         public static final double ROBOT_MOI        = 6.883;
         public static final double MOTOR_VOLTAGE    = 12.0;
@@ -240,5 +241,10 @@ public final class Constants
         public static final double  MOTOR_REDUCTION   = 5.0;
         public static final double  INTAKE_VOLTS      = 3.0;
         public static final double  OUTPUT_VOLTS      = 9.0;
+    }
+
+    public static class Controls 
+    {
+        public static final double JOYSTICK_DEADBAND  = 0.1;
     }
 }

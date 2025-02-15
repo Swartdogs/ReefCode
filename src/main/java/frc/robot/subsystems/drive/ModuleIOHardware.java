@@ -1,35 +1,22 @@
 package frc.robot.subsystems.drive;
 
-import java.util.Queue;
-import java.util.function.DoubleSupplier;
-
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
-import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.VelocityVoltage;
-import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase;
-import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
-import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.units.AngleUnit;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
@@ -38,8 +25,6 @@ import edu.wpi.first.wpilibj.AnalogEncoder;
 import frc.robot.Constants;
 
 import static edu.wpi.first.units.Units.Amps;
-import static frc.robot.util.SparkUtil.*;
-import static frc.robot.util.PhoenixUtil.*;
 
 public class ModuleIOHardware implements ModuleIO
 {
@@ -52,8 +37,6 @@ public class ModuleIOHardware implements ModuleIO
     private final RelativeEncoder _turnEncoder;
     private final AnalogEncoder _turnPot;
     private Rotation2d _potOffset;
-
-    public ModuleIOHardware()
 
     public ModuleIOHardware(int module)
     {
@@ -93,13 +76,11 @@ public class ModuleIOHardware implements ModuleIO
             default -> new Rotation2d();
         };
 
-        _turnEncoder    = _turnMotor.getEncoder();
-
         // Configure drive motor
-        _drivePosition = _driveMotor.getPosition();
-        _driveVelocity = _driveMotor.getVelocity();
+        _drivePosition     = _driveMotor.getPosition();
+        _driveVelocity     = _driveMotor.getVelocity();
         _driveAppliedVolts = _driveMotor.getMotorVoltage();
-        _driveCurrentAmps = _driveMotor.getStatorCurrent();
+        _driveCurrentAmps  = _driveMotor.getStatorCurrent();
 
         var driveConfig = new TalonFXConfiguration();
         driveConfig.CurrentLimits.StatorCurrentLimit = Amps.of(120.0).magnitude();
@@ -114,32 +95,20 @@ public class ModuleIOHardware implements ModuleIO
         _driveMotor.optimizeBusUtilization();
 
         // Configure turn motor
+        
+        _turnEncoder    = _turnMotor.getEncoder();
+
         var turnConfig = new SparkMaxConfig();
 
         turnConfig.inverted(Constants.Drive.TURN_INVERTED).idleMode(IdleMode.kBrake).smartCurrentLimit(Constants.Drive.TURN_MOTOR_CURRENT_LIMIT).voltageCompensation(Constants.General.MOTOR_VOLTAGE);
 
-        turnConfig.encoder.positionConversionFactor(Constants.Drive.TURN_ENCODER_POSITION_FACTOR).velocityConversionFactor(Constants.Drive.TURN_ENCODER_VELOCITY_FACTOR);
-
-        turnConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder).positionWrappingEnabled(true).positionWrappingInputRange(Constants.Drive.TURN_PID_MIN_INPUT, Constants.Drive.TURN_PID_MAX_INPUT)
-                .pidf(Constants.Drive.TURN_KP, 0.0, Constants.Drive.TURN_KD, 0.0);
-
+        turnConfig.encoder.uvwMeasurementPeriod(10).quadratureMeasurementPeriod(10).uvwAverageDepth(2).quadratureAverageDepth(2);
         turnConfig.signals.primaryEncoderPositionAlwaysOn(true).primaryEncoderPositionPeriodMs((int)(1000.0 / Constants.Drive.ODOMETRY_FREQUENCY)).primaryEncoderVelocityAlwaysOn(true).primaryEncoderVelocityPeriodMs(20)
                 .appliedOutputPeriodMs(20).busVoltagePeriodMs(20).outputCurrentPeriodMs(20);
 
-        _turnEncoder.setPosition(_turnPot.get() - _zeroRotation.getRotations());
+        _turnEncoder.setPosition(0.0);
 
-        tryUntilOk(_turnSpark, 5, () -> _turnSpark.configure(turnConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
-
-        // Create drive status signals
-        _drivePosition     = _driveTalon.getPosition();
-        _driveVelocity     = _driveTalon.getVelocity();
-        _driveAppliedVolts = _driveTalon.getMotorVoltage();
-        _driveCurrent      = _driveTalon.getStatorCurrent();
-
-        // Create odometry queues
-        _timestampQueue     = OdometryThread.getInstance().makeTimestampQueue();
-        _drivePositionQueue = OdometryThread.getInstance().registerSignal(_driveTalon.getPosition());
-        _turnPositionQueue  = OdometryThread.getInstance().registerSignal(_turnSpark, _turnPot::get);
+        _turnMotor.configure(turnConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 
     @Override
@@ -149,7 +118,7 @@ public class ModuleIOHardware implements ModuleIO
         BaseStatusSignal.refreshAll(_drivePosition, _driveVelocity, _driveAppliedVolts, _driveCurrentAmps);
 
         inputs.drivePositionRad = _drivePosition.getValue().in(edu.wpi.first.units.Units.Radian) / Constants.Drive.DRIVE_MOTOR_REDUCTION;
-        inputs.driveVelocityRadPerSec = Units.rotationsToRadians(_driveVelocity.getValueAsDouble()) / Constants.Drive.DRIVE_MOTOR_REDUCTION;
+        inputs.driveVelocityRadPerSec =  _driveVelocity.getValue().in(edu.wpi.first.units.Units.RadiansPerSecond) / Constants.Drive.DRIVE_MOTOR_REDUCTION;
         inputs.driveAppliedVolts = _driveAppliedVolts.getValueAsDouble();
         inputs.driveCurrentAmps = _driveCurrentAmps.getValueAsDouble();
 

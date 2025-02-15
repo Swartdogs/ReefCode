@@ -365,7 +365,7 @@ public class RobotContainer
         _nullAuto.set(_selectedAuto == null);
     }
 
-    public boolean isRedAlliance()
+    public static boolean isRedAlliance()
     {
         return DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Red;
     }

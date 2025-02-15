@@ -12,6 +12,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.drive.Drive;
 
 public final class DriveCommands
@@ -48,13 +49,13 @@ public final class DriveCommands
             // Convert to field relative speeds & send command
             if (robotCentric.getAsBoolean())
             {
-                var chassisSpeeds = new ChassisSpeeds(linearVelocity.getX() * Constants.General.MAX_LINEAR_SPEED, linearVelocity.getY() * Constants.General.MAX_LINEAR_SPEED, omega * Constants.Drive.MAX_ANGULAR_SPEED);
+                var chassisSpeeds = new ChassisSpeeds(linearVelocity.getX() * Constants.Drive.MAX_LINEAR_SPEED, linearVelocity.getY() * Constants.Drive.MAX_LINEAR_SPEED, omega * Constants.Drive.MAX_ANGULAR_SPEED);
 
                 drive.runVelocity(chassisSpeeds);
             }
             else
             {
-                if (!Utilities.isBlueAlliance())
+                if (RobotContainer.isRedAlliance())
                 {
                     linearVelocity = linearVelocity.unaryMinus();
                 }
@@ -74,7 +75,7 @@ public final class DriveCommands
         return Commands.runOnce(() ->
         {
             var pose = drive.getPose();
-            drive.setPose(new Pose2d(pose.getX(), pose.getY(), Rotation2d.fromDegrees(Utilities.isBlueAlliance() ? 0 : 180)));
+            drive.setPose(new Pose2d(pose.getX(), pose.getY(), Rotation2d.fromDegrees(!RobotContainer.isRedAlliance() ? 0 : 180)));
         }).ignoringDisable(true);
     }
 
