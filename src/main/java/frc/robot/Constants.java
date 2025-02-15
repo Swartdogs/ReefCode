@@ -220,18 +220,18 @@ public final class Constants
     {
         public static final HashMap<String, Command> _lookup = new HashMap<String, Command>() {
             {
-                put("LeftIKL", AutoBuilder.buildAuto("Left_IK"));
-                put("LeftILK", AutoBuilder.buildAuto("Left_IL"));
-                put("LeftJKL", AutoBuilder.buildAuto("Left_JK"));
-                put("LeftJLK", AutoBuilder.buildAuto("Left_JL"));
-                put("MiddleGAB", AutoBuilder.buildAuto("Middle_GA"));
-                put("MiddleGBA", AutoBuilder.buildAuto("Middle_GB"));
-                put("MiddleHAB", AutoBuilder.buildAuto("Middle_HA"));
-                put("MiddleHBA", AutoBuilder.buildAuto("Middle_HB"));
-                put("RightECD", AutoBuilder.buildAuto("Right_EC"));
-                put("RightEDC", AutoBuilder.buildAuto("Right_ED"));
-                put("RightFCD", AutoBuilder.buildAuto("Right_FC"));
-                put("RightFDC", AutoBuilder.buildAuto("Right_FD"));
+                put("LeftIKL", AutoBuilder.buildAuto("Left_IKL"));
+                put("LeftILK", AutoBuilder.buildAuto("Left_ILK"));
+                put("LeftJKL", AutoBuilder.buildAuto("Left_JKL"));
+                put("LeftJLK", AutoBuilder.buildAuto("Left_JLK"));
+                put("MiddleGAB", AutoBuilder.buildAuto("Middle_GAB"));
+                put("MiddleGBA", AutoBuilder.buildAuto("Middle_GBA"));
+                put("MiddleHAB", AutoBuilder.buildAuto("Middle_HAB"));
+                put("MiddleHBA", AutoBuilder.buildAuto("Middle_HBA"));
+                put("RightECD", AutoBuilder.buildAuto("Right_ECD"));
+                put("RightEDC", AutoBuilder.buildAuto("Right_EDC"));
+                put("RightFCD", AutoBuilder.buildAuto("Right_FCD"));
+                put("RightFDC", AutoBuilder.buildAuto("Right_FDC"));
             }
         };
     }
