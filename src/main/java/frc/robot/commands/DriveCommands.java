@@ -1,7 +1,9 @@
 package frc.robot.commands;
 
+import java.util.Set;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -11,6 +13,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.drive.Drive;
@@ -65,9 +68,9 @@ public final class DriveCommands
         }, drive);
     }
 
-    public static Command driveAtOrientation(Drive drive, DoubleSupplier xSupplier, DoubleSupplier ySupplier, BooleanSupplier robotCentric, Rotation2d setpoint, double maxSpeed)
+    public static Command driveAtOrientation(Drive drive, DoubleSupplier xSupplier, DoubleSupplier ySupplier, BooleanSupplier robotCentric, Supplier<Rotation2d> setpoint, double maxSpeed)
     {
-        return Commands.runOnce(() -> drive.rotateInit(setpoint, maxSpeed)).andThen(joystickDrive(drive, xSupplier, ySupplier, () -> drive.rotateExecute(), robotCentric, 2, 1));
+        return new DeferredCommand(() -> Commands.runOnce(() -> drive.rotateInit(setpoint.get(), maxSpeed)).andThen(joystickDrive(drive, xSupplier, ySupplier, () -> drive.rotateExecute(), robotCentric, 2, 1)), Set.of(drive));
     }
 
     public static Command resetGyro(Drive drive)

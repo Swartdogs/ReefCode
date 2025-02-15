@@ -216,7 +216,7 @@ public class RobotContainer
         // Trigger _manipulatorRunning = new Trigger(() -> _manipulator.isRunning());
 
         // Default command, normal field-relative drive
-        _drive.setDefaultCommand(DriveCommands.joystickFieldCentricDrive(_drive, _elevator, () -> -_controller.getLeftY(), () -> -_controller.getLeftX(), () -> -_controller.getRightX()));
+        _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_controller.getLeftY(), () -> -_controller.getLeftX(), () -> -_controller.getRightX(), () -> false));
         // _drive.setDefaultCommand(DriveCommands.setTurnOpenLoop(_drive, () ->
         // MathUtil.applyDeadband(-_controller.getRightX(), 0.1) * 4.0));
         // _controller.a().onTrue(DriveCommands.setTurnPosition(_drive,
@@ -291,32 +291,31 @@ public class RobotContainer
         Trigger _operatorButton14   = _operatorButtons.axisLessThan(1, -0.5);
 
         // Default command, normal field-relative drive
-        _drive.setDefaultCommand(DriveCommands.joystickFieldCentricDrive(_drive, _elevator, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> -_driverJoystick.getZ()));
+        _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> -_driverJoystick.getZ(), () -> robotCentric()));
 
         // Driver Controls
-        _driverJoystick.button(1).whileTrue(DriveCommands.joystickRobotCentricDrive(_drive, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> -_driverJoystick.getZ()));
         _driverJoystick.button(2).onTrue(null); // replace this with switching cameras
-        _driverJoystick.button(11).onTrue(DriveCommands.resetGyro(_drive, () -> isRedAlliance()));
+        _driverJoystick.button(11).onTrue(DriveCommands.resetGyro(_drive));
 
         _driverButtons.button(0)
-                .whileTrue(DriveCommands.joystickDriveAtAngle(_drive, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> isRedAlliance() ? Constants.Field.RED_REEF_ANGLE_ONE : Constants.Field.BLUE_REEF_ANGLE_ONE));
+                .whileTrue(DriveCommands.driveAtOrientation(_drive, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> robotCentric(), () -> isRedAlliance() ? Constants.Field.RED_REEF_ANGLE_ONE : Constants.Field.BLUE_REEF_ANGLE_ONE, Constants.Drive.MAX_SNAP_SPEED));
         _driverButtons.button(1)
-                .whileTrue(DriveCommands.joystickDriveAtAngle(_drive, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> isRedAlliance() ? Constants.Field.RED_REEF_ANGLE_TWO : Constants.Field.BLUE_REEF_ANGLE_TWO));
+                .whileTrue(DriveCommands.driveAtOrientation(_drive, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> robotCentric(), () -> isRedAlliance() ? Constants.Field.RED_REEF_ANGLE_TWO : Constants.Field.BLUE_REEF_ANGLE_TWO, Constants.Drive.MAX_SNAP_SPEED));
         _driverButtons.button(2)
-                .whileTrue(DriveCommands.joystickDriveAtAngle(_drive, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> isRedAlliance() ? Constants.Field.RED_REEF_ANGLE_THREE : Constants.Field.BLUE_REEF_ANGLE_THREE));
+                .whileTrue(DriveCommands.driveAtOrientation(_drive, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> robotCentric(), () -> isRedAlliance() ? Constants.Field.RED_REEF_ANGLE_THREE : Constants.Field.BLUE_REEF_ANGLE_THREE, Constants.Drive.MAX_SNAP_SPEED));
         _driverButtons.button(3)
-                .whileTrue(DriveCommands.joystickDriveAtAngle(_drive, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> isRedAlliance() ? Constants.Field.RED_REEF_ANGLE_FOUR : Constants.Field.BLUE_REEF_ANGLE_FOUR));
+                .whileTrue(DriveCommands.driveAtOrientation(_drive, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> robotCentric(), () -> isRedAlliance() ? Constants.Field.RED_REEF_ANGLE_FOUR : Constants.Field.BLUE_REEF_ANGLE_FOUR, Constants.Drive.MAX_SNAP_SPEED));
         _driverButtons.button(4)
-                .whileTrue(DriveCommands.joystickDriveAtAngle(_drive, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> isRedAlliance() ? Constants.Field.RED_REEF_ANGLE_FIVE : Constants.Field.BLUE_REEF_ANGLE_FIVE));
+                .whileTrue(DriveCommands.driveAtOrientation(_drive, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> robotCentric(), () -> isRedAlliance() ? Constants.Field.RED_REEF_ANGLE_FIVE : Constants.Field.BLUE_REEF_ANGLE_FIVE, Constants.Drive.MAX_SNAP_SPEED));
         _driverButtons.button(5)
-                .whileTrue(DriveCommands.joystickDriveAtAngle(_drive, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> isRedAlliance() ? Constants.Field.RED_REEF_ANGLE_SIX : Constants.Field.BLUE_REEF_ANGLE_SIX));
+                .whileTrue(DriveCommands.driveAtOrientation(_drive, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> robotCentric(), () -> isRedAlliance() ? Constants.Field.RED_REEF_ANGLE_SIX : Constants.Field.BLUE_REEF_ANGLE_SIX, Constants.Drive.MAX_SNAP_SPEED));
         _driverButtons.button(6)
-                .whileTrue(DriveCommands.joystickDriveAtAngle(_drive, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> isRedAlliance() ? Constants.Field.RED_LEFT_STATION_ANGLE : Constants.Field.BLUE_LEFT_STATION_ANGLE));
+                .whileTrue(DriveCommands.driveAtOrientation(_drive, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> robotCentric(), () -> isRedAlliance() ? Constants.Field.RED_LEFT_STATION_ANGLE : Constants.Field.BLUE_LEFT_STATION_ANGLE, Constants.Drive.MAX_SNAP_SPEED));
         _driverButtons.button(7).whileTrue(
-                DriveCommands.joystickDriveAtAngle(_drive, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> isRedAlliance() ? Constants.Field.RED_RIGHT_STATION_ANGLE : Constants.Field.BLUE_RIGHT_STATION_ANGLE)
+                DriveCommands.driveAtOrientation(_drive, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> robotCentric(), () -> isRedAlliance() ? Constants.Field.RED_RIGHT_STATION_ANGLE : Constants.Field.BLUE_RIGHT_STATION_ANGLE, Constants.Drive.MAX_SNAP_SPEED)
         );
         _driverButtons.button(8)
-                .whileTrue(DriveCommands.joystickDriveAtAngle(_drive, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> isRedAlliance() ? Constants.Field.RED_PROCESSOR_ANGLE : Constants.Field.BLUE_PROCESSOR_ANGLE));
+                .whileTrue(DriveCommands.driveAtOrientation(_drive, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> robotCentric(), () -> isRedAlliance() ? Constants.Field.RED_PROCESSOR_ANGLE : Constants.Field.BLUE_PROCESSOR_ANGLE, Constants.Drive.MAX_SNAP_SPEED));
 
         // Operator Controls
         _operatorButtons.button(0)
@@ -378,5 +377,10 @@ public class RobotContainer
     public Integer autoDelayTime()
     {
         return _autoDelayChooser.get();
+    }
+
+    public boolean robotCentric()
+    {
+        return _driverJoystick.button(1).getAsBoolean();
     }
 }

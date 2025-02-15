@@ -130,6 +130,7 @@ public final class Constants
         public static final RobotConfig     PP_CONFIG                     = new RobotConfig(
                 General.ROBOT_MASS, General.ROBOT_MOI, new ModuleConfig(WHEEL_RADIUS, MAX_LINEAR_SPEED, WHEEL_COF, DRIVE_GEARBOX.withReduction(DRIVE_MOTOR_REDUCTION), DRIVE_MOTOR_CURRENT_LIMIT.magnitude(), 1), MODULE_TRANSLATIONS
         );
+        public static final double MAX_SNAP_SPEED                         = 0.7;
     }
 
     public static class Field
