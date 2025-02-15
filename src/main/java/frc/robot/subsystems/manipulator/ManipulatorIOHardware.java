@@ -15,9 +15,9 @@ public class ManipulatorIOHardware implements ManipulatorIO
 
     public ManipulatorIOHardware()
     {
-        _leftTalon   = new TalonSRX(Constants.CAN.MANIPULATOR_LEFT);
-        _rightTalon  = new TalonSRX(Constants.CAN.MANIPULATOR_RIGHT);
-        _lightSensorEnd = new DigitalInput(Constants.DIO.MANIPULATOR_LIGHT_SENSOR_END);
+        _leftTalon        = new TalonSRX(Constants.CAN.MANIPULATOR_LEFT);
+        _rightTalon       = new TalonSRX(Constants.CAN.MANIPULATOR_RIGHT);
+        _lightSensorEnd   = new DigitalInput(Constants.DIO.MANIPULATOR_LIGHT_SENSOR_END);
         _lightSensorStart = new DigitalInput(Constants.DIO.MANIPULATOR_LIGHT_SENSOR_START);
 
         _leftTalon.setInverted(true); // Inverts upper talon so they pull/push together.
@@ -30,7 +30,8 @@ public class ManipulatorIOHardware implements ManipulatorIO
         inputs.leftAppliedVolts  = _leftTalon.getMotorOutputVoltage();
         inputs.rightAppliedVolts = _rightTalon.getMotorOutputVoltage();
 
-        inputs.hasCoral = !_lightSensorEnd.get();
+        inputs.startSensorTripped = !_lightSensorStart.get();
+        inputs.endSensorTripped   = !_lightSensorEnd.get();
     }
 
     public void setVolts(double volts)

@@ -73,7 +73,7 @@ public final class Constants
 
     public static class DIO
     {
-        public static final int MANIPULATOR_LIGHT_SENSOR_END = 9;
+        public static final int MANIPULATOR_LIGHT_SENSOR_END   = 9;
         public static final int MANIPULATOR_LIGHT_SENSOR_START = 8;
     }
 
@@ -208,12 +208,12 @@ public final class Constants
 
     public static class General
     {
-        public static final double LOOP_PERIOD_SECS = 0.02;
-        public static final double MAX_LINEAR_SPEED = 4.8; // m/s
-        public static final double ROBOT_MASS       = 74.088;
-        public static final double ROBOT_MOI        = 6.883;
-        public static final double MOTOR_VOLTAGE    = 12.0;
-        public static final double MAX_ANGULAR_SPEED = MAX_LINEAR_SPEED/Constants.Drive.DRIVE_BASE_RADIUS;
+        public static final double LOOP_PERIOD_SECS  = 0.02;
+        public static final double MAX_LINEAR_SPEED  = 4.8; // m/s
+        public static final double ROBOT_MASS        = 74.088;
+        public static final double ROBOT_MOI         = 6.883;
+        public static final double MOTOR_VOLTAGE     = 12.0;
+        public static final double MAX_ANGULAR_SPEED = MAX_LINEAR_SPEED / Constants.Drive.DRIVE_BASE_RADIUS;
     }
 
     public static class Lookups
@@ -240,7 +240,7 @@ public final class Constants
     {
         public static final DCMotor MANIPULATOR_MOTOR = DCMotor.getVex775Pro(1);
         public static final double  MOTOR_REDUCTION   = 5.0;
-        public static final double  INTAKE_VOLTS      = 3.0;
+        public static final double  INTAKE_VOLTS      = 3.70;
         public static final double  OUTPUT_VOLTS      = 9.0;
     }
 }

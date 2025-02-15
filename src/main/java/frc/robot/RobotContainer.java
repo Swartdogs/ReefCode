@@ -102,7 +102,7 @@ public class RobotContainer
                 // Sim robot, instantiate physics sim IO implementations
                 _drive = new Drive(new GyroIO() {}, new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim());
                 _elevator = new Elevator(new ElevatorIOSim());
-                _manipulator = new Manipulator(new ManipulatorIOSim(() -> _driverJoystick.button(7).getAsBoolean()));
+                _manipulator = new Manipulator(new ManipulatorIOSim(() -> _driverJoystick.button(7).getAsBoolean(), () -> _driverJoystick.button(8).getAsBoolean()));
                 _funnel = new Funnel(new FunnelIOSim());
                 _dashboard = new Dashboard(new DashboardIONetwork());
                 _led = new LED(new LEDIOSim());
@@ -329,17 +329,17 @@ public class RobotContainer
                 .onTrue(ElevatorCommands.setHeight(_elevator, ElevatorHeight.Level4).alongWith(new DeferredCommand(() -> LEDCommands.setDefaultColor(_led, (_hasCoral.getAsBoolean() ? Constants.LED.ORANGE : Constants.LED.RED)), Set.of())));
         _operatorButtons.button(4)
                 .onTrue(ElevatorCommands.setHeight(_elevator, ElevatorHeight.Stow).alongWith(new DeferredCommand(() -> LEDCommands.setDefaultColor(_led, (_hasCoral.getAsBoolean() ? Constants.LED.GREEN : Constants.LED.RED)), Set.of())));
+
         _operatorButtons.button(5).onTrue(ManipulatorCommands.intake(_manipulator));
-        _operatorButtons.button(6).onTrue(ManipulatorCommands.output(_manipulator));
+        _operatorButtons.button(6).onTrue(CompositeCommands.output(_elevator, _manipulator));
         _operatorButtons.button(7).onTrue(ManipulatorCommands.stop(_manipulator));
         _operatorButtons.button(8).and(_driverJoystick.button(3)).onTrue(
                 FunnelCommands.drop(_funnel).alongWith(ElevatorCommands.setHeight(_elevator, ElevatorHeight.Hang)).alongWith(LEDCommands.flashColor(_led, Constants.LED.RED)).until(() -> _elevator.atSetpoint())
                         .andThen(LEDCommands.setDefaultColor(_led, Constants.LED.YELLOW))
-        ); // replace with hang prep
-        _operatorButtons.button(9).onTrue(null);// replace with hang execute
+        );
+        _operatorButtons.button(9).onTrue(ElevatorCommands.setHeight(_elevator, ElevatorHeight.Stow));
         _operatorButtons.button(10).onTrue(null);// replace with algae intake
         _operatorButtons.button(11).onTrue(null);// replace with algae output
-
         _operatorButton12.onTrue(null);// replace with algae stop
         _operatorButton13.onTrue(ElevatorCommands.modifyHeight(_elevator, Constants.Elevator.ELEVATOR_MODIFICATION_HEIGHT));
         _operatorButton14.onTrue(ElevatorCommands.modifyHeight(_elevator, -Constants.Elevator.ELEVATOR_MODIFICATION_HEIGHT));

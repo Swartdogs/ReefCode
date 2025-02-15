@@ -12,13 +12,15 @@ public class ManipulatorIOSim implements ManipulatorIO
     private final DCMotorSim      _leftMotorSim;
     private final DCMotorSim      _rightMotorSim;
     private double                _appliedVolts;
-    private final BooleanSupplier _lightSensor;
+    private final BooleanSupplier _lightSensorStart;
+    private final BooleanSupplier _lightSensorEnd;
 
-    public ManipulatorIOSim(BooleanSupplier lightSensor)
+    public ManipulatorIOSim(BooleanSupplier lightSensorEnd, BooleanSupplier lightSensorStart)
     {
-        _leftMotorSim  = new DCMotorSim(LinearSystemId.createDCMotorSystem(Constants.Manipulator.MANIPULATOR_MOTOR, 0.02, Constants.Manipulator.MOTOR_REDUCTION), Constants.Drive.DRIVE_GEARBOX);
-        _rightMotorSim = new DCMotorSim(LinearSystemId.createDCMotorSystem(Constants.Manipulator.MANIPULATOR_MOTOR, 0.02, Constants.Manipulator.MOTOR_REDUCTION), Constants.Drive.DRIVE_GEARBOX);
-        _lightSensor   = lightSensor;
+        _leftMotorSim     = new DCMotorSim(LinearSystemId.createDCMotorSystem(Constants.Manipulator.MANIPULATOR_MOTOR, 0.02, Constants.Manipulator.MOTOR_REDUCTION), Constants.Drive.DRIVE_GEARBOX);
+        _rightMotorSim    = new DCMotorSim(LinearSystemId.createDCMotorSystem(Constants.Manipulator.MANIPULATOR_MOTOR, 0.02, Constants.Manipulator.MOTOR_REDUCTION), Constants.Drive.DRIVE_GEARBOX);
+        _lightSensorEnd   = lightSensorEnd;
+        _lightSensorStart = lightSensorStart;
     }
 
     @Override
@@ -26,11 +28,12 @@ public class ManipulatorIOSim implements ManipulatorIO
     {
         _leftMotorSim.update(Constants.General.LOOP_PERIOD_SECS);
         _rightMotorSim.update(Constants.General.LOOP_PERIOD_SECS);
-        inputs.leftCurrentAmps   = Math.abs(_leftMotorSim.getCurrentDrawAmps());
-        inputs.rightCurrentAmps  = Math.abs(_rightMotorSim.getCurrentDrawAmps());
-        inputs.leftAppliedVolts  = _appliedVolts;
-        inputs.rightAppliedVolts = _appliedVolts;
-        inputs.hasCoral          = _lightSensor.getAsBoolean();
+        inputs.leftCurrentAmps    = Math.abs(_leftMotorSim.getCurrentDrawAmps());
+        inputs.rightCurrentAmps   = Math.abs(_rightMotorSim.getCurrentDrawAmps());
+        inputs.leftAppliedVolts   = _appliedVolts;
+        inputs.rightAppliedVolts  = _appliedVolts;
+        inputs.startSensorTripped = _lightSensorStart.getAsBoolean();
+        inputs.endSensorTripped   = _lightSensorEnd.getAsBoolean();
     }
 
     @Override

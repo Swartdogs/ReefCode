@@ -183,14 +183,14 @@ public class Drive extends SubsystemBase
 
         for (int i = 0; i < 4; i++)
         {
-           if(Math.hypot(discreteSpeeds.vxMetersPerSecond, discreteSpeeds.vyMetersPerSecond) > Constants.Drive.SPEED_MOTION_THRESHOLD || discreteSpeeds.omegaRadiansPerSecond > Constants.Drive.ROTATION_MOTION_THRESHOLD)
-           {
-            _modules[i].runSetpoint(setpointStates[i]);
-           }
-           else
-           {
-            _modules[i].stop();
-           }
+            if (Math.hypot(discreteSpeeds.vxMetersPerSecond, discreteSpeeds.vyMetersPerSecond) > Constants.Drive.SPEED_MOTION_THRESHOLD || discreteSpeeds.omegaRadiansPerSecond > Constants.Drive.ROTATION_MOTION_THRESHOLD)
+            {
+                _modules[i].runSetpoint(setpointStates[i]);
+            }
+            else
+            {
+                _modules[i].stop();
+            }
         }
 
         Logger.recordOutput("SwerveStates/SetpointsOptimized", setpointStates);
