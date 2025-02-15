@@ -240,7 +240,7 @@ public final class Constants
     {
         public static final DCMotor MANIPULATOR_MOTOR = DCMotor.getVex775Pro(1);
         public static final double  MOTOR_REDUCTION   = 5.0;
-        public static final double  INTAKE_VOLTS      = 3.70;
+        public static final double  INTAKE_VOLTS      = 3.50;
         public static final double  OUTPUT_VOLTS      = 9.0;
     }
 }

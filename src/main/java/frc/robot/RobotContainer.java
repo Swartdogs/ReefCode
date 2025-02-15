@@ -216,7 +216,9 @@ public class RobotContainer
         // Trigger _manipulatorRunning = new Trigger(() -> _manipulator.isRunning());
 
         // Default command, normal field-relative drive
-        _drive.setDefaultCommand(DriveCommands.joystickFieldCentricDrive(_drive, _elevator, () -> -_controller.getLeftY(), () -> -_controller.getLeftX(), () -> -_controller.getRightX()));
+        // _drive.setDefaultCommand(DriveCommands.joystickFieldCentricDrive(_drive,
+        // _elevator, () -> -_controller.getLeftY(), () -> -_controller.getLeftX(), ()
+        // -> -_controller.getRightX()));
         // _drive.setDefaultCommand(DriveCommands.setTurnOpenLoop(_drive, () ->
         // MathUtil.applyDeadband(-_controller.getRightX(), 0.1) * 4.0));
         // _controller.a().onTrue(DriveCommands.setTurnPosition(_drive,
@@ -227,7 +229,9 @@ public class RobotContainer
         // Rotation2d.fromDegrees(180)));
         // _controller.x().onTrue(DriveCommands.setTurnPosition(_drive,
         // Rotation2d.fromDegrees(270)));
-        _controller.a().onTrue(DriveCommands.odometerReset(_drive, new Pose2d(Units.inchesToMeters(297.5), Units.inchesToMeters(158.5), Rotation2d.fromDegrees(0))));
+        // _controller.a().onTrue(DriveCommands.odometerReset(_drive, new
+        // Pose2d(Units.inchesToMeters(297.5), Units.inchesToMeters(158.5),
+        // Rotation2d.fromDegrees(0))));
 
         // Lock to 0° when A button is held
         // _controller.a().whileTrue(DriveCommands.joystickDriveAtAngle(_drive, () ->
@@ -249,29 +253,34 @@ public class RobotContainer
         // _controller.rightTrigger().whileTrue(ElevatorCommands.setVolts(_elevator, ()
         // -> -_controller.getRightY() * Constants.General.MOTOR_VOLTAGE));
 
-        _controller.back().onTrue(ElevatorCommands.setHeight(_elevator, ElevatorHeight.Stow));
-        // // .alongWith(new DeferredCommand(() -> LEDCommandsetDefaultColor(_led,
-        // // (_hasCoral.getAsBoolean() ? Constants.LED.GREEN : Constants.LED.RED)),
-        // // Set.of())));
-        _controller.povUp().onTrue(ElevatorCommands.setHeight(_elevator, ElevatorHeight.Level1));
-        // // .alongWith(new DeferredCommand(() -> LEDCommands.setDefaultColor(_led,
-        // // (_hasCoral.getAsBoolean() ?
-        // // Constants.LED.PURPLE : Constants.LED.RED)), Set.of())));
-        _controller.povRight().onTrue(ElevatorCommands.setHeight(_elevator, ElevatorHeight.Level2));
-        // // .alongWith(new DeferredCommand(() -> LEDCommands.setDefaultColor(_led,
-        // // (_hasCoral.getAsBoolean() ?
-        // // Constants.LED.PINK : Constants.LED.RED)), Set.of())));
-        _controller.povDown().onTrue(ElevatorCommands.setHeight(_elevator, ElevatorHeight.Level3));
-        // // .alongWith(new DeferredCommand(() -> LEDCommands.setDefaultColor(_led,
-        // // (_hasCoral.getAsBoolean() ?
-        // // Constants.LED.BLUE : Constants.LED.RED)), Set.of())));
-        _controller.povLeft().onTrue(ElevatorCommands.setHeight(_elevator, ElevatorHeight.Level4));
-        // // .alongWith(new DeferredCommand(() -> LEDCommands.setDefaultColor(_led,
-        // // (_hasCoral.getAsBoolean() ?
-        // // Constants.LED.ORANGE : Constants.LED.RED)), Set.of())));
+        // _controller.back().onTrue(ElevatorCommands.setHeight(_elevator,
+        // ElevatorHeight.Stow));
+        // // // .alongWith(new DeferredCommand(() -> LEDCommandsetDefaultColor(_led,
+        // // // (_hasCoral.getAsBoolean() ? Constants.LED.GREEN : Constants.LED.RED)),
+        // // // Set.of())));
+        // _controller.povUp().onTrue(ElevatorCommands.setHeight(_elevator,
+        // ElevatorHeight.Level1));
+        // // // .alongWith(new DeferredCommand(() -> LEDCommands.setDefaultColor(_led,
+        // // // (_hasCoral.getAsBoolean() ?
+        // // // Constants.LED.PURPLE : Constants.LED.RED)), Set.of())));
+        // _controller.povRight().onTrue(ElevatorCommands.setHeight(_elevator,
+        // ElevatorHeight.Level2));
+        // // // .alongWith(new DeferredCommand(() -> LEDCommands.setDefaultColor(_led,
+        // // // (_hasCoral.getAsBoolean() ?
+        // // // Constants.LED.PINK : Constants.LED.RED)), Set.of())));
+        // _controller.povDown().onTrue(ElevatorCommands.setHeight(_elevator,
+        // ElevatorHeight.Level3));
+        // // // .alongWith(new DeferredCommand(() -> LEDCommands.setDefaultColor(_led,
+        // // // (_hasCoral.getAsBoolean() ?
+        // // // Constants.LED.BLUE : Constants.LED.RED)), Set.of())));
+        // _controller.povLeft().onTrue(ElevatorCommands.setHeight(_elevator,
+        // ElevatorHeight.Level4));
+        // // // .alongWith(new DeferredCommand(() -> LEDCommands.setDefaultColor(_led,
+        // // // (_hasCoral.getAsBoolean() ?
+        // // // Constants.LED.ORANGE : Constants.LED.RED)), Set.of())));
 
         _controller.leftStick().onTrue(ManipulatorCommands.intake(_manipulator));
-        _controller.start().onTrue(CompositeCommands.output(_elevator, _manipulator));
+        _controller.start().onTrue(ManipulatorCommands.output(_manipulator));
         _controller.rightStick().onTrue(ManipulatorCommands.stop(_manipulator));
 
         // _hasCoral.onTrue(LEDCommands.setDefaultColor(_led, Constants.LED.GREEN));
