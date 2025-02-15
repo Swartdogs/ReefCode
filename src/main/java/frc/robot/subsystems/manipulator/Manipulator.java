@@ -32,7 +32,7 @@ public class Manipulator extends SubsystemBase
 
     public boolean hasCoral()
     {
-        return _inputs.hasCoral;
+        return !_inputs.startSensorTripped && _inputs.endSensorTripped;
     }
 
     public boolean isRunning()

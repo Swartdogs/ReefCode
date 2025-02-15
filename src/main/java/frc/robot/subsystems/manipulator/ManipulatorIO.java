@@ -11,7 +11,8 @@ public interface ManipulatorIO
         public double  leftCurrentAmps   = 0.0;
         public double  rightAppliedVolts = 0.0;
         public double  rightCurrentAmps  = 0.0;
-        public boolean hasCoral          = false;
+        public boolean startSensorTripped = false;
+        public boolean endSensorTripped  = false;
     }
 
     public default void updateInputs(ManipulatorIOInputs inputs)

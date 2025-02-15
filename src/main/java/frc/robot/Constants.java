@@ -73,7 +73,8 @@ public final class Constants
 
     public static class DIO
     {
-        public static final int MANIPULATOR_LIGHT_SENSOR = 9;
+        public static final int MANIPULATOR_LIGHT_SENSOR_END = 9;
+        public static final int MANIPULATOR_LIGHT_SENSOR_START = 8;
     }
 
     public static class Drive
@@ -126,6 +127,8 @@ public final class Constants
         public static final double          MIN_SPEED_ELEVATOR_HEIGHT     = Constants.Elevator.L3_HEIGHT;
         public static final double          SPEED_ELEVATOR_M              = (MAX_SPEED_ELEVATOR - MIN_SPEED_ELEVATOR) / (MIN_SPEED_ELEVATOR_HEIGHT - MAX_SPEED_ELEVATOR_HEIGHT);
         public static final double          SPEED_ELEVATOR_B              = MAX_SPEED_ELEVATOR - SPEED_ELEVATOR_M * MAX_SPEED_ELEVATOR_HEIGHT;
+        public static final double          SPEED_MOTION_THRESHOLD        = 0.02 * Constants.General.MAX_LINEAR_SPEED;
+        public static final double          ROTATION_MOTION_THRESHOLD     = 0.02 * Constants.General.MAX_ANGULAR_SPEED;
     }
 
     public static class Field
@@ -210,6 +213,7 @@ public final class Constants
         public static final double ROBOT_MASS       = 74.088;
         public static final double ROBOT_MOI        = 6.883;
         public static final double MOTOR_VOLTAGE    = 12.0;
+        public static final double MAX_ANGULAR_SPEED = MAX_LINEAR_SPEED/Constants.Drive.DRIVE_BASE_RADIUS;
     }
 
     public static class Lookups
