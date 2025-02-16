@@ -83,7 +83,7 @@ public final class Constants
         public static final double          WHEEL_BASE                    = Units.inchesToMeters(26);
         public static final double          DRIVE_BASE_RADIUS             = Math.hypot(TRACK_WIDTH / 2.0, WHEEL_BASE / 2.0);
         public static final Translation2d[] MODULE_TRANSLATIONS           = new Translation2d[] { new Translation2d(TRACK_WIDTH / 2.0, WHEEL_BASE / 2.0), new Translation2d(TRACK_WIDTH / 2.0, -WHEEL_BASE / 2.0),
-                new Translation2d(-TRACK_WIDTH / 2.0, WHEEL_BASE / 2.0), new Translation2d(-TRACK_WIDTH / 2.0, -WHEEL_BASE / 2.0), };
+                new Translation2d(-TRACK_WIDTH / 2.0, WHEEL_BASE / 2.0), new Translation2d(-TRACK_WIDTH / 2.0, -WHEEL_BASE / 2.0) };
         public static final Rotation2d      FL_ZERO_ROTATION              = Rotation2d.fromDegrees(57.45 + 45.0); // Raw reading - 1/8 for the 45 degree offset
         public static final Rotation2d      FR_ZERO_ROTATION              = Rotation2d.fromDegrees(11.29 - 45.0);
         public static final Rotation2d      BL_ZERO_ROTATION              = Rotation2d.fromDegrees(65.26 - 45.0);
@@ -99,8 +99,8 @@ public final class Constants
         public static final double          DRIVE_KD                      = 0.0;
         public static final double          DRIVE_KS                      = 0.0;
         public static final double          DRIVE_KV                      = 0.1;
-        public static final double          DRIVE_SIM_P                   = 0.05;
-        public static final double          DRIVE_SIM_D                   = 0.0;
+        public static final double          DRIVE_SIM_KP                  = 0.2;
+        public static final double          DRIVE_SIM_KD                  = 0.0;
         public static final double          DRIVE_SIM_KS                  = 0.0;
         public static final double          DRIVE_SIM_KV                  = 0.0789;
         public static final boolean         TURN_INVERTED                 = true;
@@ -111,24 +111,33 @@ public final class Constants
         public static final double          TURN_ENCODER_VELOCITY_FACTOR  = 1 / TURN_MOTOR_REDUCTION;
         public static final double          TURN_KP                       = 7.0;
         public static final double          TURN_KD                       = 0.0;
-        public static final double          TURN_SIM_P                    = 8.0;
-        public static final double          TURN_SIM_D                    = 0.0;
+        public static final double          TURN_SIM_KP                   = 8.0;
+        public static final double          TURN_SIM_KD                   = 0.0;
         public static final double          TURN_PID_MIN_INPUT            = 0;
         public static final double          TURN_PID_MAX_INPUT            = 1;
         public static final double          WHEEL_COF                     = 1.2;
         public static final double          ODOMETRY_FREQUENCY            = 100.0; // ms
-        public static final ModuleConfig    MODULE_CONFIG                 = new ModuleConfig(WHEEL_RADIUS, General.MAX_LINEAR_SPEED, WHEEL_COF, DRIVE_GEARBOX, DRIVE_MOTOR_REDUCTION, TURN_MOTOR_CURRENT_LIMIT, 1);
-        public static final RobotConfig     PP_CONFIG                     = new RobotConfig(
-                General.ROBOT_MASS, General.ROBOT_MOI, new ModuleConfig(WHEEL_RADIUS, General.MAX_LINEAR_SPEED, WHEEL_COF, DRIVE_GEARBOX.withReduction(DRIVE_MOTOR_REDUCTION), DRIVE_MOTOR_CURRENT_LIMIT.magnitude(), 1), MODULE_TRANSLATIONS
-        );
+        public static final double          ROTATE_KP                     = 0;
+        public static final double          ROTATE_KD                     = 0;
         public static final double          MAX_SPEED_ELEVATOR            = 1;
         public static final double          MIN_SPEED_ELEVATOR            = 0.2;
         public static final double          MAX_SPEED_ELEVATOR_HEIGHT     = Constants.Elevator.L2_HEIGHT;
         public static final double          MIN_SPEED_ELEVATOR_HEIGHT     = Constants.Elevator.L3_HEIGHT;
         public static final double          SPEED_ELEVATOR_M              = (MAX_SPEED_ELEVATOR - MIN_SPEED_ELEVATOR) / (MIN_SPEED_ELEVATOR_HEIGHT - MAX_SPEED_ELEVATOR_HEIGHT);
         public static final double          SPEED_ELEVATOR_B              = MAX_SPEED_ELEVATOR - SPEED_ELEVATOR_M * MAX_SPEED_ELEVATOR_HEIGHT;
-        public static final double          SPEED_MOTION_THRESHOLD        = 0.02 * Constants.General.MAX_LINEAR_SPEED;
-        public static final double          ROTATION_MOTION_THRESHOLD     = 0.02 * Constants.General.MAX_ANGULAR_SPEED;
+        public static final double          MAX_LINEAR_SPEED              = 4.8; // m/s
+        public static final double          MAX_ANGULAR_SPEED             = MAX_LINEAR_SPEED / DRIVE_BASE_RADIUS;
+        public static final double          SPEED_MOTION_THRESHOLD        = 0.02 * MAX_LINEAR_SPEED;
+        public static final double          ROTATION_MOTION_THRESHOLD     = 0.02 * MAX_ANGULAR_SPEED;
+        public static final ModuleConfig    MODULE_CONFIG                 = new ModuleConfig(WHEEL_RADIUS, MAX_LINEAR_SPEED, WHEEL_COF, DRIVE_GEARBOX, DRIVE_MOTOR_REDUCTION, TURN_MOTOR_CURRENT_LIMIT, 1);
+        public static final RobotConfig     PP_CONFIG                     = new RobotConfig(
+                General.ROBOT_MASS, General.ROBOT_MOI, new ModuleConfig(WHEEL_RADIUS, MAX_LINEAR_SPEED, WHEEL_COF, DRIVE_GEARBOX.withReduction(DRIVE_MOTOR_REDUCTION), DRIVE_MOTOR_CURRENT_LIMIT.magnitude(), 1), MODULE_TRANSLATIONS
+        );
+        public static final double          MAX_SNAP_SPEED                = 0.7;
+        public static final double          PATHPLANNER_DRIVE_KP          = 2.0;
+        public static final double          PATHPLANNER_DRIVE_KD          = 0.0;
+        public static final double          PATHPLANNER_TURN_KP           = 2.0;
+        public static final double          PATHPLANNER_TURN_KD           = 0.0;
     }
 
     public static class Field
@@ -208,12 +217,10 @@ public final class Constants
 
     public static class General
     {
-        public static final double LOOP_PERIOD_SECS  = 0.02;
-        public static final double MAX_LINEAR_SPEED  = 4.8; // m/s
-        public static final double ROBOT_MASS        = 74.088;
-        public static final double ROBOT_MOI         = 6.883;
-        public static final double MOTOR_VOLTAGE     = 12.0;
-        public static final double MAX_ANGULAR_SPEED = MAX_LINEAR_SPEED / Constants.Drive.DRIVE_BASE_RADIUS;
+        public static final double LOOP_PERIOD_SECS = 0.02;
+        public static final double ROBOT_MASS       = 74.088;
+        public static final double ROBOT_MOI        = 6.883;
+        public static final double MOTOR_VOLTAGE    = 12.0;
     }
 
     public static class Lookups
@@ -242,5 +249,10 @@ public final class Constants
         public static final double  MOTOR_REDUCTION   = 5.0;
         public static final double  INTAKE_VOLTS      = 3.50;
         public static final double  OUTPUT_VOLTS      = 9.0;
+    }
+
+    public static class Controls
+    {
+        public static final double JOYSTICK_DEADBAND = 0.1;
     }
 }

@@ -14,8 +14,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Dashboard extends SubsystemBase
 {
     private final DashboardIO                  _io;
-    private final DashboardIOInputsAutoLogged  _inputs     = new DashboardIOInputsAutoLogged();
-    private Map<String, PathPlannerAuto>       _autoLookup = Map.of("Right_FC", new PathPlannerAuto("Right_FC"), "Left_JL", new PathPlannerAuto("Left_JL"));
+    private final DashboardIOInputsAutoLogged  _inputs = new DashboardIOInputsAutoLogged();
+    private Map<String, PathPlannerAuto>       _autoLookup;
     private Map<String, List<PathPlannerPath>> _pathLookup;
 
     public Dashboard(DashboardIO io)
@@ -24,6 +24,7 @@ public class Dashboard extends SubsystemBase
 
         try
         {
+            _autoLookup = Map.of("Right_FC", new PathPlannerAuto("Right_FC"), "Left_JL", new PathPlannerAuto("Left_JL"));
             _pathLookup = Map.of("Right_FC", PathPlannerAuto.getPathGroupFromAutoFile("Right_FC"), "Left_JL", PathPlannerAuto.getPathGroupFromAutoFile("Left_JL"));
 
         }
