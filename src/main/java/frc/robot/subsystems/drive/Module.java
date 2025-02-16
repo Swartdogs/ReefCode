@@ -12,15 +12,15 @@ import frc.robot.Constants;
 public class Module
 {
     private final ModuleIO                 _io;
-    private final ModuleIOInputsAutoLogged _inputs = new ModuleIOInputsAutoLogged();
+    private final ModuleIOInputsAutoLogged _inputs             = new ModuleIOInputsAutoLogged();
     private final int                      _index;
     private final SimpleMotorFeedforward   _driveFeedForward;
     private final PIDController            _driveFeedback;
     private final PIDController            _turnFeedback;
-    private Rotation2d _angleSetpoint = null;
-    private Double _speedSetpoint = null;
-    private Rotation2d _turnRelativeOffset = null;
-    private double _lastPositionMeters = 0.0;
+    private Rotation2d                     _angleSetpoint      = null;
+    private Double                         _speedSetpoint      = null;
+    private Rotation2d                     _turnRelativeOffset = null;
+    private double                         _lastPositionMeters = 0.0;
 
     public Module(ModuleIO io, int index)
     {
@@ -78,10 +78,11 @@ public class Module
             if (_speedSetpoint != null)
             {
                 // Scale velocity based on turn error
-                // When the error is 90 degrees, the velocity setpoint should be 0. As the wheel turns
+                // When the error is 90 degrees, the velocity setpoint should be 0. As the wheel
+                // turns
                 // towards the setpoint, its velocity should increase. This is achieved by
                 // taking the component of the velocity in the direction of the setpoint.
-                double adjustSpeedSetpoint = _speedSetpoint = Math.cos(_turnFeedback.getError());
+                double adjustSpeedSetpoint = _speedSetpoint * Math.cos(_turnFeedback.getError());
 
                 // Run drive controller
                 double velocityRadPerSec = adjustSpeedSetpoint / Constants.Drive.WHEEL_RADIUS;
@@ -91,7 +92,8 @@ public class Module
     }
 
     /**
-     * Runs the module with the specified setpoint state. Returns the optimized state.
+     * Runs the module with the specified setpoint state. Returns the optimized
+     * state.
      */
     public SwerveModuleState runSetpoint(SwerveModuleState state)
     {

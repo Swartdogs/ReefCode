@@ -3,6 +3,10 @@ package frc.robot.subsystems.drive;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.PathPlannerLogging;
 
@@ -11,7 +15,6 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -19,18 +22,19 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.util.LocalADStarAK;
 
 public class Drive extends SubsystemBase
 {
-    private final GyroIO _gyroIO;
-    private final GyroIOInputsAutoLogged _gyroInputs = new GyroIOInputsAutoLogged();
-    private final Module[] _modules = new Module[4]; // FL, FR, BL, BR
+    private final GyroIO                   _gyroIO;
+    private final GyroIOInputsAutoLogged   _gyroInputs = new GyroIOInputsAutoLogged();
+    private final Module[]                 _modules    = new Module[4]; // FL, FR, BL, BR
     private final SwerveDrivePoseEstimator _poseEstimator;
-    private final SwerveDriveKinematics _kinematics = new SwerveDriveKinematics(getModuleTranslations());
-    private PIDController _rotatePID;
-    private double _maxSpeed;
-    private double _speedMultiplier;
+    private final SwerveDriveKinematics    _kinematics = new SwerveDriveKinematics(Constants.Drive.MODULE_TRANSLATIONS);
+    private PIDController                  _rotatePID;
+    private double                         _maxSpeed;
+    private double                         _speedMultiplier;
 
     public Drive(GyroIO gyroIO, ModuleIO flModuleIO, ModuleIO frModuleIO, ModuleIO blModuleIO, ModuleIO brModuleIO)
     {
@@ -46,7 +50,22 @@ public class Drive extends SubsystemBase
 
         _speedMultiplier = 1;
 
-        // TODO: Autobuilder (should go in Dashboard anyway)
+        RobotConfig config;
+
+        try
+        {
+            config = RobotConfig.fromGUISettings();
+        }
+        catch (Exception e)
+        {
+            config = new RobotConfig(Constants.General.ROBOT_MASS, Constants.General.ROBOT_MOI, Constants.Drive.MODULE_CONFIG, Constants.Drive.MODULE_TRANSLATIONS);
+        }
+
+        AutoBuilder.configure(
+                this::getPose, this::setPose, this::getChassisSpeeds, (speeds, feedforwards) -> runVelocity(speeds),
+                new PPHolonomicDriveController(new PIDConstants(Constants.Drive.PATHPLANNER_DRIVE_KP, Constants.Drive.PATHPLANNER_DRIVE_KD), new PIDConstants(Constants.Drive.PATHPLANNER_TURN_KP, Constants.Drive.PATHPLANNER_TURN_KD)),
+                config, RobotContainer::isRedAlliance, this
+        );
 
         Pathfinding.setPathfinder(new LocalADStarAK());
 
@@ -101,7 +120,7 @@ public class Drive extends SubsystemBase
         speeds = speeds.times(_speedMultiplier);
 
         // Calculate module setpoints
-        ChassisSpeeds discreteSpeeds = ChassisSpeeds.discretize(speeds, Constants.General.LOOP_PERIOD_SECS);
+        ChassisSpeeds       discreteSpeeds = ChassisSpeeds.discretize(speeds, Constants.General.LOOP_PERIOD_SECS);
         SwerveModuleState[] setpointStates = _kinematics.toSwerveModuleStates(discreteSpeeds);
 
         SwerveDriveKinematics.desaturateWheelSpeeds(setpointStates, Constants.Drive.MAX_LINEAR_SPEED);
@@ -114,7 +133,7 @@ public class Drive extends SubsystemBase
 
         for (int i = 0; i < _modules.length; i++)
         {
-            if (Math.hypot(discreteSpeeds.vxMetersPerSecond, discreteSpeeds.vyMetersPerSecond) > Constants.Drive.SPEED_MOTION_THRESHOLD || discreteSpeeds.omegaRadiansPerSecond > Constants.Drive.ROTATION_MOTION_THRESHOLD)
+            if (Math.hypot(discreteSpeeds.vxMetersPerSecond, discreteSpeeds.vyMetersPerSecond) > Constants.Drive.SPEED_MOTION_THRESHOLD || Math.abs(discreteSpeeds.omegaRadiansPerSecond) > Constants.Drive.ROTATION_MOTION_THRESHOLD)
             {
                 optimizedSetpointStates[i] = _modules[i].runSetpoint(setpointStates[i]);
             }
@@ -162,7 +181,7 @@ public class Drive extends SubsystemBase
 
         for (int i = 0; i < _modules.length; i++)
         {
-            headings[i] = getModuleTranslations()[i].getAngle();
+            headings[i] = Constants.Drive.MODULE_TRANSLATIONS[i].getAngle();
         }
 
         _kinematics.resetHeadings(headings);
@@ -197,7 +216,8 @@ public class Drive extends SubsystemBase
     }
 
     /**
-     * Returns the module states (turn angles and drive velocities) for all of the modules
+     * Returns the module states (turn angles and drive velocities) for all of the
+     * modules
      */
     @AutoLogOutput(key = "SwerveStates/Measured")
     public SwerveModuleState[] getModuleStates()
@@ -251,17 +271,6 @@ public class Drive extends SubsystemBase
     public void setModuleAbsoluteEncoderOffset(int moduleIndex, Rotation2d offset)
     {
         _modules[moduleIndex].setAbsoluteEncoderOffset(offset);
-    }
-
-    /** Returns an array of module translations. */
-    public static Translation2d[] getModuleTranslations()
-    {
-        return new Translation2d[] {
-            new Translation2d( Constants.Drive.WHEEL_BASE / 2.0,  Constants.Drive.TRACK_WIDTH / 2.0),
-            new Translation2d(-Constants.Drive.WHEEL_BASE / 2.0,  Constants.Drive.TRACK_WIDTH / 2.0),
-            new Translation2d( Constants.Drive.WHEEL_BASE / 2.0, -Constants.Drive.TRACK_WIDTH / 2.0),
-            new Translation2d(-Constants.Drive.WHEEL_BASE / 2.0, -Constants.Drive.TRACK_WIDTH / 2.0)
-        };
     }
 
     public void rotateInit(Rotation2d setpoint, double maxSpeed)

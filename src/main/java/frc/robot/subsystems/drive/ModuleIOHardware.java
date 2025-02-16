@@ -28,15 +28,15 @@ import static edu.wpi.first.units.Units.Amps;
 
 public class ModuleIOHardware implements ModuleIO
 {
-    private final TalonFX _driveMotor;
-    private final SparkBase _turnMotor;
-    private final StatusSignal<Angle> _drivePosition;
+    private final TalonFX                       _driveMotor;
+    private final SparkBase                     _turnMotor;
+    private final StatusSignal<Angle>           _drivePosition;
     private final StatusSignal<AngularVelocity> _driveVelocity;
-    private final StatusSignal<Voltage> _driveAppliedVolts;
-    private final StatusSignal<Current> _driveCurrentAmps;
-    private final RelativeEncoder _turnEncoder;
-    private final AnalogEncoder _turnPot;
-    private Rotation2d _potOffset;
+    private final StatusSignal<Voltage>         _driveAppliedVolts;
+    private final StatusSignal<Current>         _driveCurrentAmps;
+    private final RelativeEncoder               _turnEncoder;
+    private final AnalogEncoder                 _turnPot;
+    private Rotation2d                          _potOffset;
 
     public ModuleIOHardware(int module)
     {
@@ -48,7 +48,7 @@ public class ModuleIOHardware implements ModuleIO
             case 3 -> Constants.CAN.BR_DRIVE;
             default -> 0;
         });
-        
+
         _turnMotor = new SparkMax(switch (module)
         {
             case 0 -> Constants.CAN.FL_TURN;
@@ -66,7 +66,7 @@ public class ModuleIOHardware implements ModuleIO
             case 3 -> Constants.AIO.BR_ENCODER;
             default -> 0;
         });
-        
+
         _potOffset = switch (module)
         {
             case 0 -> Constants.Drive.FL_ZERO_ROTATION;
@@ -83,10 +83,10 @@ public class ModuleIOHardware implements ModuleIO
         _driveCurrentAmps  = _driveMotor.getStatorCurrent();
 
         var driveConfig = new TalonFXConfiguration();
-        driveConfig.CurrentLimits.StatorCurrentLimit = Amps.of(120.0).magnitude();
+        driveConfig.CurrentLimits.StatorCurrentLimit       = Amps.of(120.0).magnitude();
         driveConfig.CurrentLimits.StatorCurrentLimitEnable = true;
-        driveConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
-        driveConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+        driveConfig.MotorOutput.Inverted                   = InvertedValue.CounterClockwise_Positive;
+        driveConfig.MotorOutput.NeutralMode                = NeutralModeValue.Brake;
         _driveMotor.getConfigurator().apply(driveConfig);
 
         BaseStatusSignal.setUpdateFrequencyForAll(100.0, _drivePosition);
@@ -95,8 +95,8 @@ public class ModuleIOHardware implements ModuleIO
         _driveMotor.optimizeBusUtilization();
 
         // Configure turn motor
-        
-        _turnEncoder    = _turnMotor.getEncoder();
+
+        _turnEncoder = _turnMotor.getEncoder();
 
         var turnConfig = new SparkMaxConfig();
 
@@ -117,16 +117,16 @@ public class ModuleIOHardware implements ModuleIO
         // Refresh all signals
         BaseStatusSignal.refreshAll(_drivePosition, _driveVelocity, _driveAppliedVolts, _driveCurrentAmps);
 
-        inputs.drivePositionRad = _drivePosition.getValue().in(edu.wpi.first.units.Units.Radian) / Constants.Drive.DRIVE_MOTOR_REDUCTION;
-        inputs.driveVelocityRadPerSec =  _driveVelocity.getValue().in(edu.wpi.first.units.Units.RadiansPerSecond) / Constants.Drive.DRIVE_MOTOR_REDUCTION;
-        inputs.driveAppliedVolts = _driveAppliedVolts.getValueAsDouble();
-        inputs.driveCurrentAmps = _driveCurrentAmps.getValueAsDouble();
+        inputs.drivePositionRad       = _drivePosition.getValue().in(edu.wpi.first.units.Units.Radian) / Constants.Drive.DRIVE_MOTOR_REDUCTION;
+        inputs.driveVelocityRadPerSec = _driveVelocity.getValue().in(edu.wpi.first.units.Units.RadiansPerSecond) / Constants.Drive.DRIVE_MOTOR_REDUCTION;
+        inputs.driveAppliedVolts      = _driveAppliedVolts.getValueAsDouble();
+        inputs.driveCurrentAmps       = _driveCurrentAmps.getValueAsDouble();
 
-        inputs.turnAbsolutePosition = Rotation2d.fromRotations(_turnPot.get()).minus(_potOffset);
-        inputs.turnPosition = Rotation2d.fromRotations((_turnEncoder.getPosition() / Constants.Drive.TURN_MOTOR_REDUCTION));
+        inputs.turnAbsolutePosition  = Rotation2d.fromRotations(_turnPot.get()).minus(_potOffset);
+        inputs.turnPosition          = Rotation2d.fromRotations((_turnEncoder.getPosition() / Constants.Drive.TURN_MOTOR_REDUCTION));
         inputs.turnVelocityRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(_turnEncoder.getVelocity()) / Constants.Drive.TURN_MOTOR_REDUCTION;
-        inputs.turnAppliedVolts = _turnMotor.getAppliedOutput() * _turnMotor.getBusVoltage();
-        inputs.turnCurrentAmps = _turnMotor.getOutputCurrent();
+        inputs.turnAppliedVolts      = _turnMotor.getAppliedOutput() * _turnMotor.getBusVoltage();
+        inputs.turnCurrentAmps       = _turnMotor.getOutputCurrent();
     }
 
     @Override
@@ -145,7 +145,7 @@ public class ModuleIOHardware implements ModuleIO
     public void setDriveBrakeMode(boolean enable)
     {
         var config = new MotorOutputConfigs();
-        config.Inverted = InvertedValue.CounterClockwise_Positive;
+        config.Inverted    = InvertedValue.CounterClockwise_Positive;
         config.NeutralMode = enable ? NeutralModeValue.Brake : NeutralModeValue.Coast;
         _driveMotor.getConfigurator().apply(config);
     }

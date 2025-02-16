@@ -8,12 +8,11 @@ import frc.robot.Constants;
 
 public class ModuleIOSim implements ModuleIO
 {
-    private final DCMotorSim _driveSim = new DCMotorSim(LinearSystemId.createDCMotorSystem(Constants.Drive.DRIVE_GEARBOX, 0.025, Constants.Drive.DRIVE_MOTOR_REDUCTION), Constants.Drive.DRIVE_GEARBOX);
-    private final DCMotorSim _turnSim = new DCMotorSim(LinearSystemId.createDCMotorSystem(Constants.Drive.TURN_GEARBOX, 0.004, Constants.Drive.TURN_MOTOR_REDUCTION), Constants.Drive.TURN_GEARBOX);
-
-    private Rotation2d _turnAbsoluteInitPosition = new Rotation2d(Math.random() * 2.0 * Math.PI);
-    private double     _driveVolts = 0.0;
-    private double     _turnVolts  = 0.0;
+    private final DCMotorSim _driveSim                 = new DCMotorSim(LinearSystemId.createDCMotorSystem(Constants.Drive.DRIVE_GEARBOX, 0.025, Constants.Drive.DRIVE_MOTOR_REDUCTION), Constants.Drive.DRIVE_GEARBOX);
+    private final DCMotorSim _turnSim                  = new DCMotorSim(LinearSystemId.createDCMotorSystem(Constants.Drive.TURN_GEARBOX, 0.004, Constants.Drive.TURN_MOTOR_REDUCTION), Constants.Drive.TURN_GEARBOX);
+    private Rotation2d       _turnAbsoluteInitPosition = new Rotation2d(Math.random() * 2.0 * Math.PI);
+    private double           _driveVolts               = 0.0;
+    private double           _turnVolts                = 0.0;
 
     @Override
     public void updateInputs(ModuleIOInputs inputs)
@@ -21,16 +20,16 @@ public class ModuleIOSim implements ModuleIO
         _driveSim.update(Constants.General.LOOP_PERIOD_SECS);
         _turnSim.update(Constants.General.LOOP_PERIOD_SECS);
 
-        inputs.drivePositionRad = _driveSim.getAngularPositionRad();
+        inputs.drivePositionRad       = _driveSim.getAngularPositionRad();
         inputs.driveVelocityRadPerSec = _driveSim.getAngularVelocityRadPerSec();
-        inputs.driveAppliedVolts = _driveVolts;
-        inputs.driveCurrentAmps = Math.abs(_driveSim.getCurrentDrawAmps());
+        inputs.driveAppliedVolts      = _driveVolts;
+        inputs.driveCurrentAmps       = Math.abs(_driveSim.getCurrentDrawAmps());
 
-        inputs.turnAbsolutePosition = Rotation2d.fromRadians(_turnSim.getAngularPositionRad()).plus(_turnAbsoluteInitPosition);
-        inputs.turnPosition = Rotation2d.fromRadians(_turnSim.getAngularPositionRad());
+        inputs.turnAbsolutePosition  = Rotation2d.fromRadians(_turnSim.getAngularPositionRad()).plus(_turnAbsoluteInitPosition);
+        inputs.turnPosition          = Rotation2d.fromRadians(_turnSim.getAngularPositionRad());
         inputs.turnVelocityRadPerSec = _turnSim.getAngularVelocityRadPerSec();
-        inputs.turnAppliedVolts = _turnVolts;
-        inputs.turnCurrentAmps = Math.abs(_turnSim.getCurrentDrawAmps());
+        inputs.turnAppliedVolts      = _turnVolts;
+        inputs.turnCurrentAmps       = Math.abs(_turnSim.getCurrentDrawAmps());
     }
 
     @Override
