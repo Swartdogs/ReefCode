@@ -4,8 +4,6 @@ import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -34,8 +32,8 @@ public class Elevator extends SubsystemBase
 
     private final ElevatorIO                 _io;
     private final ElevatorIOInputsAutoLogged _inputs            = new ElevatorIOInputsAutoLogged();
-    private final ProfiledPIDController      _extensionPID;
-    private Double                           _extensionSetPoint = null;
+    private final PIDController              _extensionPID;
+    private Double                           _extensionSetpoint = null;
     private final Alert                      _potAlert;
     private double                           _lastPosition      = 0.0; // Last 20 milisecond elevator position
 
@@ -43,8 +41,8 @@ public class Elevator extends SubsystemBase
     {
         _io = io;
 
-        _extensionPID = new ProfiledPIDController(EXTENSION_KP, EXTENSION_KI, EXTENSION_KD, new TrapezoidProfile.Constraints(MAX_VELOCITY, MAX_ACCELERATION));
-        _extensionPID.reset(Constants.Elevator.SCALED_MIN);
+        _extensionPID = new PIDController(EXTENSION_KP, EXTENSION_KI, EXTENSION_KD);
+        _extensionPID.setTolerance(EXTENSION_TOLERANCE);
 
         _potAlert = new Alert("Potentiometer has been disconnected", AlertType.kError);
     }
@@ -54,12 +52,12 @@ public class Elevator extends SubsystemBase
         _io.updateInputs(_inputs);
         Logger.processInputs("Elevator", _inputs);
 
-        if (_extensionSetPoint != null)
+        if (_extensionSetpoint != null)
         {
-            _io.setVolts(MathUtil.clamp(_extensionPID.calculate(_inputs.extensionPosition) + Constants.Elevator.ELEVATOR_FEED_FORWARD, -Constants.General.MOTOR_VOLTAGE, Constants.General.MOTOR_VOLTAGE));
+            _io.setVolts(MathUtil.clamp(_extensionPID.calculate(_inputs.extensionPosition, _extensionSetpoint) + Constants.Elevator.ELEVATOR_FEED_FORWARD, -Constants.General.MOTOR_VOLTAGE, Constants.General.MOTOR_VOLTAGE));
         }
 
-        Logger.recordOutput("Has Extension Setpoint", _extensionSetPoint != null);
+        Logger.recordOutput("Has Extension Setpoint", _extensionSetpoint != null);
 
         if (_inputs.leaderVolts != 0 && _lastPosition == _inputs.extensionPosition) // if voltage is not 0 and last position does not change then error
         {
@@ -67,32 +65,27 @@ public class Elevator extends SubsystemBase
         }
 
         _lastPosition = _inputs.extensionPosition;
-
-        Logger.recordOutput("ElevatorSetpointPosition", _extensionPID.getSetpoint().position);
-        Logger.recordOutput("ElevatorSetpointVelocity", _extensionPID.getSetpoint().velocity);
     }
 
     public void setExtension(double height) // height is measured in inches
     {
-        _extensionSetPoint = height;
-        _extensionPID.setGoal(_extensionSetPoint);
+        _extensionSetpoint = height;
     }
 
     public void setExtension(ElevatorHeight elevatorHeight) // height is measured in inches
     {
-        _extensionSetPoint = elevatorHeight.getHeight();
-        _extensionPID.setGoal(_extensionSetPoint);
+        _extensionSetpoint = elevatorHeight.getHeight();
     }
 
     public void setVolts(double volts)
     {
         _io.setVolts(Math.min(volts + Constants.Elevator.ELEVATOR_FEED_FORWARD, 12.0));
-        _extensionSetPoint = null;
+        _extensionSetpoint = null;
     }
 
     public void modifySetpoint(double modification)
     {
-        _extensionSetPoint += modification;
+        _extensionSetpoint += modification;
     }
 
     public boolean atSetpoint()
