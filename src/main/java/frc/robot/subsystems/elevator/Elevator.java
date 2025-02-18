@@ -54,7 +54,7 @@ public class Elevator extends SubsystemBase
 
         if (_extensionSetpoint != null)
         {
-            _io.setVolts(MathUtil.clamp(_extensionPID.calculate(_inputs.extensionPosition, _extensionSetpoint) + Constants.Elevator.ELEVATOR_FEED_FORWARD, -Constants.General.MOTOR_VOLTAGE, Constants.General.MOTOR_VOLTAGE));
+            _io.setVolts(MathUtil.clamp(_extensionPID.calculate(_inputs.extensionPosition, _extensionSetpoint) + Constants.Elevator.ELEVATOR_FEED_FORWARD, -Constants.General.MOTOR_VOLTAGE/2, Constants.General.MOTOR_VOLTAGE));
         }
 
         Logger.recordOutput("Has Extension Setpoint", _extensionSetpoint != null);
