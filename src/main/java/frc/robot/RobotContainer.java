@@ -2,7 +2,10 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.NamedCommands;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Alert.AlertType;
@@ -117,22 +120,13 @@ public class RobotContainer
                 break;
         }
 
-        NamedCommands.registerCommand("ExtendToL1", ElevatorCommands.setHeight(_elevator, Constants.Elevator.L1_HEIGHT));
-        NamedCommands.registerCommand("ExtendToL2", ElevatorCommands.setHeight(_elevator, Constants.Elevator.L2_HEIGHT));
-        NamedCommands.registerCommand("ExtendToL3", ElevatorCommands.setHeight(_elevator, Constants.Elevator.L3_HEIGHT));
-        NamedCommands.registerCommand("ExtendToL4", ElevatorCommands.setHeight(_elevator, Constants.Elevator.L4_HEIGHT));
-        NamedCommands.registerCommand("Stow", ElevatorCommands.setHeight(_elevator, Constants.Elevator.STOW_HEIGHT));
-
-        if (RobotBase.isSimulation())
-        {
-            NamedCommands.registerCommand("Intake", Commands.none());
-        }
-        else
-        {
-            NamedCommands.registerCommand("Intake", ManipulatorCommands.intake(_manipulator));
-        }
-
-        NamedCommands.registerCommand("Output", ManipulatorCommands.output(_manipulator));
+        NamedCommands.registerCommand("ExtendToL1", ElevatorCommands.setHeight(_elevator, ElevatorHeight.Level1));
+        NamedCommands.registerCommand("ExtendToL2", ElevatorCommands.setHeight(_elevator, ElevatorHeight.Level2));
+        NamedCommands.registerCommand("ExtendToL3", ElevatorCommands.setHeight(_elevator, ElevatorHeight.Level3));
+        NamedCommands.registerCommand("ExtendToL4", ElevatorCommands.setHeight(_elevator, ElevatorHeight.Level4));
+        NamedCommands.registerCommand("Stow", ElevatorCommands.setHeight(_elevator, ElevatorHeight.Stow));
+        NamedCommands.registerCommand("Intake", ManipulatorCommands.intake(_manipulator));
+        NamedCommands.registerCommand("Output", CompositeCommands.output(_elevator, _manipulator));
         NamedCommands.registerCommand("Delay", Commands.defer(() -> Commands.waitSeconds(autoDelayTime()), Set.of()));
 
         var delayChooser = new SendableChooser<Integer>();
@@ -225,9 +219,7 @@ public class RobotContainer
         // Rotation2d.fromDegrees(180)));
         // _controller.x().onTrue(DriveCommands.setTurnPosition(_drive,
         // Rotation2d.fromDegrees(270)));
-        // _controller.a().onTrue(DriveCommands.odometerReset(_drive, new
-        // Pose2d(Units.inchesToMeters(297.5), Units.inchesToMeters(158.5),
-        // Rotation2d.fromDegrees(0))));
+        _controller.a().onTrue(DriveCommands.odometerReset(_drive, new Pose2d(Units.inchesToMeters(297.5), Units.inchesToMeters(158.5), Rotation2d.fromDegrees(0))));
 
         // Lock to 0° when A button is held
         // _controller.a().whileTrue(DriveCommands.joystickDriveAtAngle(_drive, () ->
@@ -371,7 +363,7 @@ public class RobotContainer
                 FunnelCommands.drop(_funnel).alongWith(ElevatorCommands.setHeight(_elevator, ElevatorHeight.Hang)).alongWith(LEDCommands.flashColor(_led, Constants.LED.RED)).until(() -> _elevator.atSetpoint())
                         .andThen(LEDCommands.setDefaultColor(_led, Constants.LED.YELLOW))
         );
-        _operatorButtons.button(9).onTrue(ElevatorCommands.setHeight(_elevator, ElevatorHeight.Stow));
+        _operatorButtons.button(9).onTrue(ElevatorCommands.hangExecute(_elevator));
         _operatorButtons.button(10).onTrue(null);// replace with algae intake
         _operatorButtons.button(11).onTrue(null);// replace with algae output
         _operatorButton12.onTrue(null);// replace with algae stop

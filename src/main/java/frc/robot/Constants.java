@@ -84,10 +84,10 @@ public final class Constants
         public static final double          DRIVE_BASE_RADIUS             = Math.hypot(TRACK_WIDTH / 2.0, WHEEL_BASE / 2.0);
         public static final Translation2d[] MODULE_TRANSLATIONS           = new Translation2d[] { new Translation2d(TRACK_WIDTH / 2.0, WHEEL_BASE / 2.0), new Translation2d(TRACK_WIDTH / 2.0, -WHEEL_BASE / 2.0),
                 new Translation2d(-TRACK_WIDTH / 2.0, WHEEL_BASE / 2.0), new Translation2d(-TRACK_WIDTH / 2.0, -WHEEL_BASE / 2.0) };
-        public static final Rotation2d      FL_ZERO_ROTATION              = Rotation2d.fromDegrees(57.45 + 45.0); // Raw reading - 1/8 for the 45 degree offset
-        public static final Rotation2d      FR_ZERO_ROTATION              = Rotation2d.fromDegrees(11.29 - 45.0);
-        public static final Rotation2d      BL_ZERO_ROTATION              = Rotation2d.fromDegrees(65.26 - 45.0);
-        public static final Rotation2d      BR_ZERO_ROTATION              = Rotation2d.fromDegrees(114.1 + 45.0);
+        public static final Rotation2d      FL_ZERO_ROTATION              = Rotation2d.fromRadians(0.944 + Math.PI / 4); // Raw reading + 1/8 for the 45 degree offset
+        public static final Rotation2d      FR_ZERO_ROTATION              = Rotation2d.fromRadians(-2.942 + 3 * Math.PI / 4);
+        public static final Rotation2d      BL_ZERO_ROTATION              = Rotation2d.fromRadians(1.198 - Math.PI / 4);
+        public static final Rotation2d      BR_ZERO_ROTATION              = Rotation2d.fromRadians(-1.150 - 3 * Math.PI / 4);
         public static final Current         DRIVE_MOTOR_CURRENT_LIMIT     = Amps.of(50);
         public static final double          WHEEL_RADIUS                  = Units.inchesToMeters(2);
         public static final double          DRIVE_MOTOR_REDUCTION         = 5.67;
@@ -95,7 +95,7 @@ public final class Constants
         public static final DCMotor         DRIVE_GEARBOX                 = DCMotor.getKrakenX60(1);
         public static final double          DRIVE_ENCODER_POSITION_FACTOR = 2 * Math.PI / DRIVE_MOTOR_REDUCTION;
         public static final double          DRIVE_ENCODER_VELOCITY_FACTOR = 2 * Math.PI / 60.0 / DRIVE_MOTOR_REDUCTION;
-        public static final double          DRIVE_KP                      = 5.0;
+        public static final double          DRIVE_KP                      = 0.05;
         public static final double          DRIVE_KD                      = 0.0;
         public static final double          DRIVE_KS                      = 0.0;
         public static final double          DRIVE_KV                      = 0.1;
@@ -109,7 +109,7 @@ public final class Constants
         public static final DCMotor         TURN_GEARBOX                  = DCMotor.getNEO(1);
         public static final double          TURN_ENCODER_POSITION_FACTOR  = 1.0 / TURN_MOTOR_REDUCTION;
         public static final double          TURN_ENCODER_VELOCITY_FACTOR  = 1 / TURN_MOTOR_REDUCTION;
-        public static final double          TURN_KP                       = 7.0;
+        public static final double          TURN_KP                       = 3.0;
         public static final double          TURN_KD                       = 0.0;
         public static final double          TURN_SIM_KP                   = 8.0;
         public static final double          TURN_SIM_KD                   = 0.0;
@@ -174,12 +174,12 @@ public final class Constants
         public static final double  RAW_SENSOR_MAX               = 0.62;
         public static final double  SCALED_MIN                   = 16.0;
         public static final double  SCALED_MAX                   = 75.75;
-        public static final double  EXTENSION_KP                 = 0.4;
+        public static final double  EXTENSION_KP                 = 1.0;
         public static final double  EXTENSION_KI                 = 0.0;
         public static final double  EXTENSION_KD                 = 0.02; // anything above 0.18 causes "shake"
-        public static final double  MAX_EXTENSION                = SCALED_MAX - SCALED_MIN;
+        public static final double  MAX_EXTENSION                = SCALED_MAX;
         public static final double  EXTENSION_TOLERANCE          = 0.5;
-        public static final double  STOW_HEIGHT                  = SCALED_MIN;
+        public static final double  STOW_HEIGHT                  = SCALED_MIN + 1.0;
         public static final double  L1_HEIGHT                    = 27.00; // 12.7625 account for bottom of baseplate to bottom of carrige
         public static final double  L2_HEIGHT                    = 33.4; // 19.11
         public static final double  L3_HEIGHT                    = 48.5; // 34.86
@@ -191,8 +191,11 @@ public final class Constants
         public static final double  EXTENSION_OFFSET             = SCALED_MIN - EXTENSION_SCALE * RAW_SENSOR_MIN;
         public static final double  ELEVATOR_MASS                = 15.875;
         public static final double  ELEVATOR_DRUM_RADIUS         = 0.0223139;
-        public static final double  ELEVATOR_FEED_FORWARD        = 1.0;
+        public static final double  ELEVATOR_FEED_FORWARD        = 0.9;
         public static final double  ELEVATOR_MODIFICATION_HEIGHT = 0.5;
+        public static final double  MAX_VELOCITY                 = 35.0;
+        public static final double  MAX_ACCELERATION             = 10000000000000.0;
+        public static final double  HANG_VOLTAGE                 = -3.0;
     }
 
     public static class Funnel

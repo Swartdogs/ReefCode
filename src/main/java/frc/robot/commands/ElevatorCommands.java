@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import java.util.function.DoubleSupplier;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.Elevator.ElevatorHeight;
 
@@ -34,5 +35,10 @@ public class ElevatorCommands
     public static Command modifyHeight(Elevator elevator, double modification)
     {
         return elevator.runOnce(() -> elevator.modifySetpoint(modification));
+    }
+
+    public static Command hangExecute(Elevator elevator)
+    {
+        return elevator.runOnce(() -> elevator.setVolts(Constants.Elevator.HANG_VOLTAGE));
     }
 }
