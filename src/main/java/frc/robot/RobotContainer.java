@@ -289,7 +289,7 @@ public class RobotContainer
         // Driver Controls
         // _driverJoystick.button(2).onTrue(null); // replace this with switching
         // cameras/
-        _driverJoystick.button(1).whileTrue(DriveCommands.reduceSpeed(_drive));
+        _driverJoystick.button(2).whileTrue(DriveCommands.reduceSpeed(_drive));
         _driverJoystick.button(11).onTrue(DriveCommands.resetGyro(_drive));
 
         // _driverButtons.button(0).whileTrue(
