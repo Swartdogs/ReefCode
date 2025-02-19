@@ -108,8 +108,6 @@ public class Robot extends LoggedRobot
 
         CommandScheduler.getInstance().run();
 
-        _robotContainer.periodic();
-
         Threads.setCurrentThreadPriority(false, 10);
 
         var canStatus = RobotController.getCANStatus();

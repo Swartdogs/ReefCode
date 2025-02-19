@@ -228,7 +228,7 @@ public final class Constants
 
     public static class Lookups
     {
-        public static final HashMap<String, Command> _lookup = new HashMap<String, Command>() {
+        public static final HashMap<String, Command> AUTO_LOOKUP = new HashMap<String, Command>() {
             {
                 put("LeftIKL", AutoBuilder.buildAuto("Left_IKL"));
                 put("LeftILK", AutoBuilder.buildAuto("Left_ILK"));
