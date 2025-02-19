@@ -19,12 +19,6 @@
         {
           "type": "named",
           "data": {
-            "name": "ExtendToL4"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
             "name": "Output"
           }
         },
