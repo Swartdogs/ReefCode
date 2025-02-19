@@ -13,13 +13,13 @@ public class FunnelCommands
     {
     }
 
-    public static Command drop(Funnel funnel)
+    public static Command drop()
     {
-        return Commands.startEnd(() -> funnel.setVolts(Constants.Funnel.FUNNEL_VOLTS), () -> funnel.setVolts(0), funnel).withTimeout(Constants.Funnel.DROP_TIME_SECS);
+        return Commands.startEnd(() -> Funnel.getInstance().setVolts(Constants.Funnel.FUNNEL_VOLTS), () -> Funnel.getInstance().setVolts(0), Funnel.getInstance()).withTimeout(Constants.Funnel.DROP_TIME_SECS);
     }
 
-    public static Command setVolts(Funnel funnel, DoubleSupplier voltsSupplier)
+    public static Command setVolts(DoubleSupplier voltsSupplier)
     {
-        return funnel.run(() -> funnel.setVolts(voltsSupplier.getAsDouble()));
+        return Funnel.getInstance().run(() -> Funnel.getInstance().setVolts(voltsSupplier.getAsDouble()));
     }
 }

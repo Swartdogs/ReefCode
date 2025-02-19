@@ -30,6 +30,25 @@ public class Elevator extends SubsystemBase
         }
     }
 
+    private static Elevator _instance;
+
+    public static Elevator getInstance()
+    {
+        if (_instance == null)
+        {
+            var io = switch (Constants.AdvantageKit.CURRENT_MODE)
+            {
+                case REAL -> new ElevatorIOHardware();
+                case SIM -> new ElevatorIOSim();
+                default -> new ElevatorIO() {};
+            };
+
+            _instance = new Elevator(io);
+        }
+
+        return _instance;
+    }
+
     private final ElevatorIO                 _io;
     private final ElevatorIOInputsAutoLogged _inputs            = new ElevatorIOInputsAutoLogged();
     private final PIDController              _extensionPID;
@@ -37,7 +56,7 @@ public class Elevator extends SubsystemBase
     private final Alert                      _potAlert;
     private double                           _lastPosition      = 0.0; // Last 20 milisecond elevator position
 
-    public Elevator(ElevatorIO io)
+    private Elevator(ElevatorIO io)
     {
         _io = io;
 

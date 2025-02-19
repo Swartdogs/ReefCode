@@ -28,12 +28,12 @@ public final class DriveCommands
      * Field relative drive command using two joysticks (controlling linear and
      * angular velocities).
      */
-    public static Command joystickDrive(Drive drive, DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier omegaSupplier, BooleanSupplier robotCentric)
+    public static Command joystickDrive(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier omegaSupplier, BooleanSupplier robotCentric)
     {
-        return joystickDrive(drive, xSupplier, ySupplier, omegaSupplier, robotCentric, 2, 3);
+        return joystickDrive(xSupplier, ySupplier, omegaSupplier, robotCentric, 2, 3);
     }
 
-    public static Command joystickDrive(Drive drive, DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier omegaSupplier, BooleanSupplier robotCentric, int translateExponent, double rotateExponent)
+    public static Command joystickDrive(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier omegaSupplier, BooleanSupplier robotCentric, int translateExponent, double rotateExponent)
     {
         return Commands.run(() ->
         {
@@ -54,7 +54,7 @@ public final class DriveCommands
             {
                 var chassisSpeeds = new ChassisSpeeds(linearVelocity.getX() * Constants.Drive.MAX_LINEAR_SPEED, linearVelocity.getY() * Constants.Drive.MAX_LINEAR_SPEED, omega * Constants.Drive.MAX_ANGULAR_SPEED);
 
-                drive.runVelocity(chassisSpeeds);
+                Drive.getInstance().runVelocity(chassisSpeeds);
             }
             else
             {
@@ -63,45 +63,48 @@ public final class DriveCommands
                     linearVelocity = linearVelocity.unaryMinus();
                 }
 
-                drive.runVelocity(
-                        ChassisSpeeds
-                                .fromFieldRelativeSpeeds(linearVelocity.getX() * Constants.Drive.MAX_LINEAR_SPEED, linearVelocity.getY() * Constants.Drive.MAX_LINEAR_SPEED, omega * Constants.Drive.MAX_ANGULAR_SPEED, drive.getRotation())
+                Drive.getInstance().runVelocity(
+                        ChassisSpeeds.fromFieldRelativeSpeeds(
+                                linearVelocity.getX() * Constants.Drive.MAX_LINEAR_SPEED, linearVelocity.getY() * Constants.Drive.MAX_LINEAR_SPEED, omega * Constants.Drive.MAX_ANGULAR_SPEED, Drive.getInstance().getRotation()
+                        )
                 );
             }
-        }, drive);
+        }, Drive.getInstance());
     }
 
-    public static Command driveAtOrientation(Drive drive, DoubleSupplier xSupplier, DoubleSupplier ySupplier, BooleanSupplier robotCentric, Supplier<Rotation2d> setpoint, double maxSpeed)
+    public static Command driveAtOrientation(DoubleSupplier xSupplier, DoubleSupplier ySupplier, BooleanSupplier robotCentric, Supplier<Rotation2d> setpoint, double maxSpeed)
     {
-        return new DeferredCommand(() -> Commands.runOnce(() -> drive.rotateInit(setpoint.get(), maxSpeed)).andThen(joystickDrive(drive, xSupplier, ySupplier, () -> drive.rotateExecute(), robotCentric, 2, 1)), Set.of(drive));
+        return new DeferredCommand(
+                () -> Commands.runOnce(() -> Drive.getInstance().rotateInit(setpoint.get(), maxSpeed)).andThen(joystickDrive(xSupplier, ySupplier, () -> Drive.getInstance().rotateExecute(), robotCentric, 2, 1)), Set.of(Drive.getInstance())
+        );
     }
 
-    public static Command resetGyro(Drive drive)
+    public static Command resetGyro()
     {
         return Commands.runOnce(() ->
         {
-            var pose = drive.getPose();
-            drive.setPose(new Pose2d(pose.getX(), pose.getY(), Rotation2d.fromDegrees(!RobotContainer.isRedAlliance() ? 0 : 180)));
+            var pose = Drive.getInstance().getPose();
+            Drive.getInstance().setPose(new Pose2d(pose.getX(), pose.getY(), Rotation2d.fromDegrees(!RobotContainer.isRedAlliance() ? 0 : 180)));
         }).ignoringDisable(true);
     }
 
-    public static Command driveVolts(Drive drive, double volts)
+    public static Command driveVolts(double volts)
     {
-        return Commands.runOnce(() -> drive.runVolts(volts));
+        return Commands.runOnce(() -> Drive.getInstance().runVolts(volts));
     }
 
-    public static Command reduceSpeed(Drive drive)
+    public static Command reduceSpeed()
     {
-        return Commands.startEnd(() -> drive.setSpeedMultiplier(0.2), () -> drive.setSpeedMultiplier(1.0));
+        return Commands.startEnd(() -> Drive.getInstance().setSpeedMultiplier(0.2), () -> Drive.getInstance().setSpeedMultiplier(1.0));
     }
 
-    public static Command stop(Drive drive)
+    public static Command stop()
     {
-        return drive.runOnce(() -> drive.stop());
+        return Drive.getInstance().runOnce(() -> Drive.getInstance().stop());
     }
 
-    public static Command odometerReset(Drive drive, Pose2d pos)
+    public static Command setOdometer(Pose2d pose)
     {
-        return drive.runOnce(() -> drive.setPose(pos));
+        return Drive.getInstance().runOnce(() -> Drive.getInstance().setPose(pose));
     }
 }

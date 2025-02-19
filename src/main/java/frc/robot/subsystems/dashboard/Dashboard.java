@@ -10,15 +10,34 @@ import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class Dashboard extends SubsystemBase
 {
+    private static Dashboard _instance;
+
+    public static Dashboard getInstance()
+    {
+        if (_instance == null)
+        {
+            var io = switch (Constants.AdvantageKit.CURRENT_MODE)
+            {
+                case REAL, SIM -> new DashboardIONetwork();
+                default -> new DashboardIO() {};
+            };
+
+            _instance = new Dashboard(io);
+        }
+
+        return _instance;
+    }
+
     private final DashboardIO                  _io;
     private final DashboardIOInputsAutoLogged  _inputs = new DashboardIOInputsAutoLogged();
     private Map<String, PathPlannerAuto>       _autoLookup;
     private Map<String, List<PathPlannerPath>> _pathLookup;
 
-    public Dashboard(DashboardIO io)
+    private Dashboard(DashboardIO io)
     {
         _io = io;
 

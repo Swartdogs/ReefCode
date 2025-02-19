@@ -4,14 +4,34 @@ import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class Funnel extends SubsystemBase
 {
+    private static Funnel _instance;
+
+    public static Funnel getInstance()
+    {
+        if (_instance == null)
+        {
+            var io = switch (Constants.AdvantageKit.CURRENT_MODE)
+            {
+                case REAL -> new FunnelIOHardware();
+                case SIM -> new FunnelIOSim();
+                default -> new FunnelIO() {};
+            };
+
+            _instance = new Funnel(io);
+        }
+
+        return _instance;
+    }
+
     private final FunnelIO                 _io;
     private final FunnelIOInputsAutoLogged _inputs    = new FunnelIOInputsAutoLogged();
     private boolean                        _isDropped = false;
 
-    public Funnel(FunnelIO io)
+    private Funnel(FunnelIO io)
     {
         _io = io;
     }

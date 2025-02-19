@@ -7,12 +7,31 @@ import frc.robot.Constants;
 
 public class LED extends SubsystemBase
 {
+    private static LED _instance;
+
+    public static LED getInstance()
+    {
+        if (_instance == null)
+        {
+            var io = switch (Constants.AdvantageKit.CURRENT_MODE)
+            {
+                case REAL -> new LEDIOHardware();
+                case SIM -> new LEDIOSim();
+                default -> new LEDIO() {};
+            };
+
+            _instance = new LED(io);
+        }
+
+        return _instance;
+    }
+
     private final LEDIO _io;
     private boolean     _flashing;
     private Color       _color;
     private double      _flashTimer;
 
-    public LED(LEDIO io)
+    private LED(LEDIO io)
     {
         _io = io;
     }

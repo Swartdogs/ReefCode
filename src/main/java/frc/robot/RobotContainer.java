@@ -4,52 +4,22 @@ import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Alert;
-import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.CompositeCommands;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.ElevatorCommands;
-import frc.robot.commands.FunnelCommands;
-import frc.robot.commands.LEDCommands;
 import frc.robot.commands.ManipulatorCommands;
-import frc.robot.subsystems.dashboard.Dashboard;
-import frc.robot.subsystems.dashboard.DashboardIO;
-import frc.robot.subsystems.dashboard.DashboardIONetwork;
 import frc.robot.subsystems.drive.Drive;
-import frc.robot.subsystems.drive.GyroIO;
-import frc.robot.subsystems.drive.GyroIONavX;
-import frc.robot.subsystems.drive.GyroIOSim;
-import frc.robot.subsystems.drive.ModuleIO;
-import frc.robot.subsystems.drive.ModuleIOHardware;
-import frc.robot.subsystems.drive.ModuleIOSim;
-import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.Elevator.ElevatorHeight;
-import frc.robot.subsystems.elevator.ElevatorIO;
-import frc.robot.subsystems.elevator.ElevatorIOHardware;
-import frc.robot.subsystems.elevator.ElevatorIOSim;
 import frc.robot.subsystems.funnel.Funnel;
-import frc.robot.subsystems.funnel.FunnelIO;
-import frc.robot.subsystems.funnel.FunnelIOHardware;
-import frc.robot.subsystems.funnel.FunnelIOSim;
-import frc.robot.subsystems.leds.LED;
-import frc.robot.subsystems.leds.LEDIO;
-import frc.robot.subsystems.leds.LEDIOHardware;
-import frc.robot.subsystems.leds.LEDIOSim;
-import frc.robot.subsystems.manipulator.Manipulator;
-import frc.robot.subsystems.manipulator.ManipulatorIO;
-import frc.robot.subsystems.manipulator.ManipulatorIOHardware;
-import frc.robot.subsystems.manipulator.ManipulatorIOSim;
 
 import java.util.Set;
 
@@ -57,14 +27,6 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 public class RobotContainer
 {
-    // Subsystems
-    private final Drive       _drive;
-    private final Elevator    _elevator;
-    private final Manipulator _manipulator;
-    private final Funnel      _funnel;
-    private final Dashboard   _dashboard;
-    private final LED         _led;
-
     // Controller
     private final CommandJoystick       _driverJoystick  = new CommandJoystick(0);
     private final CommandJoystick       _driverButtons   = new CommandJoystick(1);
@@ -87,46 +49,13 @@ public class RobotContainer
      */
     public RobotContainer()
     {
-        switch (Constants.AdvantageKit.CURRENT_MODE)
-        {
-            case REAL:
-                // Real robot, instantiate hardware IO implementations
-                _drive = new Drive(new GyroIONavX(), new ModuleIOHardware(0), new ModuleIOHardware(1), new ModuleIOHardware(2), new ModuleIOHardware(3));
-                _elevator = new Elevator(new ElevatorIOHardware());
-                _manipulator = new Manipulator(new ManipulatorIOHardware());
-                _funnel = new Funnel(new FunnelIOHardware());
-                _dashboard = new Dashboard(new DashboardIONetwork());
-                _led = new LED(new LEDIOHardware());
-                break;
-
-            case SIM:
-                // Sim robot, instantiate physics sim IO implementations
-                _drive = new Drive(new GyroIOSim(this::getChassisSpeeds), new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim());
-                _elevator = new Elevator(new ElevatorIOSim());
-                _manipulator = new Manipulator(new ManipulatorIOSim(() -> _driverJoystick.button(7).getAsBoolean(), () -> _driverJoystick.button(8).getAsBoolean()));
-                _funnel = new Funnel(new FunnelIOSim());
-                _dashboard = new Dashboard(new DashboardIONetwork());
-                _led = new LED(new LEDIOSim());
-                break;
-
-            default:
-                // Replayed robot, disable IO implementations
-                _drive = new Drive(new GyroIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {});
-                _elevator = new Elevator(new ElevatorIO() {});
-                _manipulator = new Manipulator(new ManipulatorIO() {});
-                _funnel = new Funnel(new FunnelIO() {});
-                _dashboard = new Dashboard(new DashboardIO() {});
-                _led = new LED(new LEDIO() {});
-                break;
-        }
-
-        NamedCommands.registerCommand("ExtendToL1", ElevatorCommands.setHeight(_elevator, ElevatorHeight.Level1));
-        NamedCommands.registerCommand("ExtendToL2", ElevatorCommands.setHeight(_elevator, ElevatorHeight.Level2));
-        NamedCommands.registerCommand("ExtendToL3", ElevatorCommands.setHeight(_elevator, ElevatorHeight.Level3));
-        NamedCommands.registerCommand("ExtendToL4", ElevatorCommands.setHeight(_elevator, ElevatorHeight.Level4));
-        NamedCommands.registerCommand("Stow", ElevatorCommands.setHeight(_elevator, ElevatorHeight.Stow));
-        NamedCommands.registerCommand("Intake", ManipulatorCommands.intake(_manipulator));
-        NamedCommands.registerCommand("Output", CompositeCommands.output(_elevator, _manipulator));
+        NamedCommands.registerCommand("ExtendToL1", ElevatorCommands.setHeight(ElevatorHeight.Level1));
+        NamedCommands.registerCommand("ExtendToL2", ElevatorCommands.setHeight(ElevatorHeight.Level2));
+        NamedCommands.registerCommand("ExtendToL3", ElevatorCommands.setHeight(ElevatorHeight.Level3));
+        NamedCommands.registerCommand("ExtendToL4", ElevatorCommands.setHeight(ElevatorHeight.Level4));
+        NamedCommands.registerCommand("Stow", ElevatorCommands.setHeight(ElevatorHeight.Stow));
+        NamedCommands.registerCommand("Intake", ManipulatorCommands.intake());
+        NamedCommands.registerCommand("Output", CompositeCommands.output());
         NamedCommands.registerCommand("Delay", Commands.defer(() -> Commands.waitSeconds(autoDelayTime()), Set.of()));
 
         var delayChooser = new SendableChooser<Integer>();
@@ -198,79 +127,18 @@ public class RobotContainer
     @SuppressWarnings("unused")
     private void configureTestBindings()
     {
-        // _funnel.setDefaultCommand(FunnelCommands.setVolts(_funnel, () ->
-        // Constants.Funnel.DEFAULT_VOLTS));
-        // _elevator.setDefaultCommand(ElevatorCommands.setVolts(_elevator, () ->
-        // MathUtil.applyDeadband(-_controller.getRightY(), 0.1) *
-        // Constants.General.MOTOR_VOLTAGE));
+        Drive.getInstance().setDefaultCommand(DriveCommands.joystickDrive(() -> -_controller.getLeftY(), () -> -_controller.getLeftX(), () -> -_controller.getRightX(), () -> false));
+        _controller.a().onTrue(DriveCommands.setOdometer(new Pose2d(Units.inchesToMeters(297.5), Units.inchesToMeters(158.5), Rotation2d.fromDegrees(0))));
 
-        // Trigger _hasCoral = new Trigger(() -> _manipulator.hasCoral());
-        // Trigger _manipulatorRunning = new Trigger(() -> _manipulator.isRunning());
+        _controller.back().onTrue(ElevatorCommands.setHeight(ElevatorHeight.Stow));
+        _controller.povUp().onTrue(ElevatorCommands.setHeight(ElevatorHeight.Level1));
+        _controller.povRight().onTrue(ElevatorCommands.setHeight(ElevatorHeight.Level2));
+        _controller.povDown().onTrue(ElevatorCommands.setHeight(ElevatorHeight.Level3));
+        _controller.povLeft().onTrue(ElevatorCommands.setHeight(ElevatorHeight.Level4));
 
-        // Default command, normal field-relative drive
-        _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_controller.getLeftY(), () -> -_controller.getLeftX(), () -> -_controller.getRightX(), () -> false));
-        // _drive.setDefaultCommand(DriveCommands.setTurnOpenLoop(_drive, () ->
-        // MathUtil.applyDeadband(-_controller.getRightX(), 0.1) * 4.0));
-        // _controller.a().onTrue(DriveCommands.setTurnPosition(_drive,
-        // Rotation2d.fromDegrees(0)));
-        // _controller.b().onTrue(DriveCommands.setTurnPosition(_drive,
-        // Rotation2d.fromDegrees(90)));
-        // _controller.y().onTrue(DriveCommands.setTurnPosition(_drive,
-        // Rotation2d.fromDegrees(180)));
-        // _controller.x().onTrue(DriveCommands.setTurnPosition(_drive,
-        // Rotation2d.fromDegrees(270)));
-        _controller.a().onTrue(DriveCommands.odometerReset(_drive, new Pose2d(Units.inchesToMeters(297.5), Units.inchesToMeters(158.5), Rotation2d.fromDegrees(0))));
-
-        // Lock to 0° when A button is held
-        // _controller.a().whileTrue(DriveCommands.joystickDriveAtAngle(_drive, () ->
-        // -_controller.getLeftY(), () -> -_controller.getLeftX(), () ->
-        // new-_controller.getRightX()
-        // Rotation2d()));
-
-        // Reset gyro to 0° when B button is pressed
-        // _controller.b().onTrue(Commands.runOnce(() -> _drive.setPose(new
-        // Pose2d(_drive.getPose().getTranslation(), new Rotation2d())),
-        // _drive).ignoringDisable(true));
-
-        // _controller.y().onTrue(FunnelCommands.drop(_funnel));
-        // .alongWith(ElevatorCommands.setHeight(_elevator,
-        // ElevatorHeight.Hang)).alongWith(LEDCommands.flashColor(_led,
-        // Constants.LED.RED)).until(() -> _elevator.atSetpoint())
-        // .andThen(LEDCommands.setDefaultColor(_led, Constants.LED.YELLOW))
-        // );
-        // _controller.rightTrigger().whileTrue(ElevatorCommands.setVolts(_elevator, ()
-        // -> -_controller.getRightY() * Constants.General.MOTOR_VOLTAGE));
-
-        _controller.back().onTrue(ElevatorCommands.setHeight(_elevator, ElevatorHeight.Stow));
-        // // // .alongWith(new DeferredCommand(() -> LEDCommandsetDefaultColor(_led,
-        // // // (_hasCoral.getAsBoolean() ? Constants.LED.GREEN : Constants.LED.RED)),
-        // // // Set.of())));
-        _controller.povUp().onTrue(ElevatorCommands.setHeight(_elevator, ElevatorHeight.Level1));
-        // // // .alongWith(new DeferredCommand(() -> LEDCommands.setDefaultColor(_led,
-        // // // (_hasCoral.getAsBoolean() ?
-        // // // Constants.LED.PURPLE : Constants.LED.RED)), Set.of())));
-        _controller.povRight().onTrue(ElevatorCommands.setHeight(_elevator, ElevatorHeight.Level2));
-        // // // .alongWith(new DeferredCommand(() -> LEDCommands.setDefaultColor(_led,
-        // // // (_hasCoral.getAsBoolean() ?
-        // // // Constants.LED.PINK : Constants.LED.RED)), Set.of())));
-        _controller.povDown().onTrue(ElevatorCommands.setHeight(_elevator, ElevatorHeight.Level3));
-        // // // .alongWith(new DeferredCommand(() -> LEDCommands.setDefaultColor(_led,
-        // // // (_hasCoral.getAsBoolean() ?
-        // // // Constants.LED.BLUE : Constants.LED.RED)), Set.of())));
-        _controller.povLeft().onTrue(ElevatorCommands.setHeight(_elevator, ElevatorHeight.Level4));
-        // // // .alongWith(new DeferredCommand(() -> LEDCommands.setDefaultColor(_led,
-        // // // (_hasCoral.getAsBoolean() ?
-        // // // Constants.LED.ORANGE : Constants.LED.RED)), Set.of())));
-
-        _controller.leftStick().onTrue(ManipulatorCommands.intake(_manipulator));
-        _controller.start().onTrue(ManipulatorCommands.output(_manipulator));
-        _controller.rightStick().onTrue(ManipulatorCommands.stop(_manipulator));
-
-        // _hasCoral.onTrue(LEDCommands.setDefaultColor(_led, Constants.LED.GREEN));
-        // _hasCoral.onFalse(LEDCommands.setDefaultColor(_led, Constants.LED.RED));
-
-        // _manipulatorRunning.whileTrue(LEDCommands.flashColor(_led,
-        // Constants.LED.YELLOW));
+        _controller.leftStick().onTrue(ManipulatorCommands.intake());
+        _controller.start().onTrue(ManipulatorCommands.output());
+        _controller.rightStick().onTrue(ManipulatorCommands.stop());
     }
 
     @SuppressWarnings("unused")
@@ -283,14 +151,16 @@ public class RobotContainer
         // Trigger _operatorButton14 = _operatorButtons.axisLessThan(1, -0.5);
 
         // Default command, normal field-relative drive
-        _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> -_driverJoystick.getZ(), () -> robotCentric()));
-        // _drive.setDefaultCommand(CompositeCommands.joystickDrive(_drive, _elevator, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> -_driverJoystick.getZ(), () -> robotCentric(), 2, 3));
+        Drive.getInstance().setDefaultCommand(DriveCommands.joystickDrive(() -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> -_driverJoystick.getZ(), () -> robotCentric()));
+        // _drive.setDefaultCommand(CompositeCommands.joystickDrive(_drive, _elevator,
+        // () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () ->
+        // -_driverJoystick.getZ(), () -> robotCentric(), 2, 3));
 
         // Driver Controls
         // _driverJoystick.button(2).onTrue(null); // replace this with switching
         // cameras/
-        _driverJoystick.button(2).whileTrue(DriveCommands.reduceSpeed(_drive));
-        _driverJoystick.button(11).onTrue(DriveCommands.resetGyro(_drive));
+        _driverJoystick.button(2).whileTrue(DriveCommands.reduceSpeed());
+        _driverJoystick.button(11).onTrue(DriveCommands.resetGyro());
 
         // _driverButtons.button(0).whileTrue(
         // DriveCommands.driveAtOrientation(
@@ -368,32 +238,32 @@ public class RobotContainer
         // );
 
         // Operator Controls
-        _operatorButtons.button(1).onTrue(ElevatorCommands.setHeight(_elevator, ElevatorHeight.Level4));
+        _operatorButtons.button(1).onTrue(ElevatorCommands.setHeight(ElevatorHeight.Level4));
         // .alongWith(new DeferredCommand(() -> LEDCommands.setDefaultColor(_led,
         // (_hasCoral.getAsBoolean() ? Constants.LED.PURPLE : Constants.LED.RED)),
         // Set.of())));
-        _operatorButtons.button(2).onTrue(ElevatorCommands.setHeight(_elevator, ElevatorHeight.Level3));
+        _operatorButtons.button(2).onTrue(ElevatorCommands.setHeight(ElevatorHeight.Level3));
         // .alongWith(new DeferredCommand(() -> LEDCommands.setDefaultColor(_led,
         // (_hasCoral.getAsBoolean() ? Constants.LED.PINK : Constants.LED.RED)),
         // Set.of())));
-        _operatorButtons.button(3).onTrue(ElevatorCommands.setHeight(_elevator, ElevatorHeight.Level2));
+        _operatorButtons.button(3).onTrue(ElevatorCommands.setHeight(ElevatorHeight.Level2));
         // .alongWith(new DeferredCommand(() -> LEDCommands.setDefaultColor(_led,
         // (_hasCoral.getAsBoolean() ? Constants.LED.BLUE : Constants.LED.RED)),
         // Set.of())));
-        _operatorButtons.button(4).onTrue(ElevatorCommands.setHeight(_elevator, ElevatorHeight.Level1));
+        _operatorButtons.button(4).onTrue(ElevatorCommands.setHeight(ElevatorHeight.Level1));
         // .alongWith(new DeferredCommand(() -> LEDCommands.setDefaultColor(_led,
         // (_hasCoral.getAsBoolean() ? Constants.LED.ORANGE : Constants.LED.RED)),
         // Set.of())));
-        _operatorButtons.button(5).onTrue(ElevatorCommands.setHeight(_elevator, ElevatorHeight.Stow));
+        _operatorButtons.button(5).onTrue(ElevatorCommands.setHeight(ElevatorHeight.Stow));
         // .alongWith(new DeferredCommand(() -> LEDCommands.setDefaultColor(_led,
         // (_hasCoral.getAsBoolean() ? Constants.LED.GREEN : Constants.LED.RED)),
         // Set.of())));
 
-        _operatorButtons.button(6).onTrue(ManipulatorCommands.intake(_manipulator));
-        _operatorButtons.button(7).onTrue(ManipulatorCommands.stop(_manipulator));
-        _operatorButtons.button(8).onTrue(CompositeCommands.output(_elevator, _manipulator));
-        _operatorButtons.button(9).onTrue(ElevatorCommands.modifyHeight(_elevator, Constants.Elevator.ELEVATOR_MODIFICATION_HEIGHT));
-        _operatorButtons.button(10).onTrue(ElevatorCommands.modifyHeight(_elevator, -Constants.Elevator.ELEVATOR_MODIFICATION_HEIGHT));
+        _operatorButtons.button(6).onTrue(ManipulatorCommands.intake());
+        _operatorButtons.button(7).onTrue(ManipulatorCommands.stop());
+        _operatorButtons.button(8).onTrue(CompositeCommands.output());
+        _operatorButtons.button(9).onTrue(ElevatorCommands.modifyHeight(Constants.Elevator.ELEVATOR_MODIFICATION_HEIGHT));
+        _operatorButtons.button(10).onTrue(ElevatorCommands.modifyHeight(-Constants.Elevator.ELEVATOR_MODIFICATION_HEIGHT));
         // _operatorButtons.button(11).onTrue(null);// replace with algae intake
         // _operatorButtons.button(12).onTrue(null);// replace with algae output
         // _operatorButton12.onTrue(null);// replace with algae stop
@@ -414,7 +284,7 @@ public class RobotContainer
 
     public boolean getFunnelIsDropped()
     {
-        return _funnel.isDropped();
+        return Funnel.getInstance().isDropped();
     }
 
     public void periodic()
@@ -445,10 +315,5 @@ public class RobotContainer
     public boolean robotCentric()
     {
         return _driverJoystick.button(1).getAsBoolean();
-    }
-
-    private ChassisSpeeds getChassisSpeeds()
-    {
-        return _drive.getChassisSpeeds();
     }
 }

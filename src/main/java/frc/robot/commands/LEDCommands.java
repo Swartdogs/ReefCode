@@ -12,22 +12,22 @@ public class LEDCommands
 
     }
 
-    public static Command setColor(LED led, Color color)
+    public static Command setColor(Color color)
     {
-        return led.runOnce(() -> led.setColor(color));
+        return LED.getInstance().runOnce(() -> LED.getInstance().setColor(color));
     }
 
-    public static Command flashColor(LED led, Color color)
+    public static Command flashColor(Color color)
     {
-        return led.runOnce(() ->
+        return LED.getInstance().runOnce(() ->
         {
-            led.setFlashing(true);
-            led.setColor(color);
-        }).andThen(Commands.idle(led)).finallyDo(() -> led.setFlashing(false));
+            LED.getInstance().setFlashing(true);
+            LED.getInstance().setColor(color);
+        }).andThen(Commands.idle(LED.getInstance())).finallyDo(() -> LED.getInstance().setFlashing(false));
     }
 
-    public static Command setDefaultColor(LED led, Color color)
+    public static Command setDefaultColor(Color color)
     {
-        return led.runOnce(() -> led.switchDefaultCommand(setColor(led, color)));
+        return LED.getInstance().runOnce(() -> LED.getInstance().switchDefaultCommand(setColor(color)));
     }
 }

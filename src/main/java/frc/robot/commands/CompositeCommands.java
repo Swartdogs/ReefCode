@@ -16,7 +16,6 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.Elevator.ElevatorHeight;
-import frc.robot.subsystems.manipulator.Manipulator;
 
 public class CompositeCommands
 {
@@ -24,7 +23,7 @@ public class CompositeCommands
     {
     }
 
-    public static Command joystickDrive(Drive drive, Elevator elevator, DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier omegaSupplier, BooleanSupplier robotCentric, int translateExponent, double rotateExponent)
+    public static Command joystickDrive(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier omegaSupplier, BooleanSupplier robotCentric, int translateExponent, double rotateExponent)
     {
         return Commands.run(() ->
         {
@@ -32,7 +31,7 @@ public class CompositeCommands
             double     linearMagnitude = MathUtil.applyDeadband(Math.hypot(xSupplier.getAsDouble(), ySupplier.getAsDouble()), Constants.Controls.JOYSTICK_DEADBAND);
             Rotation2d linearDirection = new Rotation2d(xSupplier.getAsDouble(), ySupplier.getAsDouble());
             double     omega           = MathUtil.applyDeadband(omegaSupplier.getAsDouble(), Constants.Controls.JOYSTICK_DEADBAND);
-            double clamp = MathUtil.clamp((Constants.Drive.SPEED_ELEVATOR_M * elevator.getExtension() + Constants.Drive.SPEED_ELEVATOR_B), Constants.Drive.MIN_SPEED_ELEVATOR, Constants.Drive.MAX_SPEED_ELEVATOR);
+            double     clamp           = MathUtil.clamp((Constants.Drive.SPEED_ELEVATOR_M * Elevator.getInstance().getExtension() + Constants.Drive.SPEED_ELEVATOR_B), Constants.Drive.MIN_SPEED_ELEVATOR, Constants.Drive.MAX_SPEED_ELEVATOR);
 
             // Square values
             linearMagnitude = Math.pow(linearMagnitude, translateExponent);
@@ -46,7 +45,7 @@ public class CompositeCommands
             {
                 var chassisSpeeds = new ChassisSpeeds(linearVelocity.getX() * Constants.Drive.MAX_LINEAR_SPEED * clamp, linearVelocity.getY() * Constants.Drive.MAX_LINEAR_SPEED * clamp, omega * Constants.Drive.MAX_ANGULAR_SPEED * clamp);
 
-                drive.runVelocity(chassisSpeeds);
+                Drive.getInstance().runVelocity(chassisSpeeds);
             }
             else
             {
@@ -55,16 +54,18 @@ public class CompositeCommands
                     linearVelocity = linearVelocity.unaryMinus();
                 }
 
-                drive.runVelocity(
-                        ChassisSpeeds
-                                .fromFieldRelativeSpeeds(linearVelocity.getX() * Constants.Drive.MAX_LINEAR_SPEED * clamp, linearVelocity.getY() * Constants.Drive.MAX_LINEAR_SPEED * clamp, omega * Constants.Drive.MAX_ANGULAR_SPEED * clamp, drive.getRotation())
+                Drive.getInstance().runVelocity(
+                        ChassisSpeeds.fromFieldRelativeSpeeds(
+                                linearVelocity.getX() * Constants.Drive.MAX_LINEAR_SPEED * clamp, linearVelocity.getY() * Constants.Drive.MAX_LINEAR_SPEED * clamp, omega * Constants.Drive.MAX_ANGULAR_SPEED * clamp,
+                                Drive.getInstance().getRotation()
+                        )
                 );
             }
-        }, drive);
+        }, Drive.getInstance());
     }
 
-    public static Command output(Elevator elevator, Manipulator manipulator)
+    public static Command output()
     {
-        return Commands.sequence(ManipulatorCommands.output(manipulator), Commands.waitSeconds(0.5), ElevatorCommands.setHeight(elevator, ElevatorHeight.Stow));
+        return Commands.sequence(ManipulatorCommands.output(), Commands.waitSeconds(0.5), ElevatorCommands.setHeight(ElevatorHeight.Stow));
     }
 }

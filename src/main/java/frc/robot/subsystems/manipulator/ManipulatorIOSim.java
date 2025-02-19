@@ -1,26 +1,25 @@
 package frc.robot.subsystems.manipulator;
 
-import java.util.function.BooleanSupplier;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.Constants;
 
 public class ManipulatorIOSim implements ManipulatorIO
 {
-    private final DCMotorSim      _leftMotorSim;
-    private final DCMotorSim      _rightMotorSim;
-    private double                _appliedVolts;
-    private final BooleanSupplier _lightSensorStart;
-    private final BooleanSupplier _lightSensorEnd;
+    private final DCMotorSim   _leftMotorSim;
+    private final DCMotorSim   _rightMotorSim;
+    private double             _appliedVolts;
+    private final DigitalInput _lightSensorStart;
+    private final DigitalInput _lightSensorEnd;
 
-    public ManipulatorIOSim(BooleanSupplier lightSensorEnd, BooleanSupplier lightSensorStart)
+    public ManipulatorIOSim()
     {
         _leftMotorSim     = new DCMotorSim(LinearSystemId.createDCMotorSystem(Constants.Manipulator.MANIPULATOR_MOTOR, 0.02, Constants.Manipulator.MOTOR_REDUCTION), Constants.Drive.DRIVE_GEARBOX);
         _rightMotorSim    = new DCMotorSim(LinearSystemId.createDCMotorSystem(Constants.Manipulator.MANIPULATOR_MOTOR, 0.02, Constants.Manipulator.MOTOR_REDUCTION), Constants.Drive.DRIVE_GEARBOX);
-        _lightSensorEnd   = lightSensorEnd;
-        _lightSensorStart = lightSensorStart;
+        _lightSensorEnd   = new DigitalInput(Constants.DIO.MANIPULATOR_LIGHT_SENSOR_END);
+        _lightSensorStart = new DigitalInput(Constants.DIO.MANIPULATOR_LIGHT_SENSOR_START);
     }
 
     @Override
@@ -32,8 +31,8 @@ public class ManipulatorIOSim implements ManipulatorIO
         inputs.rightCurrentAmps   = Math.abs(_rightMotorSim.getCurrentDrawAmps());
         inputs.leftAppliedVolts   = _appliedVolts;
         inputs.rightAppliedVolts  = _appliedVolts;
-        inputs.startSensorTripped = _lightSensorStart.getAsBoolean();
-        inputs.endSensorTripped   = _lightSensorEnd.getAsBoolean();
+        inputs.startSensorTripped = _lightSensorStart.get();
+        inputs.endSensorTripped   = _lightSensorEnd.get();
     }
 
     @Override

@@ -27,6 +27,48 @@ import frc.robot.util.LocalADStarAK;
 
 public class Drive extends SubsystemBase
 {
+    private static Drive _instance;
+
+    public static Drive getInstance()
+    {
+        if (_instance == null)
+        {
+            GyroIO   gyroIO;
+            ModuleIO flIO, frIO, blIO, brIO;
+
+            switch (Constants.AdvantageKit.CURRENT_MODE)
+            {
+                case REAL:
+                    gyroIO = new GyroIONavX();
+                    flIO = new ModuleIOHardware(0);
+                    frIO = new ModuleIOHardware(1);
+                    blIO = new ModuleIOHardware(2);
+                    brIO = new ModuleIOHardware(3);
+                    break;
+
+                case SIM:
+                    gyroIO = new GyroIOSim(() -> _instance.getChassisSpeeds());
+                    flIO = new ModuleIOSim();
+                    frIO = new ModuleIOSim();
+                    blIO = new ModuleIOSim();
+                    brIO = new ModuleIOSim();
+                    break;
+
+                default:
+                    gyroIO = new GyroIO() {};
+                    flIO = new ModuleIO() {};
+                    frIO = new ModuleIO() {};
+                    blIO = new ModuleIO() {};
+                    brIO = new ModuleIO() {};
+                    break;
+            }
+
+            _instance = new Drive(gyroIO, flIO, frIO, blIO, brIO);
+        }
+
+        return _instance;
+    }
+
     private final GyroIO                   _gyroIO;
     private final GyroIOInputsAutoLogged   _gyroInputs = new GyroIOInputsAutoLogged();
     private final Module[]                 _modules    = new Module[4]; // FL, FR, BL, BR
@@ -36,7 +78,7 @@ public class Drive extends SubsystemBase
     private double                         _maxSpeed;
     private double                         _speedMultiplier;
 
-    public Drive(GyroIO gyroIO, ModuleIO flModuleIO, ModuleIO frModuleIO, ModuleIO blModuleIO, ModuleIO brModuleIO)
+    private Drive(GyroIO gyroIO, ModuleIO flModuleIO, ModuleIO frModuleIO, ModuleIO blModuleIO, ModuleIO brModuleIO)
     {
         _gyroIO = gyroIO;
 

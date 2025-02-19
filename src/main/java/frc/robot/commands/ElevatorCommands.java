@@ -12,33 +12,33 @@ public class ElevatorCommands
     {
     }
 
-    public static Command setHeight(Elevator elevator, double height)
+    public static Command setHeight(double height)
     {
-        return elevator.runOnce(() -> elevator.setExtension(height));
+        return Elevator.getInstance().runOnce(() -> Elevator.getInstance().setExtension(height));
     }
 
-    public static Command setHeight(Elevator elevator, ElevatorHeight height)
+    public static Command setHeight(ElevatorHeight height)
     {
-        return elevator.runOnce(() -> elevator.setExtension(height));
+        return Elevator.getInstance().runOnce(() -> Elevator.getInstance().setExtension(height));
     }
 
-    public static Command setVolts(Elevator elevator, double volts)
+    public static Command setVolts(double volts)
     {
-        return elevator.runOnce(() -> elevator.setVolts(volts));
+        return Elevator.getInstance().runOnce(() -> Elevator.getInstance().setVolts(volts));
     }
 
-    public static Command setVolts(Elevator elevator, DoubleSupplier voltsSupplier)
+    public static Command setVolts(DoubleSupplier voltsSupplier)
     {
-        return elevator.run(() -> elevator.setVolts(voltsSupplier.getAsDouble()));
+        return Elevator.getInstance().run(() -> Elevator.getInstance().setVolts(voltsSupplier.getAsDouble()));
     }
 
-    public static Command modifyHeight(Elevator elevator, double modification)
+    public static Command modifyHeight(double modification)
     {
-        return elevator.runOnce(() -> elevator.modifySetpoint(modification));
+        return Elevator.getInstance().runOnce(() -> Elevator.getInstance().modifySetpoint(modification));
     }
 
-    public static Command hangExecute(Elevator elevator)
+    public static Command hangExecute()
     {
-        return elevator.runOnce(() -> elevator.setVolts(Constants.Elevator.HANG_VOLTAGE));
+        return Elevator.getInstance().runOnce(() -> Elevator.getInstance().setVolts(Constants.Elevator.HANG_VOLTAGE));
     }
 }

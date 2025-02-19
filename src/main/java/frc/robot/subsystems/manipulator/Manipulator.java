@@ -2,20 +2,36 @@ package frc.robot.subsystems.manipulator;
 
 import org.littletonrobotics.junction.Logger;
 
-import edu.wpi.first.wpilibj.Alert;
-import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class Manipulator extends SubsystemBase
 {
+    private static Manipulator _instance;
+
+    public static Manipulator getInstance()
+    {
+        if (_instance == null)
+        {
+            var io = switch (Constants.AdvantageKit.CURRENT_MODE)
+            {
+                case REAL -> new ManipulatorIOHardware();
+                case SIM -> new ManipulatorIOSim();
+                default -> new ManipulatorIO() {};
+            };
+
+            _instance = new Manipulator(io);
+        }
+
+        return _instance;
+    }
+
     private final ManipulatorIO                 _io;
     private final ManipulatorIOInputsAutoLogged _inputs = new ManipulatorIOInputsAutoLogged();
-    private final Alert                         _lightSensorAlert;
 
-    public Manipulator(ManipulatorIO io)
+    private Manipulator(ManipulatorIO io)
     {
-        _io               = io;
-        _lightSensorAlert = new Alert("Light Sensor Error Detected", AlertType.kError);
+        _io = io;
     }
 
     @Override
