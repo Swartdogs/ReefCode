@@ -284,11 +284,12 @@ public class RobotContainer
 
         // Default command, normal field-relative drive
         _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> -_driverJoystick.getZ(), () -> robotCentric()));
+        // _drive.setDefaultCommand(CompositeCommands.joystickDrive(_drive, _elevator, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> -_driverJoystick.getZ(), () -> robotCentric(), 2, 3));
 
         // Driver Controls
         // _driverJoystick.button(2).onTrue(null); // replace this with switching
         // cameras/
-        _driverJoystick.button(1).whileTrue(DriveCommands.joystickDrive(_drive, () -> -_driverJoystick.getY() / 2, () -> -_driverJoystick.getX() / 2, () -> -_driverJoystick.getZ() / 2, () -> robotCentric()));
+        _driverJoystick.button(1).whileTrue(DriveCommands.reduceSpeed(_drive));
         _driverJoystick.button(11).onTrue(DriveCommands.resetGyro(_drive));
 
         // _driverButtons.button(0).whileTrue(
