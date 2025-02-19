@@ -85,7 +85,7 @@ public class ModuleIOHardware implements ModuleIO
         var driveConfig = new TalonFXConfiguration();
         driveConfig.CurrentLimits.StatorCurrentLimit       = Amps.of(120.0).magnitude();
         driveConfig.CurrentLimits.StatorCurrentLimitEnable = true;
-        driveConfig.MotorOutput.Inverted                   = InvertedValue.CounterClockwise_Positive;
+        driveConfig.MotorOutput.Inverted                   = Constants.Drive.DRIVE_INVERTED ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
         driveConfig.MotorOutput.NeutralMode                = NeutralModeValue.Brake;
         _driveMotor.getConfigurator().apply(driveConfig);
 
@@ -145,7 +145,6 @@ public class ModuleIOHardware implements ModuleIO
     public void setDriveBrakeMode(boolean enable)
     {
         var config = new MotorOutputConfigs();
-        config.Inverted    = InvertedValue.CounterClockwise_Positive;
         config.NeutralMode = enable ? NeutralModeValue.Brake : NeutralModeValue.Coast;
         _driveMotor.getConfigurator().apply(config);
     }

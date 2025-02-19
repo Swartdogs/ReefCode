@@ -14,7 +14,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 public final class Utilities
 {
     private Utilities()
-    {}
+    {
+    }
 
     public static boolean sparkStickyFault = false;
 
@@ -72,7 +73,7 @@ public final class Utilities
         }
     }
 
-        public static void tryUntilOk(int maxAttempts, Supplier<StatusCode> command)
+    public static void tryUntilOk(int maxAttempts, Supplier<StatusCode> command)
     {
         for (int i = 0; i < maxAttempts; i++)
         {

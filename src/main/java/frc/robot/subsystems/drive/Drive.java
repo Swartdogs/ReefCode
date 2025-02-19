@@ -100,13 +100,13 @@ public class Drive extends SubsystemBase
         }
         catch (Exception e)
         {
-            config = new RobotConfig(Constants.General.ROBOT_MASS, Constants.General.ROBOT_MOI, Constants.Drive.MODULE_CONFIG, Constants.Drive.MODULE_TRANSLATIONS);
+            config = Constants.PathPlanner.ROBOT_CONFIG;
         }
 
         AutoBuilder.configure(
                 this::getPose, this::setPose, this::getChassisSpeeds, (speeds, feedforwards) -> runVelocity(speeds),
-                new PPHolonomicDriveController(new PIDConstants(Constants.Drive.PATHPLANNER_DRIVE_KP, Constants.Drive.PATHPLANNER_DRIVE_KD), new PIDConstants(Constants.Drive.PATHPLANNER_TURN_KP, Constants.Drive.PATHPLANNER_TURN_KD)),
-                config, Utilities::isRedAlliance, this
+                new PPHolonomicDriveController(new PIDConstants(Constants.PathPlanner.DRIVE_KP, Constants.PathPlanner.DRIVE_KD), new PIDConstants(Constants.PathPlanner.TURN_KP, Constants.PathPlanner.TURN_KD)), config,
+                Utilities::isRedAlliance, this
         );
 
         Pathfinding.setPathfinder(new LocalADStarAK());

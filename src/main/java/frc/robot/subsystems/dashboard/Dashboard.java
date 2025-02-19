@@ -44,16 +44,16 @@ public class Dashboard extends SubsystemBase
         return _instance;
     }
 
-    private final DashboardIO                  _io;
-    private final DashboardIOInputsAutoLogged  _inputs = new DashboardIOInputsAutoLogged();
+    private final DashboardIO                     _io;
+    private final DashboardIOInputsAutoLogged     _inputs = new DashboardIOInputsAutoLogged();
     private final LoggedDashboardChooser<String>  _startingPositionChooser;
     private final LoggedDashboardChooser<String>  _firstCoralChooser;
     private final LoggedDashboardChooser<String>  _secondCoralChooser;
     private final LoggedDashboardChooser<String>  _thirdCoralChooser;
     private final LoggedDashboardChooser<Integer> _autoDelayChooser;
-    private final Alert _nullAuto;
-    private Map<String, PathPlannerAuto>       _autoLookup;
-    private Map<String, List<PathPlannerPath>> _pathLookup;
+    private final Alert                           _nullAuto;
+    private Map<String, PathPlannerAuto>          _autoLookup;
+    private Map<String, List<PathPlannerPath>>    _pathLookup;
 
     private Dashboard(DashboardIO io)
     {

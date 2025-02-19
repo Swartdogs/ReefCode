@@ -22,13 +22,12 @@ public class Robot extends LoggedRobot
     private final Alert          _batteryLowVoltage;
     private final Alert          _rioBrownout;
     private final MedianFilter   _voltageFilter;
-
     private Command              _autonomousCommand;
-    
+
     public Robot()
     {
-        _batteryLowVoltage    = new Alert("Battery Has Dropped Below 11.5 Volts", AlertType.kWarning);
-        _rioBrownout        = new Alert("RoboRIO brownout detected", AlertType.kError);
+        _batteryLowVoltage = new Alert("Battery Has Dropped Below 11.5 Volts", AlertType.kWarning);
+        _rioBrownout       = new Alert("RoboRIO brownout detected", AlertType.kError);
 
         _voltageFilter = new MedianFilter((int)(Constants.Dashboard.LOW_BATTERY_TIME_THRESHOLD / Constants.General.LOOP_PERIOD_SECS));
 

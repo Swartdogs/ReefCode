@@ -30,9 +30,9 @@ public class Funnel extends SubsystemBase
     }
 
     private final FunnelIO                 _io;
-    private final FunnelIOInputsAutoLogged _inputs    = new FunnelIOInputsAutoLogged();
+    private final FunnelIOInputsAutoLogged _inputs             = new FunnelIOInputsAutoLogged();
     private final Alert                    _funnelDroppedAlert = new Alert("The Funnel has been dropped", AlertType.kInfo);
-    private boolean                        _isDropped = false;
+    private boolean                        _isDropped          = false;
 
     private Funnel(FunnelIO io)
     {
