@@ -15,8 +15,7 @@ import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import com.revrobotics.spark.config.SparkFlexConfig;
 
 import frc.robot.Constants;
-
-import static frc.robot.util.SparkUtil.*;
+import frc.robot.util.Utilities;
 
 public class ElevatorIOHardware implements ElevatorIO
 {
@@ -42,21 +41,21 @@ public class ElevatorIOHardware implements ElevatorIO
         followerConfig.idleMode(IdleMode.kBrake).voltageCompensation(Constants.General.MOTOR_VOLTAGE).follow(Constants.CAN.LEAD_ELEVATOR, true);
         followerConfig.closedLoop.feedbackSensor(FeedbackSensor.kAbsoluteEncoder).outputRange(0, Constants.Elevator.MAX_EXTENSION);
 
-        tryUntilOk(_leaderSparkFlex, 5, () -> _leaderSparkFlex.configure(leaderConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
-        tryUntilOk(_followerSparkFlex, 5, () -> _followerSparkFlex.configure(followerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
+        Utilities.tryUntilOk(_leaderSparkFlex, 5, () -> _leaderSparkFlex.configure(leaderConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
+        Utilities.tryUntilOk(_followerSparkFlex, 5, () -> _followerSparkFlex.configure(followerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
     }
 
     @Override
     public void updateInputs(ElevatorIOInputs inputs)
     {
         inputs.extensionPosition = _extensionPot.get();
-        ifOk(_leaderSparkFlex, _extensionEncoder::getVelocity, (value) -> inputs.extensionVelocity = value * Constants.Elevator.EXTENSION_SCALE / Constants.Elevator.EXTENSION_MOTOR_REDUCTION);
+        Utilities.ifOk(_leaderSparkFlex, _extensionEncoder::getVelocity, (value) -> inputs.extensionVelocity = value * Constants.Elevator.EXTENSION_SCALE / Constants.Elevator.EXTENSION_MOTOR_REDUCTION);
 
-        ifOk(_leaderSparkFlex, new DoubleSupplier[] { _leaderSparkFlex::getAppliedOutput, _leaderSparkFlex::getBusVoltage }, (values) -> inputs.leaderVolts = values[0] * values[1]);
-        ifOk(_leaderSparkFlex, _leaderSparkFlex::getOutputCurrent, (value) -> inputs.leaderCurrent = value);
+        Utilities.ifOk(_leaderSparkFlex, new DoubleSupplier[] { _leaderSparkFlex::getAppliedOutput, _leaderSparkFlex::getBusVoltage }, (values) -> inputs.leaderVolts = values[0] * values[1]);
+        Utilities.ifOk(_leaderSparkFlex, _leaderSparkFlex::getOutputCurrent, (value) -> inputs.leaderCurrent = value);
 
-        ifOk(_followerSparkFlex, new DoubleSupplier[] { _followerSparkFlex::getAppliedOutput, _followerSparkFlex::getBusVoltage }, (values) -> inputs.followerVolts = values[0] * values[1]);
-        ifOk(_followerSparkFlex, _followerSparkFlex::getOutputCurrent, (value) -> inputs.followerCurrent = value);
+        Utilities.ifOk(_followerSparkFlex, new DoubleSupplier[] { _followerSparkFlex::getAppliedOutput, _followerSparkFlex::getBusVoltage }, (values) -> inputs.followerVolts = values[0] * values[1]);
+        Utilities.ifOk(_followerSparkFlex, _followerSparkFlex::getOutputCurrent, (value) -> inputs.followerCurrent = value);
     }
 
     @Override

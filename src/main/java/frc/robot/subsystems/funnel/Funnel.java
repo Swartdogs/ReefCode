@@ -3,6 +3,8 @@ package frc.robot.subsystems.funnel;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
+import edu.wpi.first.wpilibj.Alert;
+import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -29,6 +31,7 @@ public class Funnel extends SubsystemBase
 
     private final FunnelIO                 _io;
     private final FunnelIOInputsAutoLogged _inputs    = new FunnelIOInputsAutoLogged();
+    private final Alert                    _funnelDroppedAlert = new Alert("The Funnel has been dropped", AlertType.kInfo);
     private boolean                        _isDropped = false;
 
     private Funnel(FunnelIO io)
@@ -41,6 +44,8 @@ public class Funnel extends SubsystemBase
     {
         _io.updateInputs(_inputs);
         Logger.processInputs("Funnel", _inputs);
+
+        _funnelDroppedAlert.set(_isDropped);
     }
 
     public void setVolts(double volts)

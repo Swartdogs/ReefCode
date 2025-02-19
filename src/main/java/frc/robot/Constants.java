@@ -68,7 +68,7 @@ public final class Constants
     public static class Dashboard
     {
         public static final double LOW_BATTERY_VOLTAGE      = 11.5;
-        public static final double CAN_ERROR_TIME_THRESHOLD = 2.0;
+        public static final double LOW_BATTERY_TIME_THRESHOLD = 5.0; // seconds
     }
 
     public static class DIO

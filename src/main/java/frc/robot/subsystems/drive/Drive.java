@@ -22,8 +22,8 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.RobotContainer;
 import frc.robot.util.LocalADStarAK;
+import frc.robot.util.Utilities;
 
 public class Drive extends SubsystemBase
 {
@@ -106,7 +106,7 @@ public class Drive extends SubsystemBase
         AutoBuilder.configure(
                 this::getPose, this::setPose, this::getChassisSpeeds, (speeds, feedforwards) -> runVelocity(speeds),
                 new PPHolonomicDriveController(new PIDConstants(Constants.Drive.PATHPLANNER_DRIVE_KP, Constants.Drive.PATHPLANNER_DRIVE_KD), new PIDConstants(Constants.Drive.PATHPLANNER_TURN_KP, Constants.Drive.PATHPLANNER_TURN_KD)),
-                config, RobotContainer::isRedAlliance, this
+                config, Utilities::isRedAlliance, this
         );
 
         Pathfinding.setPathfinder(new LocalADStarAK());

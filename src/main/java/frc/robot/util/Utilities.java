@@ -5,16 +5,23 @@ import java.util.function.DoubleConsumer;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
+import com.ctre.phoenix6.StatusCode;
 import com.revrobotics.REVLibError;
 import com.revrobotics.spark.SparkBase;
 
-public class SparkUtil
+import edu.wpi.first.wpilibj.DriverStation;
+
+public final class Utilities
 {
-    private SparkUtil()
-    {
-    }
+    private Utilities()
+    {}
 
     public static boolean sparkStickyFault = false;
+
+    public static boolean isRedAlliance()
+    {
+        return DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Red;
+    }
 
     public static void ifOk(SparkBase spark, DoubleSupplier supplier, DoubleConsumer consumer)
     {
@@ -61,6 +68,19 @@ public class SparkUtil
             else
             {
                 sparkStickyFault = true;
+            }
+        }
+    }
+
+        public static void tryUntilOk(int maxAttempts, Supplier<StatusCode> command)
+    {
+        for (int i = 0; i < maxAttempts; i++)
+        {
+            var error = command.get();
+
+            if (error.isOK())
+            {
+                break;
             }
         }
     }

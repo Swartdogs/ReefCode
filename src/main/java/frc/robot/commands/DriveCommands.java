@@ -15,8 +15,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import frc.robot.Constants;
-import frc.robot.RobotContainer;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.util.Utilities;
 
 public final class DriveCommands
 {
@@ -58,7 +58,7 @@ public final class DriveCommands
             }
             else
             {
-                if (RobotContainer.isRedAlliance())
+                if (Utilities.isRedAlliance())
                 {
                     linearVelocity = linearVelocity.unaryMinus();
                 }
@@ -84,7 +84,7 @@ public final class DriveCommands
         return Commands.runOnce(() ->
         {
             var pose = Drive.getInstance().getPose();
-            Drive.getInstance().setPose(new Pose2d(pose.getX(), pose.getY(), Rotation2d.fromDegrees(!RobotContainer.isRedAlliance() ? 0 : 180)));
+            Drive.getInstance().setPose(new Pose2d(pose.getX(), pose.getY(), Rotation2d.fromDegrees(!Utilities.isRedAlliance() ? 0 : 180)));
         }).ignoringDisable(true);
     }
 

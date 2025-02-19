@@ -14,7 +14,6 @@ import frc.robot.commands.ManipulatorCommands;
 import frc.robot.subsystems.dashboard.Dashboard;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.elevator.Elevator.ElevatorHeight;
-import frc.robot.subsystems.funnel.Funnel;
 
 public class RobotContainer
 {
@@ -29,6 +28,8 @@ public class RobotContainer
      */
     public RobotContainer()
     {
+        DriverStation.silenceJoystickConnectionWarning(true);
+
         // Configure the button bindings
         configureButtonBindings();
     }
@@ -191,22 +192,12 @@ public class RobotContainer
         // Constants.LED.YELLOW));
     }
 
-    public boolean getFunnelIsDropped()
-    {
-        return Funnel.getInstance().isDropped();
-    }
-
-    public static boolean isRedAlliance()
-    {
-        return DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Red;
-    }
-
     public Command getAutonomousCommand()
     {
         return Dashboard.getInstance().getSelectedAuto();
     }
 
-    public boolean robotCentric()
+    private boolean robotCentric()
     {
         return _driverJoystick.button(1).getAsBoolean();
     }
