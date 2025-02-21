@@ -110,11 +110,17 @@ public class Elevator extends SubsystemBase
 
     public boolean atSetpoint()
     {
-        return _extensionPID.atSetpoint();
+        return _extensionPID.atSetpoint() || _extensionSetpoint == null;
     }
 
     public double getExtension()
     {
         return _inputs.extensionPosition;
+    }
+
+    public void stop()
+    {
+        _extensionSetpoint = null;
+        _io.setVolts(0);
     }
 }

@@ -15,6 +15,7 @@ import frc.robot.Constants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.Elevator.ElevatorHeight;
+import frc.robot.subsystems.manipulator.Manipulator;
 import frc.robot.util.Utilities;
 
 public class CompositeCommands
@@ -65,8 +66,18 @@ public class CompositeCommands
         }, Drive.getInstance());
     }
 
+    public static Command intake()
+    {
+        return Commands.repeatingSequence(ManipulatorCommands.intake()).until(() -> Manipulator.getInstance().hasCoral());
+    }
+
     public static Command output()
     {
-        return Commands.sequence(ManipulatorCommands.output(), Commands.waitSeconds(0.5), ElevatorCommands.setHeight(ElevatorHeight.Stow));
+        return Commands.sequence(ManipulatorCommands.output(), Commands.waitSeconds(0.5), ElevatorCommands.setHeight(ElevatorHeight.Stow)).unless(() -> !Manipulator.getInstance().detectedCoral());
+    }
+
+    public static Command setHeight(ElevatorHeight height)
+    {
+        return Commands.sequence(ElevatorCommands.setHeight(height), Commands.waitUntil(() -> Elevator.getInstance().atSetpoint()));
     }
 }

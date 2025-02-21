@@ -1,6 +1,5 @@
 package frc.robot.subsystems.drive;
 
-import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -150,6 +149,9 @@ public class Drive extends SubsystemBase
 
         // Update odometry
         _poseEstimator.update(_gyroInputs.yawPosition, getModulePositions());
+
+        Logger.recordOutput("Odometry/Robot", _poseEstimator.getEstimatedPosition());
+        Logger.recordOutput("SwerveStates/Measured", getModuleStates());
     }
 
     /**
@@ -261,7 +263,6 @@ public class Drive extends SubsystemBase
      * Returns the module states (turn angles and drive velocities) for all of the
      * modules
      */
-    @AutoLogOutput(key = "SwerveStates/Measured")
     public SwerveModuleState[] getModuleStates()
     {
         SwerveModuleState[] states = new SwerveModuleState[_modules.length];
@@ -275,7 +276,6 @@ public class Drive extends SubsystemBase
     }
 
     /** Returns the current odometry pose. */
-    @AutoLogOutput(key = "Odometry/Robot")
     public Pose2d getPose()
     {
         return _poseEstimator.getEstimatedPosition();

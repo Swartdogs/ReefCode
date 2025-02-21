@@ -15,14 +15,14 @@ public class ManipulatorCommands
 
     public static Command intake()
     {
-        return Manipulator.getInstance().runOnce(() -> Manipulator.getInstance().setVolts(Constants.Manipulator.INTAKE_VOLTS)).andThen(Commands.waitUntil(() -> Manipulator.getInstance().hasCoral()))
-                .finallyDo(() -> Manipulator.getInstance().setVolts(0)).unless(() -> Manipulator.getInstance().hasCoral());
+        return Manipulator.getInstance().runOnce(() -> Manipulator.getInstance().setVolts(Constants.Manipulator.INTAKE_VOLTS)).andThen(Commands.waitUntil(() -> Manipulator.getInstance().detectedCoral()))
+                .finallyDo(() -> Manipulator.getInstance().setVolts(0)).unless(() -> Manipulator.getInstance().detectedCoral());
     }
 
     public static Command output()
     {
-        return Manipulator.getInstance().runOnce(() -> Manipulator.getInstance().setVolts(Constants.Manipulator.OUTPUT_VOLTS)).andThen(Commands.waitUntil(() -> !Manipulator.getInstance().hasCoral()))
-                .finallyDo(() -> Manipulator.getInstance().setVolts(0)).unless(() -> !Manipulator.getInstance().hasCoral());
+        return Manipulator.getInstance().runOnce(() -> Manipulator.getInstance().setVolts(Constants.Manipulator.OUTPUT_VOLTS)).andThen(Commands.waitUntil(() -> !Manipulator.getInstance().detectedCoral()))
+                .finallyDo(() -> Manipulator.getInstance().setVolts(0)).unless(() -> !Manipulator.getInstance().detectedCoral());
     }
 
     public static Command stop()
