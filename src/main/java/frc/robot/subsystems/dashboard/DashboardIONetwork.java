@@ -14,9 +14,17 @@ import frc.robot.Constants;
 
 public class DashboardIONetwork implements DashboardIO
 {
+    // Robot Values
+
+    // Dashboard Settings
+
+    // Buttons
+
+    // Field 
+    private final Field2d           _field;
+
     private final NetworkTableEntry _matchTimeEntry;
     private final NetworkTableEntry _hasGamePieceEntry;
-    private final Field2d           _field;
     private final NetworkTableEntry _elevatorHeightEntry;
     private final NetworkTableEntry _flSwerveAngleEntry;
     private final NetworkTableEntry _frSwerveAngleEntry;

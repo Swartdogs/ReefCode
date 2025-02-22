@@ -163,23 +163,24 @@ public final class Constants
     {
         public static final double  RAW_SENSOR_MIN               = 0.99;
         public static final double  RAW_SENSOR_MAX               = 0.62;
-        public static final double  SCALED_MIN                   = 16.0;
-        public static final double  SCALED_MAX                   = 75.75;
+        public static final double  MIN_EXTENSION                = 16.0;
+        public static final double  MAX_EXTENSION                = 75.75;
         public static final double  EXTENSION_KP                 = 0.5;
         public static final double  EXTENSION_KI                 = 0.0;
         public static final double  EXTENSION_KD                 = 0.02; // anything above 0.18 causes "shake"
-        public static final double  MAX_EXTENSION                = SCALED_MAX;
         public static final double  EXTENSION_TOLERANCE          = 0.5;
-        public static final double  STOW_HEIGHT                  = SCALED_MIN + 2.0;
+        public static final double  STOW_HEIGHT                  = MIN_EXTENSION + 2.0;
         public static final double  L1_HEIGHT                    = 27.00; // 12.7625 account for bottom of baseplate to bottom of carrige
         public static final double  L2_HEIGHT                    = 33.4; // 19.11
         public static final double  L3_HEIGHT                    = 48.5; // 34.86
         public static final double  L4_HEIGHT                    = 75.1; // 59.29
         public static final double  HANG_HEIGHT                  = L3_HEIGHT; // 19.11
-        public static final double  EXTENSION_SCALE              = (SCALED_MAX - SCALED_MIN) / (RAW_SENSOR_MAX - RAW_SENSOR_MIN);
+        public static final double  MAX_UPWARDS_SPEED            = 1.0;
+        public static final double  MAX_DOWNWARDS_SPEED          = 0.2;
+        public static final double  EXTENSION_SCALE              = (MAX_EXTENSION - MIN_EXTENSION) / (RAW_SENSOR_MAX - RAW_SENSOR_MIN);
         public static final double  EXTENSION_MOTOR_REDUCTION    = 5.0;
         public static final DCMotor ELEVATOR_GEARBOX             = DCMotor.getNeoVortex(2);
-        public static final double  EXTENSION_OFFSET             = SCALED_MIN - EXTENSION_SCALE * RAW_SENSOR_MIN;
+        public static final double  EXTENSION_OFFSET             = MIN_EXTENSION - EXTENSION_SCALE * RAW_SENSOR_MIN;
         public static final double  ELEVATOR_MASS                = 15.875;
         public static final double  ELEVATOR_DRUM_RADIUS         = 0.0223139;
         public static final double  ELEVATOR_FEED_FORWARD        = 0.7;
@@ -189,9 +190,8 @@ public final class Constants
 
     public static class Funnel
     {
-        public static final double FUNNEL_VOLTS   = 6.0;
+        public static final double RETRACT_SPEED   = 0.5;
         public static final double DROP_TIME_SECS = 2.0;
-        public static final double DEFAULT_VOLTS  = -4.5; // TODO: Do we need this anymore?
     }
 
     public static class General
@@ -238,8 +238,9 @@ public final class Constants
     {
         public static final DCMotor MANIPULATOR_MOTOR = DCMotor.getVex775Pro(1);
         public static final double  MOTOR_REDUCTION   = 5.0;
-        public static final double  INTAKE_VOLTS      = 3.50;
-        public static final double  OUTPUT_VOLTS      = 9.0;
+        public static final double  INTAKE_SPEED      = 3.5 / 12; // What we had when we were measuring in volts
+        public static final double  OUTPUT_SPEED      = 0.75;
+        public static final double  L1_SPEED_MULTIPLIER = 1.0;
     }
 
     public static class PathPlanner
