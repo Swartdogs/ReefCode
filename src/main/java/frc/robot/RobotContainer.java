@@ -7,13 +7,19 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.CompositeCommands;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.ElevatorCommands;
+import frc.robot.commands.FunnelCommands;
 import frc.robot.commands.ManipulatorCommands;
 import frc.robot.subsystems.dashboard.Dashboard;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.Elevator.ElevatorHeight;
+import frc.robot.subsystems.funnel.Funnel;
+import frc.robot.subsystems.manipulator.Manipulator;
+import frc.robot.util.Utilities;
 
 public class RobotContainer
 {
@@ -30,8 +36,11 @@ public class RobotContainer
     {
         DriverStation.silenceJoystickConnectionWarning(true);
 
+        Dashboard.getInstance();
+
         // Configure the button bindings
         configureButtonBindings();
+        // configureTestBindings();
     }
 
     @SuppressWarnings("unused")
@@ -47,7 +56,7 @@ public class RobotContainer
         _controller.povLeft().onTrue(ElevatorCommands.setHeight(ElevatorHeight.Level4));
 
         _controller.leftStick().onTrue(ManipulatorCommands.intake());
-        _controller.start().onTrue(ManipulatorCommands.output());
+        _controller.start().onTrue(CompositeCommands.output());
         _controller.rightStick().onTrue(ManipulatorCommands.stop());
     }
 
@@ -57,95 +66,83 @@ public class RobotContainer
         // Trigger _hasCoral = new Trigger(() -> _manipulator.hasCoral());
         // Trigger _manipulatorRunning = new Trigger(() -> _manipulator.isRunning());
         // Trigger _operatorButton12 = _operatorButtons.axisGreaterThan(0, 0.5);
-        // Trigger _operatorButton13 = _operatorButtons.axisGreaterThan(1, 0.5);
-        // Trigger _operatorButton14 = _operatorButtons.axisLessThan(1, -0.5);
+        Trigger _operatorButton14 = _operatorButtons.axisLessThan(1, -0.5);
+        Trigger _operatorButton15 = _operatorButtons.axisGreaterThan(1, 0.5);
 
         // Default command, normal field-relative drive
-        Drive.getInstance().setDefaultCommand(DriveCommands.joystickDrive(() -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> -_driverJoystick.getZ(), () -> robotCentric()));
-        // _drive.setDefaultCommand(CompositeCommands.joystickDrive(_drive, _elevator,
-        // () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () ->
-        // -_driverJoystick.getZ(), () -> robotCentric(), 2, 3));
+        // Drive.getInstance().setDefaultCommand(DriveCommands.joystickDrive(() ->
+        // -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () ->
+        // -_driverJoystick.getZ(), () -> robotCentric()));
+        Drive.getInstance().setDefaultCommand(CompositeCommands.joystickDrive(() -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> -_driverJoystick.getZ(), () -> robotCentric(), 2, 3));
 
         // Driver Controls
-        // _driverJoystick.button(2).onTrue(null); // replace this with switching
-        // cameras/
         _driverJoystick.button(2).whileTrue(DriveCommands.reduceSpeed());
+        // _driverJoystick.button(3).onTrue(null); // replace this with switching
+        // cameras/
         _driverJoystick.button(11).onTrue(DriveCommands.resetGyro());
 
-        // _driverButtons.button(0).whileTrue(
-        // DriveCommands.driveAtOrientation(
-        // _drive, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () ->
-        // robotCentric(), () -> isRedAlliance() ? Constants.Field.RED_REEF_ANGLE_ONE :
-        // Constants.Field.BLUE_REEF_ANGLE_ONE,
-        // Constants.Drive.MAX_SNAP_SPEED
-        // )
-        // );
-        // _driverButtons.button(1).whileTrue(
-        // DriveCommands.driveAtOrientation(
-        // _drive, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () ->
-        // robotCentric(), () -> isRedAlliance() ? Constants.Field.RED_REEF_ANGLE_TWO :
-        // Constants.Field.BLUE_REEF_ANGLE_TWO,
-        // Constants.Drive.MAX_SNAP_SPEED
-        // )
-        // );
-        // _driverButtons.button(2).whileTrue(
-        // DriveCommands.driveAtOrientation(
-        // _drive, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () ->
-        // robotCentric(), () -> isRedAlliance() ? Constants.Field.RED_REEF_ANGLE_THREE
-        // : Constants.Field.BLUE_REEF_ANGLE_THREE,
-        // Constants.Drive.MAX_SNAP_SPEED
-        // )
-        // );
-        // _driverButtons.button(3).whileTrue(
-        // DriveCommands.driveAtOrientation(
-        // _drive, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () ->
-        // robotCentric(), () -> isRedAlliance() ? Constants.Field.RED_REEF_ANGLE_FOUR :
-        // Constants.Field.BLUE_REEF_ANGLE_FOUR,
-        // Constants.Drive.MAX_SNAP_SPEED
-        // )
-        // );
-        // _driverButtons.button(4).whileTrue(
-        // DriveCommands.driveAtOrientation(
-        // _drive, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () ->
-        // robotCentric(), () -> isRedAlliance() ? Constants.Field.RED_REEF_ANGLE_FIVE :
-        // Constants.Field.BLUE_REEF_ANGLE_FIVE,
-        // Constants.Drive.MAX_SNAP_SPEED
-        // )
-        // );
-        // _driverButtons.button(5).whileTrue(
-        // DriveCommands.driveAtOrientation(
-        // _drive, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () ->
-        // robotCentric(), () -> isRedAlliance() ? Constants.Field.RED_REEF_ANGLE_SIX :
-        // Constants.Field.BLUE_REEF_ANGLE_SIX,
-        // Constants.Drive.MAX_SNAP_SPEED
-        // )
-        // );
-        // _driverButtons.button(6).whileTrue(
-        // DriveCommands.driveAtOrientation(
-        // _drive, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () ->
-        // robotCentric(), () -> isRedAlliance() ?
-        // Constants.Field.RED_LEFT_STATION_ANGLE :
-        // Constants.Field.BLUE_LEFT_STATION_ANGLE,
-        // Constants.Drive.MAX_SNAP_SPEED
-        // )
-        // );
-        // _driverButtons.button(7).whileTrue(
-        // DriveCommands.driveAtOrientation(
-        // _drive, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () ->
-        // robotCentric(), () -> isRedAlliance() ?
-        // Constants.Field.RED_RIGHT_STATION_ANGLE :
-        // Constants.Field.BLUE_RIGHT_STATION_ANGLE,
-        // Constants.Drive.MAX_SNAP_SPEED
-        // )
-        // );
-        // _driverButtons.button(8).whileTrue(
-        // DriveCommands.driveAtOrientation(
-        // _drive, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () ->
-        // robotCentric(), () -> isRedAlliance() ? Constants.Field.RED_PROCESSOR_ANGLE :
-        // Constants.Field.BLUE_PROCESSOR_ANGLE,
-        // Constants.Drive.MAX_SNAP_SPEED
-        // )
-        // );
+        _driverButtons.button(1).whileTrue(
+                DriveCommands.driveAtOrientation(
+                        () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> robotCentric(), () -> Utilities.isRedAlliance() ? Constants.Field.RED_REEF_ANGLE_ONE : Constants.Field.BLUE_REEF_ANGLE_ONE,
+                        Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
+                )
+        );
+
+        _driverButtons.button(2).whileTrue(
+                DriveCommands.driveAtOrientation(
+                        () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> robotCentric(), () -> Utilities.isRedAlliance() ? Constants.Field.RED_REEF_ANGLE_TWO : Constants.Field.BLUE_REEF_ANGLE_TWO,
+                        Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
+                )
+        );
+
+        _driverButtons.button(3).whileTrue(
+                DriveCommands.driveAtOrientation(
+                        () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> robotCentric(), () -> Utilities.isRedAlliance() ? Constants.Field.RED_REEF_ANGLE_THREE : Constants.Field.BLUE_REEF_ANGLE_THREE,
+                        Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
+                )
+        );
+
+        _driverButtons.button(4).whileTrue(
+                DriveCommands.driveAtOrientation(
+                        () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> robotCentric(), () -> Utilities.isRedAlliance() ? Constants.Field.RED_REEF_ANGLE_FOUR : Constants.Field.BLUE_REEF_ANGLE_FOUR,
+                        Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
+                )
+        );
+
+        _driverButtons.button(5).whileTrue(
+                DriveCommands.driveAtOrientation(
+                        () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> robotCentric(), () -> Utilities.isRedAlliance() ? Constants.Field.RED_REEF_ANGLE_FIVE : Constants.Field.BLUE_REEF_ANGLE_FIVE,
+                        Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
+                )
+        );
+
+        _driverButtons.button(6).whileTrue(
+                DriveCommands.driveAtOrientation(
+                        () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> robotCentric(), () -> Utilities.isRedAlliance() ? Constants.Field.RED_REEF_ANGLE_SIX : Constants.Field.BLUE_REEF_ANGLE_SIX,
+                        Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
+                )
+        );
+
+        _driverButtons.button(7).whileTrue(
+                DriveCommands.driveAtOrientation(
+                        () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> robotCentric(), () -> Utilities.isRedAlliance() ? Constants.Field.RED_LEFT_STATION_ANGLE : Constants.Field.BLUE_LEFT_STATION_ANGLE,
+                        Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
+                )
+        );
+
+        _driverButtons.button(8).whileTrue(
+                DriveCommands.driveAtOrientation(
+                        () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> robotCentric(), () -> Utilities.isRedAlliance() ? Constants.Field.RED_RIGHT_STATION_ANGLE : Constants.Field.BLUE_RIGHT_STATION_ANGLE,
+                        Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
+                )
+        );
+
+        _driverButtons.button(9).whileTrue(
+                DriveCommands.driveAtOrientation(
+                        () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> robotCentric(), () -> Utilities.isRedAlliance() ? Constants.Field.RED_PROCESSOR_ANGLE : Constants.Field.BLUE_PROCESSOR_ANGLE,
+                        Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
+                )
+        );
 
         // Operator Controls
         _operatorButtons.button(1).onTrue(ElevatorCommands.setHeight(ElevatorHeight.Level4));
@@ -169,7 +166,7 @@ public class RobotContainer
         // (_hasCoral.getAsBoolean() ? Constants.LED.GREEN : Constants.LED.RED)),
         // Set.of())));
 
-        _operatorButtons.button(6).onTrue(ManipulatorCommands.intake());
+        _operatorButtons.button(6).onTrue(CompositeCommands.intake());
         _operatorButtons.button(7).onTrue(ManipulatorCommands.stop());
         _operatorButtons.button(8).onTrue(CompositeCommands.output());
         _operatorButtons.button(9).onTrue(ElevatorCommands.modifyHeight(Constants.Elevator.ELEVATOR_MODIFICATION_HEIGHT));
@@ -177,19 +174,16 @@ public class RobotContainer
         // _operatorButtons.button(11).onTrue(null);// replace with algae intake
         // _operatorButtons.button(12).onTrue(null);// replace with algae output
         // _operatorButton12.onTrue(null);// replace with algae stop
-        // _operatorButton13.and(_driverJoystick.button(3)).onTrue(FunnelCommands.drop(_funnel).alongWith(ElevatorCommands.setHeight(_elevator,
-        // ElevatorHeight.Hang)));
-        // .alongWith(LEDCommands.flashColor(_led, Constants.LED.RED)).until(() ->
+        _operatorButton14.and(_driverJoystick.button(4)).onTrue(FunnelCommands.drop().alongWith(ElevatorCommands.setHeight(ElevatorHeight.Hang)));
+        // .alongWith(LEDCommands.flashColor(Constants.LED.RED)).until(() ->
         // _elevator.atSetpoint())
-        // .andThen(LEDCommands.setDefaultColor(_led, Constants.LED.YELLOW))
+        // .andThen(LEDCommands.setDefaultColor(Constants.LED.YELLOW))
         // );
-        // _operatorButton14.onTrue(ElevatorCommands.hangExecute(_elevator));
+        _operatorButton15.onTrue(ElevatorCommands.hangExecute());
 
-        // _hasCoral.onTrue(LEDCommands.setDefaultColor(_led, Constants.LED.GREEN));
-        // _hasCoral.onFalse(LEDCommands.setDefaultColor(_led, Constants.LED.RED));
-
-        // _manipulatorRunning.whileTrue(LEDCommands.flashColor(_led,
-        // Constants.LED.YELLOW));
+        // _hasCoral.onTrue(LEDCommands.setDefaultColor(Constants.LED.GREEN));
+        // _hasCoral.onFalse(LEDCommands.setDefaultColor(Constants.LED.RED));
+        // _manipulatorRunning.whileTrue(LEDCommands.flashColor(Constants.LED.YELLOW));
     }
 
     public Command getAutonomousCommand()

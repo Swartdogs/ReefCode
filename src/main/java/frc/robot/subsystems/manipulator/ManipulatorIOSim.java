@@ -43,4 +43,12 @@ public class ManipulatorIOSim implements ManipulatorIO
         _leftMotorSim.setInputVoltage(volts);
         _rightMotorSim.setInputVoltage(volts);
     }
+
+    @Override
+    public void setLeftVolts(double volts)
+    {
+        _appliedVolts = MathUtil.clamp(volts, -Constants.General.MOTOR_VOLTAGE, Constants.General.MOTOR_VOLTAGE);
+
+        _leftMotorSim.setInputVoltage(volts);
+    }
 }

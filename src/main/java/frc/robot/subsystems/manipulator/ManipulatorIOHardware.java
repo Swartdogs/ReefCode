@@ -39,4 +39,9 @@ public class ManipulatorIOHardware implements ManipulatorIO
         _rightTalon.set(ControlMode.PercentOutput, volts / Constants.General.MOTOR_VOLTAGE);
         _leftTalon.set(ControlMode.PercentOutput, volts / Constants.General.MOTOR_VOLTAGE);
     }
+
+    public void setLeftVolts(double volts)
+    {
+        _leftTalon.set(ControlMode.PercentOutput, volts / Constants.General.MOTOR_VOLTAGE);
+    }
 }

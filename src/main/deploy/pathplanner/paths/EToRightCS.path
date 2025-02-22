@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.157236842105262,
-        "y": 2.533634868421052
+        "x": 5.093707191780822,
+        "y": 2.702739726027397
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.6370065789473687,
-        "y": 0.9749177631578945
+        "x": 3.573476928622928,
+        "y": 1.1440226207642394
       },
       "isLocked": false,
       "linkedName": "E"
@@ -31,14 +31,7 @@
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [
-    {
-      "name": "Stow",
-      "waypointRelativePos": 0.06550802139037434,
-      "endWaypointRelativePos": null,
-      "command": null
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,

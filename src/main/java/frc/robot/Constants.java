@@ -91,7 +91,7 @@ public final class Constants
                 new Translation2d(-TRACK_WIDTH / 2.0, WHEEL_BASE / 2.0), new Translation2d(-TRACK_WIDTH / 2.0, -WHEEL_BASE / 2.0) };
         public static final Rotation2d      FL_ZERO_ROTATION              = Rotation2d.fromRadians(0.944 + Math.PI / 4); // Raw reading + 1/8 for the 45 degree offset
         public static final Rotation2d      FR_ZERO_ROTATION              = Rotation2d.fromRadians(-2.942 + 3 * Math.PI / 4);
-        public static final Rotation2d      BL_ZERO_ROTATION              = Rotation2d.fromRadians(1.198 - Math.PI / 4);
+        public static final Rotation2d      BL_ZERO_ROTATION              = Rotation2d.fromRadians(1.12 - Math.PI / 4);
         public static final Rotation2d      BR_ZERO_ROTATION              = Rotation2d.fromRadians(-1.150 - 3 * Math.PI / 4);
         public static final Current         DRIVE_MOTOR_CURRENT_LIMIT     = Amps.of(50);
         public static final double          WHEEL_RADIUS                  = Units.inchesToMeters(2);
@@ -115,13 +115,13 @@ public final class Constants
         public static final double          TURN_SIM_KP                   = 8.0;
         public static final double          TURN_SIM_KD                   = 0.0;
         public static final double          ODOMETRY_FREQUENCY            = 100.0; // ms
-        public static final double          ROTATE_KP                     = 0;
+        public static final double          ROTATE_KP                     = 0.3;
         public static final double          ROTATE_KD                     = 0;
         public static final double          MAX_SPEED_ELEVATOR_MULTIPLIER = 1;
-        public static final double          MIN_SPEED_ELEVATOR_MULTIPLIER = 0.2;
-        public static final double          MAX_SPEED_ELEVATOR_HEIGHT     = Constants.Elevator.L2_HEIGHT;
+        public static final double          MIN_SPEED_ELEVATOR_MULTIPLIER = 0.3;
+        public static final double          MAX_SPEED_ELEVATOR_HEIGHT     = Constants.Elevator.L1_HEIGHT;
         public static final double          MIN_SPEED_ELEVATOR_HEIGHT     = Constants.Elevator.L3_HEIGHT;
-        public static final double          SPEED_ELEVATOR_M              = (MAX_SPEED_ELEVATOR_MULTIPLIER - MIN_SPEED_ELEVATOR_MULTIPLIER) / (MIN_SPEED_ELEVATOR_HEIGHT - MAX_SPEED_ELEVATOR_HEIGHT);
+        public static final double          SPEED_ELEVATOR_M              = (MAX_SPEED_ELEVATOR_MULTIPLIER - MIN_SPEED_ELEVATOR_MULTIPLIER) / (MAX_SPEED_ELEVATOR_HEIGHT - MIN_SPEED_ELEVATOR_HEIGHT);
         public static final double          SPEED_ELEVATOR_B              = MAX_SPEED_ELEVATOR_MULTIPLIER - SPEED_ELEVATOR_M * MAX_SPEED_ELEVATOR_HEIGHT;
         public static final double          MAX_LINEAR_SPEED              = 4.8; // m/s
         public static final double          MAX_ANGULAR_SPEED             = MAX_LINEAR_SPEED / DRIVE_BASE_RADIUS;
@@ -130,7 +130,6 @@ public final class Constants
         public static final double          MAX_SNAP_SPEED_PERCENTAGE     = 0.7;
     }
 
-    // TODO: Not currently used. Will be needed for april tags and angle snapping
     public static class Field
     {
         public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT   = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
@@ -146,10 +145,10 @@ public final class Constants
         public static final Rotation2d          RED_REEF_ANGLE_FOUR      = getTagAngle(10);
         public static final Rotation2d          RED_REEF_ANGLE_FIVE      = getTagAngle(11);
         public static final Rotation2d          RED_REEF_ANGLE_SIX       = getTagAngle(6);
-        public static final Rotation2d          BLUE_LEFT_STATION_ANGLE  = getTagAngle(13);
-        public static final Rotation2d          BLUE_RIGHT_STATION_ANGLE = getTagAngle(12);
-        public static final Rotation2d          RED_LEFT_STATION_ANGLE   = getTagAngle(1);
-        public static final Rotation2d          RED_RIGHT_STATION_ANGLE  = getTagAngle(2);
+        public static final Rotation2d          BLUE_LEFT_STATION_ANGLE  = getTagAngle(13).plus(Rotation2d.fromDegrees(180));
+        public static final Rotation2d          BLUE_RIGHT_STATION_ANGLE = getTagAngle(12).plus(Rotation2d.fromDegrees(180));
+        public static final Rotation2d          RED_LEFT_STATION_ANGLE   = getTagAngle(1).plus(Rotation2d.fromDegrees(180));
+        public static final Rotation2d          RED_RIGHT_STATION_ANGLE  = getTagAngle(2).plus(Rotation2d.fromDegrees(180));
         public static final Rotation2d          BLUE_PROCESSOR_ANGLE     = getTagAngle(16);
         public static final Rotation2d          RED_PROCESSOR_ANGLE      = getTagAngle(3);
 
@@ -161,21 +160,21 @@ public final class Constants
 
     public static class Elevator
     {
-        public static final double  RAW_SENSOR_MIN               = 0.99;
-        public static final double  RAW_SENSOR_MAX               = 0.62;
+        public static final double  RAW_SENSOR_MIN               = 0.987;
+        public static final double  RAW_SENSOR_MAX               = 0.621;
         public static final double  SCALED_MIN                   = 16.0;
-        public static final double  SCALED_MAX                   = 75.75;
+        public static final double  SCALED_MAX                   = 77.25;
         public static final double  EXTENSION_KP                 = 0.5;
         public static final double  EXTENSION_KI                 = 0.0;
         public static final double  EXTENSION_KD                 = 0.02; // anything above 0.18 causes "shake"
         public static final double  MAX_EXTENSION                = SCALED_MAX;
         public static final double  EXTENSION_TOLERANCE          = 0.5;
         public static final double  STOW_HEIGHT                  = SCALED_MIN + 2.0;
-        public static final double  L1_HEIGHT                    = 27.00; // 12.7625 account for bottom of baseplate to bottom of carrige
-        public static final double  L2_HEIGHT                    = 33.4; // 19.11
-        public static final double  L3_HEIGHT                    = 48.5; // 34.86
-        public static final double  L4_HEIGHT                    = 75.1; // 59.29
-        public static final double  HANG_HEIGHT                  = L3_HEIGHT; // 19.11
+        public static final double  L1_HEIGHT                    = SCALED_MIN + 11.0;
+        public static final double  L2_HEIGHT                    = SCALED_MIN + 17.4;
+        public static final double  L3_HEIGHT                    = SCALED_MIN + 32.5;
+        public static final double  L4_HEIGHT                    = SCALED_MIN + 58.5;
+        public static final double  HANG_HEIGHT                  = L3_HEIGHT;
         public static final double  EXTENSION_SCALE              = (SCALED_MAX - SCALED_MIN) / (RAW_SENSOR_MAX - RAW_SENSOR_MIN);
         public static final double  EXTENSION_MOTOR_REDUCTION    = 5.0;
         public static final DCMotor ELEVATOR_GEARBOX             = DCMotor.getNeoVortex(2);
@@ -185,13 +184,14 @@ public final class Constants
         public static final double  ELEVATOR_FEED_FORWARD        = 0.7;
         public static final double  ELEVATOR_MODIFICATION_HEIGHT = 0.5;
         public static final double  HANG_VOLTAGE                 = -3.0;
+        public static final double  WAIT_TIME                    = 1;
     }
 
     public static class Funnel
     {
         public static final double FUNNEL_VOLTS   = 6.0;
         public static final double DROP_TIME_SECS = 2.0;
-        public static final double DEFAULT_VOLTS  = -4.5; // TODO: Do we need this anymore?
+        public static final double DEFAULT_VOLTS  = -4.5;
     }
 
     public static class General
@@ -236,18 +236,19 @@ public final class Constants
 
     public static class Manipulator
     {
-        public static final DCMotor MANIPULATOR_MOTOR = DCMotor.getVex775Pro(1);
-        public static final double  MOTOR_REDUCTION   = 5.0;
-        public static final double  INTAKE_VOLTS      = 3.50;
-        public static final double  OUTPUT_VOLTS      = 9.0;
+        public static final DCMotor MANIPULATOR_MOTOR   = DCMotor.getVex775Pro(1);
+        public static final double  MOTOR_REDUCTION     = 5.0;
+        public static final double  INTAKE_VOLTS        = 3.50;
+        public static final double  OUTPUT_VOLTS        = 10.0;
+        public static final double  DEBOUNCE_LOOP_COUNT = 0.2;
     }
 
     public static class PathPlanner
     {
-        public static final double       DRIVE_KP      = 2.0;
+        public static final double       DRIVE_KP      = 2.5;
         public static final double       DRIVE_KD      = 0.0;
-        public static final double       TURN_KP       = 2.0;
-        public static final double       TURN_KD       = 0.0;
+        public static final double       TURN_KP       = 0.6;
+        public static final double       TURN_KD       = 0.02;
         public static final double       WHEEL_COF     = 1.2;
         public static final double       ROBOT_MASS    = 74.088;
         public static final double       ROBOT_MOI     = 6.883;

@@ -68,12 +68,12 @@ public class CompositeCommands
 
     public static Command intake()
     {
-        return Commands.repeatingSequence(ManipulatorCommands.intake()).until(() -> Manipulator.getInstance().hasCoral());
+        return Commands.repeatingSequence(ManipulatorCommands.intake()).until(() -> Manipulator.getInstance().hasCoral()).unless(() -> Manipulator.getInstance().hasCoral());
     }
 
     public static Command output()
     {
-        return Commands.sequence(ManipulatorCommands.output(), Commands.waitSeconds(0.5), ElevatorCommands.setHeight(ElevatorHeight.Stow)).unless(() -> !Manipulator.getInstance().detectedCoral());
+        return Commands.sequence(ManipulatorCommands.output(), Commands.waitSeconds(Constants.Elevator.WAIT_TIME), ElevatorCommands.setHeight(ElevatorHeight.Stow)).unless(() -> !Manipulator.getInstance().detectedCoral());
     }
 
     public static Command setHeight(ElevatorHeight height)

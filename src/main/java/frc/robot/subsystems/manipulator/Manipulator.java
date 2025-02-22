@@ -31,19 +31,39 @@ public class Manipulator extends SubsystemBase
     private final ManipulatorIO                 _io;
     private final ManipulatorIOInputsAutoLogged _inputs = new ManipulatorIOInputsAutoLogged();
     private Debouncer                           _debouncer;
-    private boolean                             _hasCoral;
+    private boolean                             _coralDetected;
 
     private Manipulator(ManipulatorIO io)
     {
         _io        = io;
-        _debouncer = new Debouncer(0.1);
+        _debouncer = new Debouncer(Constants.Manipulator.DEBOUNCE_LOOP_COUNT);
     }
 
     @Override
     public void periodic()
     {
         _io.updateInputs(_inputs);
+        _coralDetected = (!_inputs.startSensorTripped && _inputs.endSensorTripped) || (Elevator.getInstance().getExtension() > ((Constants.Elevator.L3_HEIGHT + Constants.Elevator.L4_HEIGHT) / 2.0) && _inputs.endSensorTripped);
         Logger.processInputs("Manipulator", _inputs);
+        Logger.recordOutput("Detected Coral", _coralDetected);
+        Logger.recordOutput("Has Coral", hasCoral());
+    }
+
+    public void output()
+    {
+        if (Math.abs(Elevator.getInstance().getExtension() - Constants.Elevator.L1_HEIGHT) <= 2)
+        {
+            _io.setLeftVolts(Constants.Manipulator.OUTPUT_VOLTS);
+        }
+        else
+        {
+            _io.setVolts(Constants.Manipulator.OUTPUT_VOLTS);
+        }
+    }
+
+    public void intake()
+    {
+        _io.setVolts(Constants.Manipulator.INTAKE_VOLTS);
     }
 
     public void setVolts(double volts)
@@ -53,16 +73,16 @@ public class Manipulator extends SubsystemBase
 
     public boolean detectedCoral()
     {
-        return (!_inputs.startSensorTripped && _inputs.endSensorTripped) || (Elevator.getInstance().getExtension() > ((Constants.Elevator.L3_HEIGHT + Constants.Elevator.L4_HEIGHT) / 2.0) && _inputs.endSensorTripped);
+        return _coralDetected;
     }
 
     public boolean hasCoral()
     {
-        return _debouncer.calculate(detectedCoral());
+        return _debouncer.calculate(_coralDetected);
     }
 
     public boolean isRunning()
     {
-        return _inputs.leftAppliedVolts > 0;
+        return _inputs.leftAppliedVolts > 0 || _inputs.rightAppliedVolts > 0;
     }
 }

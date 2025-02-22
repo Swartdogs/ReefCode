@@ -22,4 +22,9 @@ public interface ManipulatorIO
     public default void setVolts(double volts)
     {
     }
+
+    public default void setLeftVolts(double volts)
+    {
+
+    }
 }

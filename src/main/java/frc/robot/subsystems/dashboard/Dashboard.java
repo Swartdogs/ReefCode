@@ -121,11 +121,11 @@ public class Dashboard extends SubsystemBase
 
         _nullAuto = new Alert("No Auto Detected", AlertType.kWarning);
 
-        NamedCommands.registerCommand("ExtendToL1", ElevatorCommands.setHeight(ElevatorHeight.Level1));
-        NamedCommands.registerCommand("ExtendToL2", ElevatorCommands.setHeight(ElevatorHeight.Level2));
-        NamedCommands.registerCommand("ExtendToL3", ElevatorCommands.setHeight(ElevatorHeight.Level3));
-        NamedCommands.registerCommand("ExtendToL4", ElevatorCommands.setHeight(ElevatorHeight.Level4));
-        NamedCommands.registerCommand("Stow", ElevatorCommands.setHeight(ElevatorHeight.Stow));
+        NamedCommands.registerCommand("ExtendToL1", CompositeCommands.setHeight(ElevatorHeight.Level1));
+        NamedCommands.registerCommand("ExtendToL2", CompositeCommands.setHeight(ElevatorHeight.Level2));
+        NamedCommands.registerCommand("ExtendToL3", CompositeCommands.setHeight(ElevatorHeight.Level3));
+        NamedCommands.registerCommand("ExtendToL4", CompositeCommands.setHeight(ElevatorHeight.Level4));
+        NamedCommands.registerCommand("Stow", CompositeCommands.setHeight(ElevatorHeight.Stow));
         NamedCommands.registerCommand("Intake", ManipulatorCommands.intake());
         NamedCommands.registerCommand("Output", CompositeCommands.output());
         NamedCommands.registerCommand("Delay", Commands.defer(() -> Commands.waitSeconds(_autoDelayChooser.get()), Set.of()));
