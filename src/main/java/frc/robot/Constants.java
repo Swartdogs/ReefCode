@@ -162,23 +162,24 @@ public final class Constants
     {
         public static final double  RAW_SENSOR_MIN               = 0.987;
         public static final double  RAW_SENSOR_MAX               = 0.621;
-        public static final double  SCALED_MIN                   = 16.0;
-        public static final double  SCALED_MAX                   = 77.25;
+        public static final double  MIN_EXTENSION                = 16.0;
+        public static final double  MAX_EXTENSION                = 77.25;
         public static final double  EXTENSION_KP                 = 0.5;
         public static final double  EXTENSION_KI                 = 0.0;
         public static final double  EXTENSION_KD                 = 0.02; // anything above 0.18 causes "shake"
-        public static final double  MAX_EXTENSION                = SCALED_MAX;
         public static final double  EXTENSION_TOLERANCE          = 0.5;
-        public static final double  STOW_HEIGHT                  = SCALED_MIN + 2.0;
-        public static final double  L1_HEIGHT                    = SCALED_MIN + 11.0;
-        public static final double  L2_HEIGHT                    = SCALED_MIN + 17.4;
-        public static final double  L3_HEIGHT                    = SCALED_MIN + 32.5;
-        public static final double  L4_HEIGHT                    = SCALED_MIN + 58.5;
+        public static final double  STOW_HEIGHT                  = MIN_EXTENSION + 2.0;
+        public static final double  L1_HEIGHT                    = MIN_EXTENSION + 11.0;
+        public static final double  L2_HEIGHT                    = MIN_EXTENSION + 17.4;
+        public static final double  L3_HEIGHT                    = MIN_EXTENSION + 32.5;
+        public static final double  L4_HEIGHT                    = MIN_EXTENSION + 58.5;
         public static final double  HANG_HEIGHT                  = L3_HEIGHT;
-        public static final double  EXTENSION_SCALE              = (SCALED_MAX - SCALED_MIN) / (RAW_SENSOR_MAX - RAW_SENSOR_MIN);
+        public static final double  MAX_UPWARDS_SPEED            = 1.0;
+        public static final double  MAX_DOWNWARDS_SPEED          = 0.2;
+        public static final double  EXTENSION_SCALE              = (MAX_EXTENSION - MIN_EXTENSION) / (RAW_SENSOR_MAX - RAW_SENSOR_MIN);
         public static final double  EXTENSION_MOTOR_REDUCTION    = 5.0;
         public static final DCMotor ELEVATOR_GEARBOX             = DCMotor.getNeoVortex(2);
-        public static final double  EXTENSION_OFFSET             = SCALED_MIN - EXTENSION_SCALE * RAW_SENSOR_MIN;
+        public static final double  EXTENSION_OFFSET             = MIN_EXTENSION - EXTENSION_SCALE * RAW_SENSOR_MIN;
         public static final double  ELEVATOR_MASS                = 15.875;
         public static final double  ELEVATOR_DRUM_RADIUS         = 0.0223139;
         public static final double  ELEVATOR_FEED_FORWARD        = 0.7;
@@ -189,9 +190,8 @@ public final class Constants
 
     public static class Funnel
     {
-        public static final double FUNNEL_VOLTS   = 6.0;
+        public static final double RETRACT_SPEED   = 0.5;
         public static final double DROP_TIME_SECS = 2.0;
-        public static final double DEFAULT_VOLTS  = -4.5;
     }
 
     public static class General
@@ -240,6 +240,9 @@ public final class Constants
         public static final double  MOTOR_REDUCTION     = 5.0;
         public static final double  INTAKE_VOLTS        = 3.50;
         public static final double  OUTPUT_VOLTS        = 10.0;
+        public static final double  INTAKE_SPEED      = 3.5 / 12; // What we had when we were measuring in volts
+        public static final double  OUTPUT_SPEED      = 0.75;
+        public static final double  L1_SPEED_MULTIPLIER = 1.0;
         public static final double  DEBOUNCE_LOOP_COUNT = 0.2;
     }
 

@@ -15,7 +15,7 @@ public class FunnelCommands
 
     public static Command drop()
     {
-        return Commands.startEnd(() -> Funnel.getInstance().setVolts(Constants.Funnel.FUNNEL_VOLTS), () -> Funnel.getInstance().setVolts(0), Funnel.getInstance()).withTimeout(Constants.Funnel.DROP_TIME_SECS);
+        return Commands.startEnd(() -> Funnel.getInstance().setVolts(Constants.Funnel.RETRACT_SPEED * Constants.General.MOTOR_VOLTAGE), () -> Funnel.getInstance().setVolts(0), Funnel.getInstance()).withTimeout(Constants.Funnel.DROP_TIME_SECS);
     }
 
     public static Command setVolts(DoubleSupplier voltsSupplier)

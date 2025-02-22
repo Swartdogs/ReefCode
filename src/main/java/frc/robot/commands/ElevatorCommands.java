@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.Elevator.ElevatorHeight;
+import frc.robot.subsystems.funnel.Funnel;
 
 public class ElevatorCommands
 {
@@ -55,6 +56,6 @@ public class ElevatorCommands
 
     public static Command hangExecute()
     {
-        return Elevator.getInstance().runOnce(() -> Elevator.getInstance().setVolts(Constants.Elevator.HANG_VOLTAGE));
+        return Elevator.getInstance().startEnd(() -> Elevator.getInstance().setVolts(Constants.Elevator.HANG_VOLTAGE), () -> Elevator.getInstance().setExtension(ElevatorHeight.Stow)).unless(() -> !Funnel.getInstance().isDropped());
     }
 }

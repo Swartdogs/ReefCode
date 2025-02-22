@@ -11,7 +11,6 @@ import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -20,7 +19,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.commands.CompositeCommands;
-import frc.robot.commands.ElevatorCommands;
 import frc.robot.commands.ManipulatorCommands;
 import frc.robot.subsystems.elevator.Elevator.ElevatorHeight;
 
@@ -34,7 +32,7 @@ public class Dashboard extends SubsystemBase
         {
             var io = switch (Constants.AdvantageKit.CURRENT_MODE)
             {
-                case REAL, SIM -> new DashboardIONetwork();
+                case REAL, SIM -> new DashboardIO() {};
                 default -> new DashboardIO() {};
             };
 
@@ -166,20 +164,5 @@ public class Dashboard extends SubsystemBase
     public List<PathPlannerPath> getPaths(String autoName)
     {
         return _pathLookup.get(autoName);
-    }
-
-    public void setRobotPosition(Pose2d pose)
-    {
-        _io.setRobotPosition(pose);
-    }
-
-    public void setPath(PathPlannerPath path)
-    {
-        _io.setPath(path);
-    }
-
-    public void setAuto(List<PathPlannerPath> auto)
-    {
-        _io.setAuto(auto);
     }
 }
