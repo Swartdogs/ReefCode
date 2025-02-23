@@ -3,8 +3,9 @@ package frc.robot;
 import static edu.wpi.first.units.Units.Amps;
 
 import java.util.HashMap;
+import java.util.Map;
 
-import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.RobotConfig;
 
@@ -15,6 +16,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Current;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -160,14 +162,14 @@ public final class Constants
 
     public static class Elevator
     {
-        public static final double  RAW_SENSOR_MIN               = 0.972;
-        public static final double  RAW_SENSOR_MAX               = 0.600;
+        public static final double  RAW_SENSOR_MIN               = 0.987;
+        public static final double  RAW_SENSOR_MAX               = 0.632;
         public static final double  MIN_EXTENSION                = 16.0;
         public static final double  MAX_EXTENSION                = 77.0;
         public static final double  EXTENSION_KP                 = 0.5;
         public static final double  EXTENSION_KI                 = 0.0;
         public static final double  EXTENSION_KD                 = 0.02; // anything above 0.18 causes "shake"
-        public static final double  EXTENSION_TOLERANCE          = 0.5;
+        public static final double  EXTENSION_TOLERANCE          = 1.0;
         public static final double  STOW_HEIGHT                  = MIN_EXTENSION + 2.0;
         public static final double  L1_HEIGHT                    = MIN_EXTENSION + 11.0;
         public static final double  L2_HEIGHT                    = MIN_EXTENSION + 17.4;
@@ -217,20 +219,20 @@ public final class Constants
 
     public static class Lookups
     {
-        public static final HashMap<String, Command> AUTO_LOOKUP = new HashMap<String, Command>() {
+        public static final Map<String, Map<DriverStation.Alliance, Command>> AUTO_LOOKUP = new HashMap<String, Map<DriverStation.Alliance, Command>>() {
             {
-                put("LeftIKL", AutoBuilder.buildAuto("Left_IKL"));
-                put("LeftILK", AutoBuilder.buildAuto("Left_ILK"));
-                put("LeftJKL", AutoBuilder.buildAuto("Left_JKL"));
-                put("LeftJLK", AutoBuilder.buildAuto("Left_JLK"));
-                put("MiddleGAB", AutoBuilder.buildAuto("Middle_GAB"));
-                put("MiddleGBA", AutoBuilder.buildAuto("Middle_GBA"));
-                put("MiddleHAB", AutoBuilder.buildAuto("Middle_HAB"));
-                put("MiddleHBA", AutoBuilder.buildAuto("Middle_HBA"));
-                put("RightECD", AutoBuilder.buildAuto("Right_ECD"));
-                put("RightEDC", AutoBuilder.buildAuto("Right_EDC"));
-                put("RightFCD", AutoBuilder.buildAuto("Right_FCD"));
-                put("RightFDC", AutoBuilder.buildAuto("Right_FDC"));
+                put("LeftIKL", Map.of(DriverStation.Alliance.Blue, new PathPlannerAuto("Left_IKL"), DriverStation.Alliance.Red, new PathPlannerAuto("Left_IKL", true)));
+                put("LeftILK", Map.of(DriverStation.Alliance.Blue, new PathPlannerAuto("Left_ILK"), DriverStation.Alliance.Red, new PathPlannerAuto("Left_ILK", true)));
+                put("LeftJKL", Map.of(DriverStation.Alliance.Blue, new PathPlannerAuto("Left_JKL"), DriverStation.Alliance.Red, new PathPlannerAuto("Left_JKL", true)));
+                put("LeftJLK", Map.of(DriverStation.Alliance.Blue, new PathPlannerAuto("Left_JLK"), DriverStation.Alliance.Red, new PathPlannerAuto("Left_JLK", true)));
+                put("MiddleGAB", Map.of(DriverStation.Alliance.Blue, new PathPlannerAuto("Middle_GAB"), DriverStation.Alliance.Red, new PathPlannerAuto("Middle_GAB", true)));
+                put("MiddleGBA", Map.of(DriverStation.Alliance.Blue, new PathPlannerAuto("Middle_GBA"), DriverStation.Alliance.Red, new PathPlannerAuto("Middle_GBA", true)));
+                put("MiddleHAB", Map.of(DriverStation.Alliance.Blue, new PathPlannerAuto("Middle_HAB"), DriverStation.Alliance.Red, new PathPlannerAuto("Middle_HAB", true)));
+                put("MiddleHBA", Map.of(DriverStation.Alliance.Blue, new PathPlannerAuto("Middle_HBA"), DriverStation.Alliance.Red, new PathPlannerAuto("Middle_HBA", true)));
+                put("RightECD", Map.of(DriverStation.Alliance.Blue, new PathPlannerAuto("Right_ECD"), DriverStation.Alliance.Red, new PathPlannerAuto("Right_ECD", true)));
+                put("RightEDC", Map.of(DriverStation.Alliance.Blue, new PathPlannerAuto("Right_EDC"), DriverStation.Alliance.Red, new PathPlannerAuto("Right_EDC", true)));
+                put("RightFCD", Map.of(DriverStation.Alliance.Blue, new PathPlannerAuto("Right_FCD"), DriverStation.Alliance.Red, new PathPlannerAuto("Right_FCD", true)));
+                put("RightFDC", Map.of(DriverStation.Alliance.Blue, new PathPlannerAuto("Right_FDC"), DriverStation.Alliance.Red, new PathPlannerAuto("Right_FDC", true)));
             }
         };
     }
@@ -239,10 +241,8 @@ public final class Constants
     {
         public static final DCMotor MANIPULATOR_MOTOR   = DCMotor.getVex775Pro(1);
         public static final double  MOTOR_REDUCTION     = 5.0;
-        public static final double  INTAKE_VOLTS        = 3.50;
-        public static final double  OUTPUT_VOLTS        = 10.0;
         public static final double  INTAKE_SPEED        = 3.5 / 12; // What we had when we were measuring in volts
-        public static final double  OUTPUT_SPEED        = 0.75;
+        public static final double  OUTPUT_SPEED        = 10.0 / 12;
         public static final double  L1_SPEED_MULTIPLIER = 1.0;
         public static final double  DEBOUNCE_LOOP_COUNT = 0.2;
     }
@@ -251,8 +251,8 @@ public final class Constants
     {
         public static final double       DRIVE_KP      = 2.5;
         public static final double       DRIVE_KD      = 0.0;
-        public static final double       TURN_KP       = 0.6;
-        public static final double       TURN_KD       = 0.02;
+        public static final double       TURN_KP       = 1.15;
+        public static final double       TURN_KD       = 0.0;
         public static final double       WHEEL_COF     = 1.2;
         public static final double       ROBOT_MASS    = 74.088;
         public static final double       ROBOT_MOI     = 6.883;

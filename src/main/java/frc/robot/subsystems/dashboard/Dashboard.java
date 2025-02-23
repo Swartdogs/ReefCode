@@ -1,11 +1,14 @@
 package frc.robot.subsystems.dashboard;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Set;
 
 import org.littletonrobotics.junction.Logger;
 
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.wpilibj.Alert;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -14,6 +17,7 @@ import frc.robot.Constants;
 import frc.robot.commands.CompositeCommands;
 import frc.robot.commands.ManipulatorCommands;
 import frc.robot.subsystems.elevator.Elevator.ElevatorHeight;
+import frc.robot.subsystems.manipulator.Manipulator;
 
 public class Dashboard extends SubsystemBase
 {
@@ -35,9 +39,24 @@ public class Dashboard extends SubsystemBase
         return _instance;
     }
 
-    private final DashboardIO                 _io;
-    private final DashboardIOInputsAutoLogged _inputs = new DashboardIOInputsAutoLogged();
-    private final Alert                       _nullAuto;
+    public enum DashboardSetting
+    {
+        FunnelRetractSpeed, FunnelRetractTime, ManipulatorOutputSpeed, ManipulatorIntakeSpeed, ManipulatorL1SpeedMultiplier
+    }
+
+    private final DashboardIO                   _io;
+    private final DashboardIOInputsAutoLogged   _inputs   = new DashboardIOInputsAutoLogged();
+    private final Alert                         _nullAuto;
+    private final Map<DashboardSetting, Double> _settings = new LinkedHashMap<DashboardSetting, Double>() {
+                                                              {
+                                                                  put(DashboardSetting.FunnelRetractSpeed, Constants.Funnel.RETRACT_SPEED);
+                                                                  put(DashboardSetting.FunnelRetractTime, Constants.Funnel.DROP_TIME_SECS);
+                                                                  put(DashboardSetting.ManipulatorIntakeSpeed, Constants.Manipulator.INTAKE_SPEED);
+                                                                  put(DashboardSetting.ManipulatorOutputSpeed, Constants.Manipulator.OUTPUT_SPEED);
+                                                                  put(DashboardSetting.ManipulatorL1SpeedMultiplier, Constants.Manipulator.L1_SPEED_MULTIPLIER);
+                                                              }
+                                                          };
+    private Command                             _selectedAuto;
 
     private Dashboard(DashboardIO io)
     {
@@ -60,13 +79,97 @@ public class Dashboard extends SubsystemBase
     {
         _io.updateInputs(_inputs);
         Logger.processInputs("Dashboard", _inputs);
+
+        // Robot Values
+        _io.setManipulatorLeftMotorOutputPercentSpeed(Manipulator.getInstance().getLeftOutputSpeed());
+        _io.setManipulatorRightMotorOutputPercentSpeed(Manipulator.getInstance().getRightOutputSpeed());
+
+        // Update settings
+        _settings.put(DashboardSetting.FunnelRetractSpeed, _inputs.funnelRetractPercentSpeed);
+        _settings.put(DashboardSetting.FunnelRetractTime, _inputs.funnelRetractTime);
+        _settings.put(DashboardSetting.ManipulatorIntakeSpeed, _inputs.manipulatorIntakePercentSpeed);
+        _settings.put(DashboardSetting.ManipulatorOutputSpeed, _inputs.manipulatorOutputPercentSpeed);
+        _settings.put(DashboardSetting.ManipulatorL1SpeedMultiplier, _inputs.manipulatorL1SpeedMultiplier);
+
+        // Buttons
+        if (_inputs.elevatorZeroMinHeightPressed)
+        {
+            _io.releaseElevatorMinHeightZeroButton();
+        }
+
+        if (_inputs.elevatorZeroMaxHeightPressed)
+        {
+            _io.releaseElevatorMaxHeightZeroButton();
+        }
+
+        if (_inputs.elevatorZeroStowHeightPressed)
+        {
+            _io.releaseElevatorStowHeightZeroButton();
+        }
+
+        if (_inputs.elevatorZeroL1HeightPressed)
+        {
+            _io.releaseElevatorL1HeightZeroButton();
+        }
+
+        if (_inputs.elevatorZeroL2HeightPressed)
+        {
+            _io.releaseElevatorL2HeightZeroButton();
+        }
+
+        if (_inputs.elevatorZeroL3HeightPressed)
+        {
+            _io.releaseElevatorL3HeightZeroButton();
+        }
+
+        if (_inputs.elevatorZeroL4HeightPressed)
+        {
+            _io.releaseElevatorL4HeightZeroButton();
+        }
+
+        if (_inputs.elevatorZeroHangHeightPressed)
+        {
+            _io.releaseElevatorHangHeightZeroButton();
+        }
+
+        if (_inputs.driveZeroFLModulePressed)
+        {
+            _io.releaseDriveFLOffsetZeroButton();
+        }
+
+        if (_inputs.driveZeroFRModulePressed)
+        {
+            _io.releaseDriveFROffsetZeroButton();
+        }
+
+        if (_inputs.driveZeroBLModulePressed)
+        {
+            _io.releaseDriveBLOffsetZeroButton();
+        }
+
+        if (_inputs.driveZeroBRModulePressed)
+        {
+            _io.releaseDriveBROffsetZeroButton();
+        }
+
+        if (_inputs.driveZeroModulesPressed)
+        {
+            _io.releaseDriveModuleOffsetZeroButton();
+        }
+
+        var alliance = DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() : DriverStation.Alliance.Blue;
+        var options  = Constants.Lookups.AUTO_LOOKUP.get(_inputs.autoStartPosition + _inputs.autoFirstCoral + _inputs.autoSecondCoral + _inputs.autoThirdCoral);
+        _selectedAuto = options == null ? null : options.get(alliance);
+        _nullAuto.set(_selectedAuto == null);
+    }
+
+    public double getSetting(DashboardSetting setting)
+    {
+        return _settings.get(setting);
     }
 
     public Command getSelectedAuto()
     {
-        var selected = Constants.Lookups.AUTO_LOOKUP.get(_inputs.autoStartPosition + _inputs.autoFirstCoral + _inputs.autoSecondCoral + _inputs.autoThirdCoral);
-        _nullAuto.set(selected == null);
-
-        return selected;
+        return _selectedAuto;
     }
 }

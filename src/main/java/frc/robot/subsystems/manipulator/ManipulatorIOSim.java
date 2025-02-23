@@ -10,9 +10,10 @@ public class ManipulatorIOSim implements ManipulatorIO
 {
     private final DCMotorSim   _leftMotorSim;
     private final DCMotorSim   _rightMotorSim;
-    private double             _appliedVolts;
     private final DigitalInput _lightSensorStart;
     private final DigitalInput _lightSensorEnd;
+    private double             _leftAppliedVolts;
+    private double             _rightAppliedVolts;
 
     public ManipulatorIOSim()
     {
@@ -29,26 +30,25 @@ public class ManipulatorIOSim implements ManipulatorIO
         _rightMotorSim.update(Constants.General.LOOP_PERIOD_SECS);
         inputs.leftCurrentAmps    = Math.abs(_leftMotorSim.getCurrentDrawAmps());
         inputs.rightCurrentAmps   = Math.abs(_rightMotorSim.getCurrentDrawAmps());
-        inputs.leftAppliedVolts   = _appliedVolts;
-        inputs.rightAppliedVolts  = _appliedVolts;
+        inputs.leftAppliedVolts   = _leftAppliedVolts;
+        inputs.rightAppliedVolts  = _rightAppliedVolts;
         inputs.startSensorTripped = _lightSensorStart.get();
         inputs.endSensorTripped   = _lightSensorEnd.get();
     }
 
     @Override
-    public void setVolts(double volts)
+    public void setLeftVolts(double volts)
     {
-        _appliedVolts = MathUtil.clamp(volts, -Constants.General.MOTOR_VOLTAGE, Constants.General.MOTOR_VOLTAGE);
+        _leftAppliedVolts = MathUtil.clamp(volts, -Constants.General.MOTOR_VOLTAGE, Constants.General.MOTOR_VOLTAGE);
 
         _leftMotorSim.setInputVoltage(volts);
-        _rightMotorSim.setInputVoltage(volts);
     }
 
     @Override
-    public void setLeftVolts(double volts)
+    public void setRightVolts(double volts)
     {
-        _appliedVolts = MathUtil.clamp(volts, -Constants.General.MOTOR_VOLTAGE, Constants.General.MOTOR_VOLTAGE);
+        _rightAppliedVolts = MathUtil.clamp(volts, -Constants.General.MOTOR_VOLTAGE, Constants.General.MOTOR_VOLTAGE);
 
-        _leftMotorSim.setInputVoltage(volts);
+        _rightMotorSim.setInputVoltage(volts);
     }
 }

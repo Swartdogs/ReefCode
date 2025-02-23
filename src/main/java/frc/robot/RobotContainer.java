@@ -36,8 +36,8 @@ public class RobotContainer
         Dashboard.getInstance();
 
         // Configure the button bindings
-        configureButtonBindings();
-        // configureTestBindings();
+        // configureButtonBindings();
+        configureTestBindings();
     }
 
     @SuppressWarnings("unused")
@@ -190,6 +190,7 @@ public class RobotContainer
 
     private boolean robotCentric()
     {
-        return _driverJoystick.button(1).getAsBoolean();
+        return false;
+        // return _driverJoystick.button(1).getAsBoolean();
     }
 }
