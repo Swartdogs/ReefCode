@@ -319,7 +319,7 @@ public class Drive extends SubsystemBase
     {
         _maxSpeed = Math.abs(maxSpeed);
 
-        _rotatePID.setSetpoint(maxSpeed);
+        _rotatePID.setSetpoint(setpoint.getRadians());
     }
 
     public double rotateExecute()
