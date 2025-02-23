@@ -15,10 +15,7 @@ import frc.robot.commands.FunnelCommands;
 import frc.robot.commands.ManipulatorCommands;
 import frc.robot.subsystems.dashboard.Dashboard;
 import frc.robot.subsystems.drive.Drive;
-import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.Elevator.ElevatorHeight;
-import frc.robot.subsystems.funnel.Funnel;
-import frc.robot.subsystems.manipulator.Manipulator;
 import frc.robot.util.Utilities;
 
 public class RobotContainer
@@ -174,12 +171,12 @@ public class RobotContainer
         // _operatorButtons.button(11).onTrue(null);// replace with algae intake
         // _operatorButtons.button(12).onTrue(null);// replace with algae output
         // _operatorButton12.onTrue(null);// replace with algae stop
-        _operatorButton14.and(_driverJoystick.button(4)).onTrue(FunnelCommands.drop().alongWith(ElevatorCommands.setHeight(ElevatorHeight.Hang)));
+        _operatorButton14.whileTrue(ElevatorCommands.hangExecute());
         // .alongWith(LEDCommands.flashColor(Constants.LED.RED)).until(() ->
         // _elevator.atSetpoint())
         // .andThen(LEDCommands.setDefaultColor(Constants.LED.YELLOW))
         // );
-        _operatorButton15.onTrue(ElevatorCommands.hangExecute());
+        _operatorButton15.and(_driverJoystick.button(4)).onTrue(FunnelCommands.drop().alongWith(ElevatorCommands.setHeight(ElevatorHeight.Hang)));
 
         // _hasCoral.onTrue(LEDCommands.setDefaultColor(Constants.LED.GREEN));
         // _hasCoral.onFalse(LEDCommands.setDefaultColor(Constants.LED.RED));

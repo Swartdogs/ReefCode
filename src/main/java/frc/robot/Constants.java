@@ -132,7 +132,7 @@ public final class Constants
 
     public static class Field
     {
-        public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT   = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
+        public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT   = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded);
         public static final Rotation2d          BLUE_REEF_ANGLE_ONE      = getTagAngle(18);
         public static final Rotation2d          BLUE_REEF_ANGLE_TWO      = getTagAngle(17);
         public static final Rotation2d          BLUE_REEF_ANGLE_THREE    = getTagAngle(22);
@@ -160,10 +160,10 @@ public final class Constants
 
     public static class Elevator
     {
-        public static final double  RAW_SENSOR_MIN               = 0.987;
-        public static final double  RAW_SENSOR_MAX               = 0.621;
+        public static final double  RAW_SENSOR_MIN               = 0.972;
+        public static final double  RAW_SENSOR_MAX               = 0.600;
         public static final double  MIN_EXTENSION                = 16.0;
-        public static final double  MAX_EXTENSION                = 77.25;
+        public static final double  MAX_EXTENSION                = 77.0;
         public static final double  EXTENSION_KP                 = 0.5;
         public static final double  EXTENSION_KI                 = 0.0;
         public static final double  EXTENSION_KD                 = 0.02; // anything above 0.18 causes "shake"
@@ -185,12 +185,13 @@ public final class Constants
         public static final double  ELEVATOR_FEED_FORWARD        = 0.7;
         public static final double  ELEVATOR_MODIFICATION_HEIGHT = 0.5;
         public static final double  HANG_VOLTAGE                 = -3.0;
+        public static final double  HANG_SPEED                   = 0.25;
         public static final double  WAIT_TIME                    = 1;
     }
 
     public static class Funnel
     {
-        public static final double RETRACT_SPEED   = 0.5;
+        public static final double RETRACT_SPEED  = 1.0;
         public static final double DROP_TIME_SECS = 2.0;
     }
 
@@ -240,8 +241,8 @@ public final class Constants
         public static final double  MOTOR_REDUCTION     = 5.0;
         public static final double  INTAKE_VOLTS        = 3.50;
         public static final double  OUTPUT_VOLTS        = 10.0;
-        public static final double  INTAKE_SPEED      = 3.5 / 12; // What we had when we were measuring in volts
-        public static final double  OUTPUT_SPEED      = 0.75;
+        public static final double  INTAKE_SPEED        = 3.5 / 12; // What we had when we were measuring in volts
+        public static final double  OUTPUT_SPEED        = 0.75;
         public static final double  L1_SPEED_MULTIPLIER = 1.0;
         public static final double  DEBOUNCE_LOOP_COUNT = 0.2;
     }

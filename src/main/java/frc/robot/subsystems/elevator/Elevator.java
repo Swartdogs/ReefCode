@@ -66,6 +66,7 @@ public class Elevator extends SubsystemBase
         _potAlert = new Alert("Potentiometer has been disconnected", AlertType.kError);
     }
 
+    @Override
     public void periodic()
     {
         _io.updateInputs(_inputs);

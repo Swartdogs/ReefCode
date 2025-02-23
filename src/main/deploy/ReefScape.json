@@ -1,14 +1,7 @@
 {
   "version": 1.0,
-  "grid_size": 128,
+  "grid_size": 32,
   "tabs": [
-    {
-      "name": "Teleoperated",
-      "grid_layout": {
-        "layouts": [],
-        "containers": []
-      }
-    },
     {
       "name": "Autonomous",
       "grid_layout": {
@@ -17,34 +10,816 @@
           {
             "title": "Field",
             "x": 0.0,
-            "y": 128.0,
-            "width": 1920.0,
-            "height": 640.0,
+            "y": 0.0,
+            "width": 1632.0,
+            "height": 736.0,
             "type": "Field",
             "properties": {
               "topic": "/SmartDashboard/Field",
               "period": 0.02,
-              "field_game": "Reefscape",
+              "field_game": "Crescendo",
               "robot_width": 0.85,
               "robot_length": 0.85,
               "show_other_objects": true,
               "show_trajectories": true,
               "field_rotation": 0.0,
-              "robot_color": 4294927104,
-              "trajectory_color": 4294927104
+              "robot_color": 4294198070,
+              "trajectory_color": 4294967295
             }
           },
           {
-            "title": "Auto Choices",
-            "x": 0.0,
+            "title": "Start Position",
+            "x": 1632.0,
+            "y": 128.0,
+            "width": 288.0,
+            "height": 128.0,
+            "type": "Split Button Chooser",
+            "properties": {
+              "topic": "/SmartDashboard/Start Position",
+              "period": 0.02
+            }
+          },
+          {
+            "title": "Auto Delay",
+            "x": 1632.0,
             "y": 0.0,
-            "width": 1920.0,
+            "width": 288.0,
+            "height": 128.0,
+            "type": "Split Button Chooser",
+            "properties": {
+              "topic": "/SmartDashboard/Auto Delay",
+              "period": 0.02
+            }
+          },
+          {
+            "title": "First Coral",
+            "x": 1632.0,
+            "y": 256.0,
+            "width": 288.0,
             "height": 128.0,
             "type": "ComboBox Chooser",
             "properties": {
-              "topic": "/SmartDashboard/Auto Choices",
+              "topic": "/SmartDashboard/First Coral",
               "period": 0.02,
               "sort_options": false
+            }
+          },
+          {
+            "title": "Second Coral",
+            "x": 1632.0,
+            "y": 384.0,
+            "width": 288.0,
+            "height": 128.0,
+            "type": "ComboBox Chooser",
+            "properties": {
+              "topic": "/SmartDashboard/Second Coral",
+              "period": 0.02,
+              "sort_options": false
+            }
+          },
+          {
+            "title": "Third Coral",
+            "x": 1632.0,
+            "y": 512.0,
+            "width": 288.0,
+            "height": 128.0,
+            "type": "ComboBox Chooser",
+            "properties": {
+              "topic": "/SmartDashboard/Third Coral",
+              "period": 0.02,
+              "sort_options": false
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "Teleoperated",
+      "grid_layout": {
+        "layouts": [],
+        "containers": [
+          {
+            "title": "Elevator Setpoint",
+            "x": 0.0,
+            "y": 0.0,
+            "width": 1344.0,
+            "height": 736.0,
+            "type": "Match Time",
+            "properties": {
+              "topic": "Dashboard/Robot Values/Elevator Setpoint",
+              "period": 0.02,
+              "data_type": "double",
+              "time_display_mode": "Seconds Only",
+              "red_start_time": 15,
+              "yellow_start_time": 30
+            }
+          },
+          {
+            "title": "Alerts",
+            "x": 1344.0,
+            "y": 0.0,
+            "width": 576.0,
+            "height": 736.0,
+            "type": "Alerts",
+            "properties": {
+              "topic": "/SmartDashboard/Alerts",
+              "period": 0.02
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "Programmer",
+      "grid_layout": {
+        "layouts": [
+          {
+            "title": "Settings",
+            "x": 1312.0,
+            "y": 32.0,
+            "width": 224.0,
+            "height": 384.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "RIGHT"
+            },
+            "children": [
+              {
+                "title": "Max Height",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Preferences/Dashboard/Dashboard Settings/Elevator Max Height",
+                  "period": 0.02,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "Hang Height",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Preferences/Dashboard/Dashboard Settings/Elevator Hang Height",
+                  "period": 0.02,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "L4 Height",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Preferences/Dashboard/Dashboard Settings/Elevator L4 Height",
+                  "period": 0.02,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "L3 Height",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Preferences/Dashboard/Dashboard Settings/Elevator L3 Height",
+                  "period": 0.02,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "L2 Height",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Preferences/Dashboard/Dashboard Settings/Elevator L2 Height",
+                  "period": 0.02,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "L1 Height",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Preferences/Dashboard/Dashboard Settings/Elevator L1 Height",
+                  "period": 0.02,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "Stow Height",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Preferences/Dashboard/Dashboard Settings/Elevator Stow Height",
+                  "period": 0.02,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "Min Height",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Preferences/Dashboard/Dashboard Settings/Elevator Min Height",
+                  "period": 0.02,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              }
+            ]
+          },
+          {
+            "title": "Zero",
+            "x": 1536.0,
+            "y": 32.0,
+            "width": 224.0,
+            "height": 384.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "HIDDEN"
+            },
+            "children": [
+              {
+                "title": "Zero",
+                "x": 800.0,
+                "y": 96.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Toggle Switch",
+                "properties": {
+                  "topic": "Dashboard/Buttons/Elevator Zero Max Height",
+                  "period": 0.02,
+                  "data_type": "boolean"
+                }
+              },
+              {
+                "title": "Zero",
+                "x": 800.0,
+                "y": 160.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Toggle Switch",
+                "properties": {
+                  "topic": "Dashboard/Buttons/Elevator Zero Hang Height",
+                  "period": 0.02,
+                  "data_type": "boolean"
+                }
+              },
+              {
+                "title": "Zero",
+                "x": 736.0,
+                "y": 192.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Toggle Switch",
+                "properties": {
+                  "topic": "Dashboard/Buttons/Elevator Zero L4 Height",
+                  "period": 0.02,
+                  "data_type": "boolean"
+                }
+              },
+              {
+                "title": "Zero",
+                "x": 736.0,
+                "y": 224.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Toggle Switch",
+                "properties": {
+                  "topic": "Dashboard/Buttons/Elevator Zero L3 Height",
+                  "period": 0.02,
+                  "data_type": "boolean"
+                }
+              },
+              {
+                "title": "Zero",
+                "x": 736.0,
+                "y": 352.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Toggle Switch",
+                "properties": {
+                  "topic": "Dashboard/Buttons/Elevator Zero L2 Height",
+                  "period": 0.02,
+                  "data_type": "boolean"
+                }
+              },
+              {
+                "title": "Zero",
+                "x": 736.0,
+                "y": 384.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Toggle Switch",
+                "properties": {
+                  "topic": "Dashboard/Buttons/Elevator Zero L1 Height",
+                  "period": 0.02,
+                  "data_type": "boolean"
+                }
+              },
+              {
+                "title": "Zero",
+                "x": 736.0,
+                "y": 448.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Toggle Switch",
+                "properties": {
+                  "topic": "Dashboard/Buttons/Elevator Zero Stow Height",
+                  "period": 0.02,
+                  "data_type": "boolean"
+                }
+              },
+              {
+                "title": "Zero",
+                "x": 704.0,
+                "y": 448.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Toggle Switch",
+                "properties": {
+                  "topic": "Dashboard/Buttons/Elevator Zero Min Height",
+                  "period": 0.02,
+                  "data_type": "boolean"
+                }
+              }
+            ]
+          },
+          {
+            "title": "Offsets",
+            "x": 32.0,
+            "y": 416.0,
+            "width": 256.0,
+            "height": 224.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "RIGHT"
+            },
+            "children": [
+              {
+                "title": "FL",
+                "x": 1216.0,
+                "y": 512.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Preferences/Dashboard/Dashboard Settings/Drive FL Offset",
+                  "period": 0.02,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "FR",
+                "x": 1248.0,
+                "y": 576.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Preferences/Dashboard/Dashboard Settings/Drive FR Offset",
+                  "period": 0.02,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "BL",
+                "x": 1184.0,
+                "y": 608.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Preferences/Dashboard/Dashboard Settings/Drive BL Offset",
+                  "period": 0.02,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "BR",
+                "x": 1216.0,
+                "y": 640.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Preferences/Dashboard/Dashboard Settings/Drive BR Offset",
+                  "period": 0.02,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              }
+            ]
+          },
+          {
+            "title": "Zero",
+            "x": 288.0,
+            "y": 416.0,
+            "width": 128.0,
+            "height": 224.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "HIDDEN"
+            },
+            "children": [
+              {
+                "title": "Zero",
+                "x": 288.0,
+                "y": 480.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Toggle Switch",
+                "properties": {
+                  "topic": "Dashboard/Buttons/Drive Zero FL Offset",
+                  "period": 0.02,
+                  "data_type": "boolean"
+                }
+              },
+              {
+                "title": "Zero",
+                "x": 288.0,
+                "y": 480.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Toggle Switch",
+                "properties": {
+                  "topic": "Dashboard/Buttons/Drive Zero FR Offset",
+                  "period": 0.02,
+                  "data_type": "boolean"
+                }
+              },
+              {
+                "title": "Zero",
+                "x": 320.0,
+                "y": 544.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Toggle Switch",
+                "properties": {
+                  "topic": "Dashboard/Buttons/Drive Zero BL Offset",
+                  "period": 0.02,
+                  "data_type": "boolean"
+                }
+              },
+              {
+                "title": "Zero",
+                "x": 320.0,
+                "y": 576.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Toggle Switch",
+                "properties": {
+                  "topic": "Dashboard/Buttons/Drive Zero BR Offset",
+                  "period": 0.02,
+                  "data_type": "boolean"
+                }
+              }
+            ]
+          }
+        ],
+        "containers": [
+          {
+            "title": "Height",
+            "x": 1184.0,
+            "y": 32.0,
+            "width": 128.0,
+            "height": 384.0,
+            "type": "Number Bar",
+            "properties": {
+              "topic": "Dashboard/Robot Values/Elevator Height",
+              "period": 0.02,
+              "data_type": "double",
+              "min_value": 0.0,
+              "max_value": 80.0,
+              "divisions": 5,
+              "inverted": false,
+              "orientation": "vertical"
+            }
+          },
+          {
+            "title": "Setpoint",
+            "x": 1056.0,
+            "y": 32.0,
+            "width": 128.0,
+            "height": 384.0,
+            "type": "Number Bar",
+            "properties": {
+              "topic": "Dashboard/Robot Values/Elevator Setpoint",
+              "period": 0.02,
+              "data_type": "double",
+              "min_value": 0.0,
+              "max_value": 80.0,
+              "divisions": 5,
+              "inverted": false,
+              "orientation": "vertical"
+            }
+          },
+          {
+            "title": "Swerve",
+            "x": 32.0,
+            "y": 32.0,
+            "width": 384.0,
+            "height": 384.0,
+            "type": "SwerveDrive",
+            "properties": {
+              "topic": "/SmartDashboard/Swerve",
+              "period": 0.02,
+              "show_robot_rotation": true,
+              "rotation_unit": "Radians"
+            }
+          },
+          {
+            "title": "Zero Drive Modules",
+            "x": 32.0,
+            "y": 640.0,
+            "width": 384.0,
+            "height": 96.0,
+            "type": "Toggle Button",
+            "properties": {
+              "topic": "Dashboard/Buttons/Drive Zero Module Offsets",
+              "period": 0.02,
+              "data_type": "boolean"
+            }
+          },
+          {
+            "title": "Hang Speed",
+            "x": 1056.0,
+            "y": 416.0,
+            "width": 352.0,
+            "height": 128.0,
+            "type": "Number Slider",
+            "properties": {
+              "topic": "/Preferences/Dashboard/Dashboard Settings/Elevator Hang Speed",
+              "period": 0.02,
+              "data_type": "double",
+              "min_value": 0.0,
+              "max_value": 1.0,
+              "divisions": 5,
+              "update_continuously": false
+            }
+          },
+          {
+            "title": "Max Downward Speed",
+            "x": 1056.0,
+            "y": 544.0,
+            "width": 352.0,
+            "height": 128.0,
+            "type": "Number Slider",
+            "properties": {
+              "topic": "/Preferences/Dashboard/Dashboard Settings/Elevator Max Down Speed",
+              "period": 0.02,
+              "data_type": "double",
+              "min_value": 0.0,
+              "max_value": 1.0,
+              "divisions": 5,
+              "update_continuously": false
+            }
+          },
+          {
+            "title": "Max Upward Speed",
+            "x": 1408.0,
+            "y": 544.0,
+            "width": 352.0,
+            "height": 128.0,
+            "type": "Number Slider",
+            "properties": {
+              "topic": "/Preferences/Dashboard/Dashboard Settings/Elevator Max Up Speed",
+              "period": 0.02,
+              "data_type": "double",
+              "min_value": 0.0,
+              "max_value": 1.0,
+              "divisions": 5,
+              "update_continuously": false
+            }
+          },
+          {
+            "title": "Elevator kD",
+            "x": 1600.0,
+            "y": 416.0,
+            "width": 160.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/Preferences/Dashboard/Dashboard Settings/Elevator kD",
+              "period": 0.02,
+              "data_type": "double",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "Elevator kP",
+            "x": 1408.0,
+            "y": 416.0,
+            "width": 192.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/Preferences/Dashboard/Dashboard Settings/Elevator kP",
+              "period": 0.02,
+              "data_type": "double",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "Dropped",
+            "x": 480.0,
+            "y": 608.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "Dashboard/Robot Values/Funnel Is Dropped",
+              "period": 0.02,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
+            }
+          },
+          {
+            "title": "Retract Speed",
+            "x": 480.0,
+            "y": 480.0,
+            "width": 512.0,
+            "height": 128.0,
+            "type": "Number Slider",
+            "properties": {
+              "topic": "/Preferences/Dashboard/Dashboard Settings/Funnel Retract Speed",
+              "period": 0.02,
+              "data_type": "double",
+              "min_value": 0.0,
+              "max_value": 1.0,
+              "divisions": 5,
+              "update_continuously": false
+            }
+          },
+          {
+            "title": "Retract Time",
+            "x": 736.0,
+            "y": 608.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/Preferences/Dashboard/Dashboard Settings/Funnel Retract Time",
+              "period": 0.02,
+              "data_type": "double",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "Left Output",
+            "x": 480.0,
+            "y": 32.0,
+            "width": 128.0,
+            "height": 256.0,
+            "type": "Number Bar",
+            "properties": {
+              "topic": "Dashboard/Robot Values/Manipulator Left Percent Output",
+              "period": 0.02,
+              "data_type": "double",
+              "min_value": -1.0,
+              "max_value": 1.0,
+              "divisions": 5,
+              "inverted": false,
+              "orientation": "vertical"
+            }
+          },
+          {
+            "title": "Right Output",
+            "x": 608.0,
+            "y": 32.0,
+            "width": 128.0,
+            "height": 256.0,
+            "type": "Number Bar",
+            "properties": {
+              "topic": "Dashboard/Robot Values/Manipulator Right Percent Output",
+              "period": 0.02,
+              "data_type": "double",
+              "min_value": -1.0,
+              "max_value": 1.0,
+              "divisions": 5,
+              "inverted": false,
+              "orientation": "vertical"
+            }
+          },
+          {
+            "title": "Intake Speed",
+            "x": 736.0,
+            "y": 160.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Number Slider",
+            "properties": {
+              "topic": "/Preferences/Dashboard/Dashboard Settings/Manipulator Intake Speed",
+              "period": 0.02,
+              "data_type": "double",
+              "min_value": 0.0,
+              "max_value": 1.0,
+              "divisions": 5,
+              "update_continuously": false
+            }
+          },
+          {
+            "title": "Output Speed",
+            "x": 736.0,
+            "y": 32.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Number Slider",
+            "properties": {
+              "topic": "/Preferences/Dashboard/Dashboard Settings/Manipulator Output Speed",
+              "period": 0.02,
+              "data_type": "double",
+              "min_value": 0.0,
+              "max_value": 1.0,
+              "divisions": 5,
+              "update_continuously": false
+            }
+          },
+          {
+            "title": "L1 Speed Multiplier",
+            "x": 480.0,
+            "y": 288.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Number Slider",
+            "properties": {
+              "topic": "/Preferences/Dashboard/Dashboard Settings/Manipulator L1 Speed Multiplier",
+              "period": 0.02,
+              "data_type": "double",
+              "min_value": 0.0,
+              "max_value": 1.0,
+              "divisions": 5,
+              "update_continuously": false
+            }
+          },
+          {
+            "title": "Dropped",
+            "x": 736.0,
+            "y": 288.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "Dashboard/Robot Values/Funnel Is Dropped",
+              "period": 0.02,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
+            }
+          },
+          {
+            "title": "Dropped",
+            "x": 864.0,
+            "y": 288.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "Dashboard/Robot Values/Funnel Is Dropped",
+              "period": 0.02,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
             }
           }
         ]
