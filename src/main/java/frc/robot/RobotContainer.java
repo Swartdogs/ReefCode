@@ -70,7 +70,7 @@ public class RobotContainer
         // Drive.getInstance().setDefaultCommand(DriveCommands.joystickDrive(() ->
         // -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () ->
         // -_driverJoystick.getZ(), () -> robotCentric()));
-        Drive.getInstance().setDefaultCommand(CompositeCommands.joystickDrive(() -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> -_driverJoystick.getZ(), () -> robotCentric(), 2, 3));
+        Drive.getInstance().setDefaultCommand(CompositeCommands.joystickDrive(() -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> -_driverJoystick.getZ(), () -> robotCentric(), 2, 5));
 
         // Driver Controls
         _driverJoystick.button(2).whileTrue(DriveCommands.reduceSpeed());
