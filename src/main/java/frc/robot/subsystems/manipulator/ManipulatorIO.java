@@ -21,10 +21,15 @@ public interface ManipulatorIO
 
     public default void setVolts(double volts)
     {
+        setLeftVolts(volts);
+        setRightVolts(volts);
     }
 
     public default void setLeftVolts(double volts)
     {
+    }
 
+    public default void setRightVolts(double volts)
+    {
     }
 }

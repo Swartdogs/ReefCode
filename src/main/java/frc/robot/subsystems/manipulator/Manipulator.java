@@ -5,6 +5,8 @@ import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.subsystems.dashboard.Dashboard;
+import frc.robot.subsystems.dashboard.Dashboard.DashboardSetting;
 import frc.robot.subsystems.elevator.Elevator;
 
 public class Manipulator extends SubsystemBase
@@ -51,24 +53,25 @@ public class Manipulator extends SubsystemBase
 
     public void output()
     {
-        if (Math.abs(Elevator.getInstance().getExtension() - Constants.Elevator.L1_HEIGHT) <= 2)
+        if (Elevator.getInstance().getExtension() < Constants.Elevator.L2_HEIGHT)
         {
-            _io.setLeftVolts(Constants.Manipulator.OUTPUT_VOLTS);
+            _io.setLeftVolts(Dashboard.getInstance().getSetting(DashboardSetting.ManipulatorOutputSpeed) * Constants.General.MOTOR_VOLTAGE);
+            _io.setRightVolts(Dashboard.getInstance().getSetting(DashboardSetting.ManipulatorOutputSpeed) * Dashboard.getInstance().getSetting(DashboardSetting.ManipulatorL1SpeedMultiplier) * Constants.General.MOTOR_VOLTAGE);
         }
         else
         {
-            _io.setVolts(Constants.Manipulator.OUTPUT_VOLTS);
+            _io.setVolts(Dashboard.getInstance().getSetting(DashboardSetting.ManipulatorOutputSpeed) * Constants.General.MOTOR_VOLTAGE);
         }
     }
 
     public void intake()
     {
-        _io.setVolts(Constants.Manipulator.INTAKE_VOLTS);
+        _io.setVolts(Dashboard.getInstance().getSetting(DashboardSetting.ManipulatorIntakeSpeed) * Constants.General.MOTOR_VOLTAGE);
     }
 
-    public void setVolts(double volts)
+    public void stop()
     {
-        _io.setVolts(volts);
+        _io.setVolts(0);
     }
 
     public boolean detectedCoral()
@@ -84,5 +87,15 @@ public class Manipulator extends SubsystemBase
     public boolean isRunning()
     {
         return _inputs.leftAppliedVolts > 0 || _inputs.rightAppliedVolts > 0;
+    }
+
+    public double getLeftOutputSpeed()
+    {
+        return _inputs.leftAppliedVolts / Constants.General.MOTOR_VOLTAGE;
+    }
+
+    public double getRightOutputSpeed()
+    {
+        return _inputs.rightAppliedVolts / Constants.General.MOTOR_VOLTAGE;
     }
 }

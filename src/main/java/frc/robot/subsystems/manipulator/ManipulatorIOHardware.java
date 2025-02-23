@@ -23,6 +23,7 @@ public class ManipulatorIOHardware implements ManipulatorIO
         _leftTalon.setInverted(true); // Inverts upper talon so they pull/push together.
     }
 
+    @Override
     public void updateInputs(ManipulatorIOInputs inputs)
     {
         inputs.leftCurrentAmps   = _leftTalon.getStatorCurrent();
@@ -34,14 +35,15 @@ public class ManipulatorIOHardware implements ManipulatorIO
         inputs.endSensorTripped   = !_lightSensorEnd.get();
     }
 
-    public void setVolts(double volts)
-    {
-        _rightTalon.set(ControlMode.PercentOutput, volts / Constants.General.MOTOR_VOLTAGE);
-        _leftTalon.set(ControlMode.PercentOutput, volts / Constants.General.MOTOR_VOLTAGE);
-    }
-
+    @Override
     public void setLeftVolts(double volts)
     {
         _leftTalon.set(ControlMode.PercentOutput, volts / Constants.General.MOTOR_VOLTAGE);
+    }
+
+    @Override
+    public void setRightVolts(double volts)
+    {
+        _rightTalon.set(ControlMode.PercentOutput, volts / Constants.General.MOTOR_VOLTAGE);
     }
 }

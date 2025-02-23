@@ -1,6 +1,5 @@
 package frc.robot.subsystems.funnel;
 
-import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.wpilibj.Alert;
@@ -46,6 +45,8 @@ public class Funnel extends SubsystemBase
         Logger.processInputs("Funnel", _inputs);
 
         _funnelDroppedAlert.set(_isDropped);
+
+        Logger.recordOutput("Funnel/Is Dropped", isDropped());
     }
 
     public void setVolts(double volts)
@@ -58,7 +59,6 @@ public class Funnel extends SubsystemBase
         }
     }
 
-    @AutoLogOutput(key = "Funnel/Is Dropped")
     public boolean isDropped()
     {
         return _isDropped;
