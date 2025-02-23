@@ -1,8 +1,13 @@
 package frc.robot.subsystems.dashboard;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Preferences;
@@ -74,12 +79,39 @@ public class DashboardIONetwork implements DashboardIO
     private final SendableSelector<String> _autoFirstCoralChooser;
     private final SendableSelector<String> _autoSecondCoralChooser;
     private final SendableSelector<String> _autoThirdCoralChooser;
+    private String                         _currentStartPosition;
+    private String                         _currentFirstCoral;
+    private String                         _currentSecondCoral;
+    private String                         _currentThirdCoral;
 
     // Field
     private final Field2d _field;
-    private final Pose2d  MIDDLE_START_POSITION = new Pose2d(Units.inchesToMeters(297.5), Units.inchesToMeters(158.5), Rotation2d.fromDegrees(180));
-    private final Pose2d  LEFT_START_POSITION   = new Pose2d(Units.inchesToMeters(297.5), Units.inchesToMeters(208.5), Rotation2d.fromDegrees(180));
-    private final Pose2d  RIGHT_START_POSITION  = new Pose2d(Units.inchesToMeters(297.5), Units.inchesToMeters(108.5), Rotation2d.fromDegrees(180));
+
+    // Auto Paths
+    private static final Pose2d                    MIDDLE_START_POSITION = new Pose2d(7.553, 4.015, Rotation2d.fromDegrees(180));
+    private static final Pose2d                    LEFT_START_POSITION   = new Pose2d(7.683, 6.676, Rotation2d.fromDegrees(180));
+    private static final Pose2d                    RIGHT_START_POSITION  = new Pose2d(7.159, 2.091, Rotation2d.fromDegrees(180));
+    private static final Map<String, List<String>> NEXT_POSITIONS        = new HashMap<String, List<String>>() {
+                                                                             {
+                                                                                 put("A", Arrays.asList("LeftCS", "RightCS"));
+                                                                                 put("B", Arrays.asList("LeftCS", "RightCS"));
+                                                                                 put("C", Arrays.asList("RightCS"));
+                                                                                 put("D", Arrays.asList("RightCS"));
+                                                                                 put("E", Arrays.asList("RightCS"));
+                                                                                 put("F", Arrays.asList("RightCS"));
+                                                                                 put("G", Arrays.asList("RightCS"));
+                                                                                 put("H", Arrays.asList("LeftCS"));
+                                                                                 put("I", Arrays.asList("LeftCS"));
+                                                                                 put("J", Arrays.asList("LeftCS"));
+                                                                                 put("K", Arrays.asList("LeftCS"));
+                                                                                 put("L", Arrays.asList("LeftCS"));
+                                                                                 put("Left", Arrays.asList("I", "J"));
+                                                                                 put("Middle", Arrays.asList("G", "H"));
+                                                                                 put("Right", Arrays.asList("E", "F"));
+                                                                                 put("LeftCS", Arrays.asList("A", "B", "J", "K", "L"));
+                                                                                 put("RightCS", Arrays.asList("A", "B", "C", "D"));
+                                                                             }
+                                                                         };
 
     public DashboardIONetwork()
     {
@@ -185,45 +217,6 @@ public class DashboardIONetwork implements DashboardIO
         _autoStartPositionChooser.addOption("Middle", "Middle");
         _autoStartPositionChooser.addOption("Left", "Left");
 
-        _autoFirstCoralChooser.addOption("A", "A");
-        _autoFirstCoralChooser.addOption("B", "B");
-        _autoFirstCoralChooser.addOption("C", "C");
-        _autoFirstCoralChooser.addOption("D", "D");
-        _autoFirstCoralChooser.addOption("E", "E");
-        _autoFirstCoralChooser.addOption("F", "F");
-        _autoFirstCoralChooser.addOption("G", "G");
-        _autoFirstCoralChooser.addOption("H", "H");
-        _autoFirstCoralChooser.addOption("I", "I");
-        _autoFirstCoralChooser.addOption("J", "J");
-        _autoFirstCoralChooser.addOption("K", "K");
-        _autoFirstCoralChooser.addOption("L", "L");
-
-        _autoSecondCoralChooser.addOption("A", "A");
-        _autoSecondCoralChooser.addOption("B", "B");
-        _autoSecondCoralChooser.addOption("C", "C");
-        _autoSecondCoralChooser.addOption("D", "D");
-        _autoSecondCoralChooser.addOption("E", "E");
-        _autoSecondCoralChooser.addOption("F", "F");
-        _autoSecondCoralChooser.addOption("G", "G");
-        _autoSecondCoralChooser.addOption("H", "H");
-        _autoSecondCoralChooser.addOption("I", "I");
-        _autoSecondCoralChooser.addOption("J", "J");
-        _autoSecondCoralChooser.addOption("K", "K");
-        _autoSecondCoralChooser.addOption("L", "L");
-
-        _autoThirdCoralChooser.addOption("A", "A");
-        _autoThirdCoralChooser.addOption("B", "B");
-        _autoThirdCoralChooser.addOption("C", "C");
-        _autoThirdCoralChooser.addOption("D", "D");
-        _autoThirdCoralChooser.addOption("E", "E");
-        _autoThirdCoralChooser.addOption("F", "F");
-        _autoThirdCoralChooser.addOption("G", "G");
-        _autoThirdCoralChooser.addOption("H", "H");
-        _autoThirdCoralChooser.addOption("I", "I");
-        _autoThirdCoralChooser.addOption("J", "J");
-        _autoThirdCoralChooser.addOption("K", "K");
-        _autoThirdCoralChooser.addOption("L", "L");
-
         SmartDashboard.putData("Auto Delay", _autoDelayChooser);
         SmartDashboard.putData("Start Position", _autoStartPositionChooser);
         SmartDashboard.putData("First Coral", _autoFirstCoralChooser);
@@ -291,22 +284,27 @@ public class DashboardIONetwork implements DashboardIO
         inputs.autoSecondCoral   = _autoSecondCoralChooser.getSelected();
         inputs.autoThirdCoral    = _autoThirdCoralChooser.getSelected();
 
-        if (inputs.autoStartPosition != null)
+        if (inputs.autoStartPosition != null && inputs.autoStartPosition != _currentStartPosition)
         {
             switch (inputs.autoStartPosition)
             {
                 case "Middle":
                     _field.setRobotPose(MIDDLE_START_POSITION);
+                    setMiddleStartReefOptions(_autoFirstCoralChooser);
                     break;
 
                 case "Left":
                     _field.setRobotPose(LEFT_START_POSITION);
+                    setLeftStartReefOptions(_autoFirstCoralChooser);
                     break;
 
                 case "Right":
                     _field.setRobotPose(RIGHT_START_POSITION);
+                    setRightStartReefOptions(_autoFirstCoralChooser);
                     break;
             }
+
+            _currentStartPosition = inputs.autoStartPosition;
         }
     }
 
@@ -472,17 +470,22 @@ public class DashboardIONetwork implements DashboardIO
         _driveZeroModuleOffsetsButton.setBoolean(false);
     }
 
-    private void setLeftSideReefOptions(SendableSelector<String> selector)
+    private static void setLeftStartReefOptions(SendableSelector<String> selector)
     {
-        setReefOptions(selector, new String[] { "I", "J", "K", "L", "A", "B" });
+        setReefOptions(selector, NEXT_POSITIONS.get("Left"));
     }
 
-    private void setRightSideReefOptions(SendableSelector<String> selector)
+    private static void setRightStartReefOptions(SendableSelector<String> selector)
     {
-        setReefOptions(selector, new String[] { "A", "B", "C", "D", "E", "F" });
+        setReefOptions(selector, NEXT_POSITIONS.get("Right"));
     }
 
-    private void setReefOptions(SendableSelector<String> selector, String[] options)
+    private static void setMiddleStartReefOptions(SendableSelector<String> selector)
+    {
+        setReefOptions(selector, NEXT_POSITIONS.get("Middle"));
+    }
+
+    private static void setReefOptions(SendableSelector<String> selector, List<String> options)
     {
         selector.clear();
 
@@ -490,5 +493,22 @@ public class DashboardIONetwork implements DashboardIO
         {
             selector.addOption(option, option);
         }
+    }
+
+    // This function assumes we're already at a node
+    // We need to first see which coral station(s) we can go to,
+    // then we can see what nodes we can go to from those coral stations
+    private static List<String> calculateNextAvailablePositions(String current)
+    {
+        var nextPositions = new ArrayList<String>();
+
+        var coralStations = NEXT_POSITIONS.get(current);
+
+        for (var coralStation : coralStations)
+        {
+            nextPositions.addAll(NEXT_POSITIONS.get(coralStation));
+        }
+
+        return nextPositions;
     }
 }
