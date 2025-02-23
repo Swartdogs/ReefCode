@@ -112,7 +112,7 @@ public final class Constants
         public static final int             TURN_MOTOR_CURRENT_LIMIT      = 80;
         public static final double          TURN_MOTOR_REDUCTION          = 12.1;
         public static final DCMotor         TURN_GEARBOX                  = DCMotor.getNEO(1);
-        public static final double          TURN_KP                       = 3.0;
+        public static final double          TURN_KP                       = 1.0;
         public static final double          TURN_KD                       = 0.0;
         public static final double          TURN_SIM_KP                   = 8.0;
         public static final double          TURN_SIM_KD                   = 0.0;

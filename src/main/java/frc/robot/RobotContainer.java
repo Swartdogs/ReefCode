@@ -36,8 +36,8 @@ public class RobotContainer
         Dashboard.getInstance();
 
         // Configure the button bindings
-        // configureButtonBindings();
-        configureTestBindings();
+        configureButtonBindings();
+        // configureTestBindings();
     }
 
     @SuppressWarnings("unused")
@@ -119,17 +119,17 @@ public class RobotContainer
                         Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
                 )
         );
-
+        
         _driverButtons.button(7).whileTrue(
                 DriveCommands.driveAtOrientation(
-                        () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> robotCentric(), () -> Utilities.isRedAlliance() ? Constants.Field.RED_LEFT_STATION_ANGLE : Constants.Field.BLUE_LEFT_STATION_ANGLE,
+                        () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> robotCentric(), () -> Utilities.isRedAlliance() ? Constants.Field.RED_RIGHT_STATION_ANGLE : Constants.Field.BLUE_RIGHT_STATION_ANGLE,
                         Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
                 )
         );
-
+        
         _driverButtons.button(8).whileTrue(
                 DriveCommands.driveAtOrientation(
-                        () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> robotCentric(), () -> Utilities.isRedAlliance() ? Constants.Field.RED_RIGHT_STATION_ANGLE : Constants.Field.BLUE_RIGHT_STATION_ANGLE,
+                        () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> robotCentric(), () -> Utilities.isRedAlliance() ? Constants.Field.RED_LEFT_STATION_ANGLE : Constants.Field.BLUE_LEFT_STATION_ANGLE,
                         Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
                 )
         );
