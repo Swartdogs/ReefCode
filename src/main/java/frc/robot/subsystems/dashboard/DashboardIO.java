@@ -61,6 +61,7 @@ public interface DashboardIO
         public String autoFirstCoral    = "";
         public String autoSecondCoral   = "";
         public String autoThirdCoral    = "";
+        public String autoPath          = "";
     }
 
     public default void updateInputs(DashboardIOInputs inputs)

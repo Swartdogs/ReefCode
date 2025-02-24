@@ -41,12 +41,6 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "ExtendToL1"
-          }
-        },
-        {
           "type": "path",
           "data": {
             "pathName": "EToRightCS"
@@ -86,12 +80,6 @@
           "type": "named",
           "data": {
             "name": "Output"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "ExtendToL1"
           }
         },
         {

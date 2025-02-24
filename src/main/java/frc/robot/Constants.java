@@ -219,20 +219,20 @@ public final class Constants
 
     public static class Lookups
     {
-        public static final Map<String, Map<DriverStation.Alliance, Command>> AUTO_LOOKUP = new HashMap<String, Map<DriverStation.Alliance, Command>>() {
+        public static final Map<String, Command> AUTO_LOOKUP = new HashMap<String, Command>() {
             {
-                put("LeftIKL", Map.of(DriverStation.Alliance.Blue, new PathPlannerAuto("Left_IKL"), DriverStation.Alliance.Red, new PathPlannerAuto("Left_IKL", true)));
-                put("LeftILK", Map.of(DriverStation.Alliance.Blue, new PathPlannerAuto("Left_ILK"), DriverStation.Alliance.Red, new PathPlannerAuto("Left_ILK", true)));
-                put("LeftJKL", Map.of(DriverStation.Alliance.Blue, new PathPlannerAuto("Left_JKL"), DriverStation.Alliance.Red, new PathPlannerAuto("Left_JKL", true)));
-                put("LeftJLK", Map.of(DriverStation.Alliance.Blue, new PathPlannerAuto("Left_JLK"), DriverStation.Alliance.Red, new PathPlannerAuto("Left_JLK", true)));
-                put("MiddleGAB", Map.of(DriverStation.Alliance.Blue, new PathPlannerAuto("Middle_GAB"), DriverStation.Alliance.Red, new PathPlannerAuto("Middle_GAB", true)));
-                put("MiddleGBA", Map.of(DriverStation.Alliance.Blue, new PathPlannerAuto("Middle_GBA"), DriverStation.Alliance.Red, new PathPlannerAuto("Middle_GBA", true)));
-                put("MiddleHAB", Map.of(DriverStation.Alliance.Blue, new PathPlannerAuto("Middle_HAB"), DriverStation.Alliance.Red, new PathPlannerAuto("Middle_HAB", true)));
-                put("MiddleHBA", Map.of(DriverStation.Alliance.Blue, new PathPlannerAuto("Middle_HBA"), DriverStation.Alliance.Red, new PathPlannerAuto("Middle_HBA", true)));
-                put("RightECD", Map.of(DriverStation.Alliance.Blue, new PathPlannerAuto("Right_ECD"), DriverStation.Alliance.Red, new PathPlannerAuto("Right_ECD", true)));
-                put("RightEDC", Map.of(DriverStation.Alliance.Blue, new PathPlannerAuto("Right_EDC"), DriverStation.Alliance.Red, new PathPlannerAuto("Right_EDC", true)));
-                put("RightFCD", Map.of(DriverStation.Alliance.Blue, new PathPlannerAuto("Right_FCD"), DriverStation.Alliance.Red, new PathPlannerAuto("Right_FCD", true)));
-                put("RightFDC", Map.of(DriverStation.Alliance.Blue, new PathPlannerAuto("Right_FDC"), DriverStation.Alliance.Red, new PathPlannerAuto("Right_FDC", true)));
+                put("LeftIKL", new PathPlannerAuto("Left_IKL"));
+                put("LeftILK", new PathPlannerAuto("Left_ILK"));
+                put("LeftJKL", new PathPlannerAuto("Left_JKL"));
+                put("LeftJLK", new PathPlannerAuto("Left_JLK"));
+                put("MiddleGAB", new PathPlannerAuto("Middle_GAB"));
+                put("MiddleGBA", new PathPlannerAuto("Middle_GBA"));
+                put("MiddleHAB", new PathPlannerAuto("Middle_HAB"));
+                put("MiddleHBA", new PathPlannerAuto("Middle_HBA"));
+                put("RightECD", new PathPlannerAuto("Right_ECD"));
+                put("RightEDC", new PathPlannerAuto("Right_EDC"));
+                put("RightFCD", new PathPlannerAuto("Right_FCD"));
+                put("RightFDC", new PathPlannerAuto("Right_FDC"));
             }
         };
     }
@@ -249,9 +249,9 @@ public final class Constants
 
     public static class PathPlanner
     {
-        public static final double       DRIVE_KP      = 2.5;
+        public static final double       DRIVE_KP      = 3.0;
         public static final double       DRIVE_KD      = 0.0;
-        public static final double       TURN_KP       = 1.15;
+        public static final double       TURN_KP       = 1.5;
         public static final double       TURN_KD       = 0.0;
         public static final double       WHEEL_COF     = 1.2;
         public static final double       ROBOT_MASS    = 74.088;

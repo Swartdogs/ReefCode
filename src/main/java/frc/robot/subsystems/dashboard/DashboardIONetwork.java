@@ -69,9 +69,10 @@ public class DashboardIONetwork implements DashboardIO
     // Auto Selectors
     private final SendableChooser<Integer> _autoDelayChooser;
     private final SendableChooser<String>  _autoStartPositionChooser;
-    private final SendableSelector<String> _autoFirstCoralChooser;
-    private final SendableSelector<String> _autoSecondCoralChooser;
-    private final SendableSelector<String> _autoThirdCoralChooser;
+    private final SendableChooser<String>  _autoFirstCoralChooser;
+    private final SendableChooser<String>  _autoSecondCoralChooser;
+    private final SendableChooser<String>  _autoThirdCoralChooser;
+    private final SendableChooser<String>  _pathChooser;
     // private String _currentStartPosition;
     // private String _currentFirstCoral;
     // private String _currentSecondCoral;
@@ -200,9 +201,10 @@ public class DashboardIONetwork implements DashboardIO
         // Auto Selectors
         _autoDelayChooser         = new SendableChooser<Integer>();
         _autoStartPositionChooser = new SendableChooser<String>();
-        _autoFirstCoralChooser    = new SendableSelector<String>();
-        _autoSecondCoralChooser   = new SendableSelector<String>();
-        _autoThirdCoralChooser    = new SendableSelector<String>();
+        _autoFirstCoralChooser    = new SendableChooser<String>();
+        _autoSecondCoralChooser   = new SendableChooser<String>();
+        _autoThirdCoralChooser    = new SendableChooser<String>();
+        _pathChooser              = new SendableChooser<String>();
 
         _autoDelayChooser.setDefaultOption("0", 0);
         _autoDelayChooser.addOption("1", 1);
@@ -254,11 +256,43 @@ public class DashboardIONetwork implements DashboardIO
         _autoThirdCoralChooser.addOption("K", "K");
         _autoThirdCoralChooser.addOption("L", "L");
 
+        _pathChooser.setDefaultOption("None", null);
+        _pathChooser.addOption("AToLeftCS", "AToLeftCS");
+        _pathChooser.addOption("AToRightCS", "AToRightCS");
+        _pathChooser.addOption("BToLeftCS", "BToLeftCS");
+        _pathChooser.addOption("BToRightCS", "BToRightCS");
+        _pathChooser.addOption("CToRightCS", "CToRightCS");
+        _pathChooser.addOption("DToRightCS", "DToRightCS");
+        _pathChooser.addOption("EToRightCS", "EToRightCS");
+        _pathChooser.addOption("FToRightCS", "FToRightCS");
+        _pathChooser.addOption("GToRightCS", "GToRightCS");
+        _pathChooser.addOption("HToLeftCS", "HToLeftCS");
+        _pathChooser.addOption("IToLeftCS", "IToLeftCS");
+        _pathChooser.addOption("JToLeftCS", "JToLeftCS");
+        _pathChooser.addOption("KToLeftCS", "KToLeftCS");
+        _pathChooser.addOption("LeftCSToA", "LeftCSToA");
+        _pathChooser.addOption("LeftCSToB", "LeftCSToB");
+        _pathChooser.addOption("LeftCSToJ", "LeftCSToJ");
+        _pathChooser.addOption("LeftCSToK", "LeftCSToK");
+        _pathChooser.addOption("LeftCSToL", "LeftCSToL");
+        _pathChooser.addOption("LeftToI", "LeftToI");
+        _pathChooser.addOption("LeftToJ", "LeftToJ");
+        _pathChooser.addOption("LToLeftCS", "LToLeftCS");
+        _pathChooser.addOption("MiddleToG", "MiddleToG");
+        _pathChooser.addOption("MiddleToH", "MiddleToH");
+        _pathChooser.addOption("RightCSToA", "RightCSToA");
+        _pathChooser.addOption("RightCSToB", "RightCSToB");
+        _pathChooser.addOption("RightCSToC", "RightCSToC");
+        _pathChooser.addOption("RightCSToD", "RightCSToD");
+        _pathChooser.addOption("RightToE", "RightToE");
+        _pathChooser.addOption("RightToF", "RightToF");
+
         SmartDashboard.putData("Auto Delay", _autoDelayChooser);
         SmartDashboard.putData("Start Position", _autoStartPositionChooser);
         SmartDashboard.putData("First Coral", _autoFirstCoralChooser);
         SmartDashboard.putData("Second Coral", _autoSecondCoralChooser);
         SmartDashboard.putData("Third Coral", _autoThirdCoralChooser);
+        SmartDashboard.putData("Path Chooser", _pathChooser);
 
         // Field
         _field = new Field2d();
@@ -320,6 +354,7 @@ public class DashboardIONetwork implements DashboardIO
         inputs.autoFirstCoral    = _autoFirstCoralChooser.getSelected();
         inputs.autoSecondCoral   = _autoSecondCoralChooser.getSelected();
         inputs.autoThirdCoral    = _autoThirdCoralChooser.getSelected();
+        inputs.autoPath          = _pathChooser.getSelected();
 
         // if (inputs.autoStartPosition != null && inputs.autoStartPosition !=
         // _currentStartPosition)
