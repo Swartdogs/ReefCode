@@ -95,7 +95,7 @@ public final class Constants
         public static final Rotation2d      FR_ZERO_ROTATION              = Rotation2d.fromRadians(-2.942 + 3 * Math.PI / 4);
         public static final Rotation2d      BL_ZERO_ROTATION              = Rotation2d.fromRadians(1.12 - Math.PI / 4);
         public static final Rotation2d      BR_ZERO_ROTATION              = Rotation2d.fromRadians(-1.150 - 3 * Math.PI / 4);
-        public static final Current         DRIVE_MOTOR_CURRENT_LIMIT     = Amps.of(50);
+        public static final int             DRIVE_MOTOR_CURRENT_LIMIT     = 120;
         public static final double          WHEEL_RADIUS                  = Units.inchesToMeters(2);
         public static final double          DRIVE_MOTOR_REDUCTION         = 5.67;
         public static final boolean         DRIVE_INVERTED                = false;
@@ -241,8 +241,8 @@ public final class Constants
     {
         public static final DCMotor MANIPULATOR_MOTOR   = DCMotor.getVex775Pro(1);
         public static final double  MOTOR_REDUCTION     = 5.0;
-        public static final double  INTAKE_SPEED        = 3.5 / 12; // What we had when we were measuring in volts
-        public static final double  OUTPUT_SPEED        = 10.0 / 12;
+        public static final double  INTAKE_SPEED        = 3.5 / Constants.General.MOTOR_VOLTAGE; // What we had when we were measuring in volts
+        public static final double  OUTPUT_SPEED        = 10.0 / Constants.General.MOTOR_VOLTAGE;
         public static final double  L1_SPEED_MULTIPLIER = 1.0;
         public static final double  DEBOUNCE_LOOP_COUNT = 0.2;
     }
@@ -256,7 +256,7 @@ public final class Constants
         public static final double       WHEEL_COF     = 1.2;
         public static final double       ROBOT_MASS    = 74.088;
         public static final double       ROBOT_MOI     = 6.883;
-        public static final ModuleConfig MODULE_CONFIG = new ModuleConfig(Drive.WHEEL_RADIUS, Drive.MAX_LINEAR_SPEED, WHEEL_COF, Drive.DRIVE_GEARBOX, Drive.DRIVE_MOTOR_REDUCTION, Drive.DRIVE_MOTOR_CURRENT_LIMIT.magnitude(), 1);
+        public static final ModuleConfig MODULE_CONFIG = new ModuleConfig(Drive.WHEEL_RADIUS, Drive.MAX_LINEAR_SPEED, WHEEL_COF, Drive.DRIVE_GEARBOX, Drive.DRIVE_MOTOR_REDUCTION, Drive.DRIVE_MOTOR_CURRENT_LIMIT, 1);
         public static final RobotConfig  ROBOT_CONFIG  = new RobotConfig(ROBOT_MASS, ROBOT_MOI, MODULE_CONFIG, Drive.MODULE_TRANSLATIONS);
     }
 }
