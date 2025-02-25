@@ -58,10 +58,7 @@ public interface DashboardIO
         // Auto Selectors
         public int    autoDelay         = 0;
         public String autoStartPosition = "";
-        public String autoFirstCoral    = "";
-        public String autoSecondCoral   = "";
-        public String autoThirdCoral    = "";
-        public String autoPath          = "";
+        public int    autoNumCoral      = 0;
     }
 
     public default void updateInputs(DashboardIOInputs inputs)

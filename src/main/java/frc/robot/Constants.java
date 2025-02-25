@@ -1,8 +1,5 @@
 package frc.robot;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.RobotConfig;
@@ -15,7 +12,6 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.util.Color;
-import edu.wpi.first.wpilibj2.command.Command;
 
 public final class Constants
 {
@@ -44,6 +40,14 @@ public final class Constants
         public static final int BL_ENCODER    = 2;
         public static final int BR_ENCODER    = 3;
         public static final int EXTENSION_POT = 4;
+    }
+
+    public static class Autos
+    {
+        public static final PathPlannerAuto LEFT_1_CORAL_AUTO = new PathPlannerAuto("Left_J");
+        public static final PathPlannerAuto MIDDLE_1_CORAL_AUTO = new PathPlannerAuto("Middle_G");
+        public static final PathPlannerAuto RIGHT_1_CORAL_AUTO = new PathPlannerAuto("Right_E");
+        public static final PathPlannerAuto RIGHT_2_CORAL_AUTO = new PathPlannerAuto("Right_DC");
     }
 
     public static class CAN
@@ -211,26 +215,6 @@ public final class Constants
         public static final Color  BLUE            = new Color(0, 0, 255);
         public static final Color  PINK            = new Color(255, 46, 204);
         public static final Color  PURPLE          = new Color(127, 0, 255);
-    }
-
-    public static class Lookups
-    {
-        public static final Map<String, Command> AUTO_LOOKUP = new HashMap<String, Command>() {
-            {
-                put("LeftIKL", new PathPlannerAuto("Left_IKL"));
-                put("LeftILK", new PathPlannerAuto("Left_ILK"));
-                put("LeftJKL", new PathPlannerAuto("Left_JKL"));
-                put("LeftJLK", new PathPlannerAuto("Left_JLK"));
-                put("MiddleGAB", new PathPlannerAuto("Middle_GAB"));
-                put("MiddleGBA", new PathPlannerAuto("Middle_GBA"));
-                put("MiddleHAB", new PathPlannerAuto("Middle_HAB"));
-                put("MiddleHBA", new PathPlannerAuto("Middle_HBA"));
-                put("RightECD", new PathPlannerAuto("Right_ECD"));
-                put("RightEDC", new PathPlannerAuto("Right_EDC"));
-                put("RightFCD", new PathPlannerAuto("Right_FCD"));
-                put("RightFDC", new PathPlannerAuto("Right_FDC"));
-            }
-        };
     }
 
     public static class Manipulator
