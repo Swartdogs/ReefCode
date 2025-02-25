@@ -8,7 +8,9 @@
     "RightStartingSide"
   ],
   "autoFolders": [
-    "3-Coral Auto"
+    "1-Coral Auto",
+    "3-Coral Auto",
+    "2-Coral Auto"
   ],
   "defaultMaxVel": 3.0,
   "defaultMaxAccel": 3.0,

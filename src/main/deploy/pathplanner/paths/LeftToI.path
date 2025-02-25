@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.683,
-        "y": 6.676
+        "x": 7.6298537981951675,
+        "y": 6.759104410807291
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.603425536016032,
-        "y": 6.127328899326994
+        "x": 6.3854428609212235,
+        "y": 5.812940798158999
       },
       "isLocked": false,
       "linkedName": "LeftStart"
     },
     {
       "anchor": {
-        "x": 5.532811494307084,
-        "y": 5.274098378961736
+        "x": 5.341524906864873,
+        "y": 5.031248180248118
       },
       "prevControl": {
-        "x": 5.983510302699253,
-        "y": 5.569581835355431
+        "x": 6.068352005570023,
+        "y": 5.585591006808811
       },
       "nextControl": null,
       "isLocked": false,
@@ -31,14 +31,7 @@
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [
-    {
-      "name": "ExtendToL4",
-      "waypointRelativePos": 0.3,
-      "endWaypointRelativePos": null,
-      "command": null
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
@@ -55,7 +48,7 @@
   "folder": "LeftStartingSide",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 179.9297002958642
+    "rotation": -142.373394968694
   },
   "useDefaultConstraints": true
 }
