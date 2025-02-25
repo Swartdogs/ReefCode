@@ -24,8 +24,6 @@ import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.AnalogEncoder;
 import frc.robot.Constants;
 
-import static edu.wpi.first.units.Units.Amps;
-
 public class ModuleIOHardware implements ModuleIO
 {
     private final TalonFX                       _driveMotor;
