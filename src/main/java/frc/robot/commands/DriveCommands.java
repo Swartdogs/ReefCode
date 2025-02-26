@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants;
 import frc.robot.subsystems.drive.Drive;
-import frc.robot.util.Utilities;
 
 public final class DriveCommands
 {
@@ -56,11 +55,6 @@ public final class DriveCommands
             }
             else
             {
-                if (Utilities.isRedAlliance())
-                {
-                    linearVelocity = linearVelocity.unaryMinus();
-                }
-
                 Drive.getInstance().runVelocity(
                         ChassisSpeeds.fromFieldRelativeSpeeds(
                                 linearVelocity.getX() * Constants.Drive.MAX_LINEAR_SPEED, linearVelocity.getY() * Constants.Drive.MAX_LINEAR_SPEED, omega * Constants.Drive.MAX_ANGULAR_SPEED, Drive.getInstance().getRotation()
@@ -80,7 +74,7 @@ public final class DriveCommands
         return Commands.runOnce(() ->
         {
             var pose = Drive.getInstance().getPose();
-            Drive.getInstance().setPose(new Pose2d(pose.getX(), pose.getY(), Rotation2d.fromDegrees(!Utilities.isRedAlliance() ? 0 : 180)));
+            Drive.getInstance().setPose(new Pose2d(pose.getX(), pose.getY(), Rotation2d.fromDegrees(0)));
         }).ignoringDisable(true);
     }
 

@@ -16,7 +16,6 @@ import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.Elevator.ElevatorHeight;
 import frc.robot.subsystems.manipulator.Manipulator;
-import frc.robot.util.Utilities;
 
 public class CompositeCommands
 {
@@ -51,11 +50,6 @@ public class CompositeCommands
             }
             else
             {
-                if (Utilities.isRedAlliance())
-                {
-                    linearVelocity = linearVelocity.unaryMinus();
-                }
-
                 var chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
                         linearVelocity.getX() * Constants.Drive.MAX_LINEAR_SPEED * clamp, linearVelocity.getY() * Constants.Drive.MAX_LINEAR_SPEED * clamp, omega * Constants.Drive.MAX_ANGULAR_SPEED * clamp, Drive.getInstance().getRotation()
                 );

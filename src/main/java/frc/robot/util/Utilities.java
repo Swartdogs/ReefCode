@@ -9,8 +9,6 @@ import com.ctre.phoenix6.StatusCode;
 import com.revrobotics.REVLibError;
 import com.revrobotics.spark.SparkBase;
 
-import edu.wpi.first.wpilibj.DriverStation;
-
 public final class Utilities
 {
     private Utilities()
@@ -18,11 +16,6 @@ public final class Utilities
     }
 
     public static boolean sparkStickyFault = false;
-
-    public static boolean isRedAlliance()
-    {
-        return DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Red;
-    }
 
     public static void ifOk(SparkBase spark, DoubleSupplier supplier, DoubleConsumer consumer)
     {
