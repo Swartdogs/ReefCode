@@ -19,7 +19,7 @@ public class Manipulator extends SubsystemBase
         {
             var io = switch (Constants.AdvantageKit.CURRENT_MODE)
             {
-                case REAL -> new ManipulatorIOHardware();
+                case REAL -> new ManipulatorIOSparkMax();
                 case SIM -> new ManipulatorIOSim();
                 default -> new ManipulatorIO() {};
             };

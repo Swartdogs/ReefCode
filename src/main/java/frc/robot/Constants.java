@@ -44,10 +44,10 @@ public final class Constants
 
     public static class Autos
     {
-        public static final PathPlannerAuto LEFT_1_CORAL_AUTO = new PathPlannerAuto("Left_J");
+        public static final PathPlannerAuto LEFT_1_CORAL_AUTO   = new PathPlannerAuto("Left_J");
         public static final PathPlannerAuto MIDDLE_1_CORAL_AUTO = new PathPlannerAuto("Middle_G");
-        public static final PathPlannerAuto RIGHT_1_CORAL_AUTO = new PathPlannerAuto("Right_E");
-        public static final PathPlannerAuto RIGHT_2_CORAL_AUTO = new PathPlannerAuto("Right_DC");
+        public static final PathPlannerAuto RIGHT_1_CORAL_AUTO  = new PathPlannerAuto("Right_E");
+        public static final PathPlannerAuto RIGHT_2_CORAL_AUTO  = new PathPlannerAuto("Right_DC");
     }
 
     public static class CAN
@@ -117,8 +117,8 @@ public final class Constants
         public static final double          TURN_SIM_KP                   = 8.0;
         public static final double          TURN_SIM_KD                   = 0.0;
         public static final double          ODOMETRY_FREQUENCY            = 100.0; // ms
-        public static final double          ROTATE_KP                     = 1.3;
-        public static final double          ROTATE_KD                     = 0.02;
+        public static final double          ROTATE_KP                     = 2.35;
+        public static final double          ROTATE_KD                     = 0.08;
         public static final double          MAX_SPEED_ELEVATOR_MULTIPLIER = 1;
         public static final double          MIN_SPEED_ELEVATOR_MULTIPLIER = 0.3;
         public static final double          MAX_SPEED_ELEVATOR_HEIGHT     = Constants.Elevator.L1_HEIGHT;
@@ -162,8 +162,8 @@ public final class Constants
 
     public static class Elevator
     {
-        public static final double  RAW_SENSOR_MIN               = 0.987;
-        public static final double  RAW_SENSOR_MAX               = 0.632;
+        public static final double  RAW_SENSOR_MIN               = 0.652;
+        public static final double  RAW_SENSOR_MAX               = 0.412;
         public static final double  MIN_EXTENSION                = 16.0;
         public static final double  MAX_EXTENSION                = 77.0;
         public static final double  EXTENSION_KP                 = 0.5;
@@ -174,8 +174,8 @@ public final class Constants
         public static final double  L1_HEIGHT                    = MIN_EXTENSION + 11.0;
         public static final double  L2_HEIGHT                    = MIN_EXTENSION + 17.4;
         public static final double  L3_HEIGHT                    = MIN_EXTENSION + 32.5;
-        public static final double  L4_HEIGHT                    = MIN_EXTENSION + 58.5;
-        public static final double  HANG_HEIGHT                  = L3_HEIGHT;
+        public static final double  L4_HEIGHT                    = MIN_EXTENSION + 59.5;
+        public static final double  HANG_HEIGHT                  = MIN_EXTENSION + 24.0;
         public static final double  MAX_UPWARDS_SPEED            = 1.0;
         public static final double  MAX_DOWNWARDS_SPEED          = 0.2;
         public static final double  EXTENSION_SCALE              = (MAX_EXTENSION - MIN_EXTENSION) / (RAW_SENSOR_MAX - RAW_SENSOR_MIN);
@@ -186,8 +186,7 @@ public final class Constants
         public static final double  ELEVATOR_DRUM_RADIUS         = 0.0223139;
         public static final double  ELEVATOR_FEED_FORWARD        = 0.7;
         public static final double  ELEVATOR_MODIFICATION_HEIGHT = 0.5;
-        public static final double  HANG_VOLTAGE                 = -3.0;
-        public static final double  HANG_SPEED                   = 0.25;
+        public static final double  HANG_SPEED                   = 1.0;
         public static final double  WAIT_TIME                    = 1;
     }
 
@@ -234,7 +233,7 @@ public final class Constants
         public static final double       TURN_KP       = 1.5;
         public static final double       TURN_KD       = 0.0;
         public static final double       WHEEL_COF     = 1.2;
-        public static final double       ROBOT_MASS    = 74.088;
+        public static final double       ROBOT_MASS    = 63.27614;
         public static final double       ROBOT_MOI     = 6.883;
         public static final ModuleConfig MODULE_CONFIG = new ModuleConfig(Drive.WHEEL_RADIUS, Drive.MAX_LINEAR_SPEED, WHEEL_COF, Drive.DRIVE_GEARBOX, Drive.DRIVE_MOTOR_REDUCTION, Drive.DRIVE_MOTOR_CURRENT_LIMIT, 1);
         public static final RobotConfig  ROBOT_CONFIG  = new RobotConfig(ROBOT_MASS, ROBOT_MOI, MODULE_CONFIG, Drive.MODULE_TRANSLATIONS);

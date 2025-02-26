@@ -33,12 +33,12 @@ public class ElevatorIOHardware implements ElevatorIO
 
         var leaderConfig = new SparkFlexConfig();
 
-        leaderConfig.idleMode(IdleMode.kBrake).voltageCompensation(Constants.General.MOTOR_VOLTAGE).inverted(true);
+        leaderConfig.idleMode(IdleMode.kBrake).voltageCompensation(Constants.General.MOTOR_VOLTAGE).inverted(true).smartCurrentLimit(120);
         leaderConfig.closedLoop.feedbackSensor(FeedbackSensor.kAbsoluteEncoder).outputRange(0, Constants.Elevator.MAX_EXTENSION);
 
         var followerConfig = new SparkFlexConfig();
 
-        followerConfig.idleMode(IdleMode.kBrake).voltageCompensation(Constants.General.MOTOR_VOLTAGE).follow(Constants.CAN.LEAD_ELEVATOR, true);
+        followerConfig.idleMode(IdleMode.kBrake).voltageCompensation(Constants.General.MOTOR_VOLTAGE).follow(Constants.CAN.LEAD_ELEVATOR, true).smartCurrentLimit(120);
         followerConfig.closedLoop.feedbackSensor(FeedbackSensor.kAbsoluteEncoder).outputRange(0, Constants.Elevator.MAX_EXTENSION);
 
         Utilities.tryUntilOk(_leaderSparkFlex, 5, () -> _leaderSparkFlex.configure(leaderConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));

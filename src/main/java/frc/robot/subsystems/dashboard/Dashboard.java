@@ -56,7 +56,6 @@ public class Dashboard extends SubsystemBase
                                                                   put(DashboardSetting.ManipulatorL1SpeedMultiplier, Constants.Manipulator.L1_SPEED_MULTIPLIER);
                                                               }
                                                           };
-
     private Command                             _selectedAuto;
 
     private Dashboard(DashboardIO io)

@@ -56,12 +56,11 @@ public class CompositeCommands
                     linearVelocity = linearVelocity.unaryMinus();
                 }
 
-                Drive.getInstance().runVelocity(
-                        ChassisSpeeds.fromFieldRelativeSpeeds(
-                                linearVelocity.getX() * Constants.Drive.MAX_LINEAR_SPEED * clamp, linearVelocity.getY() * Constants.Drive.MAX_LINEAR_SPEED * clamp, omega * Constants.Drive.MAX_ANGULAR_SPEED * clamp,
-                                Drive.getInstance().getRotation()
-                        )
+                var chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
+                        linearVelocity.getX() * Constants.Drive.MAX_LINEAR_SPEED * clamp, linearVelocity.getY() * Constants.Drive.MAX_LINEAR_SPEED * clamp, omega * Constants.Drive.MAX_ANGULAR_SPEED * clamp, Drive.getInstance().getRotation()
                 );
+
+                Drive.getInstance().runVelocity(chassisSpeeds);
             }
         }, Drive.getInstance());
     }
