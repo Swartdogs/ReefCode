@@ -221,7 +221,7 @@ public final class Constants
         public static final DCMotor MANIPULATOR_MOTOR   = DCMotor.getVex775Pro(1);
         public static final double  MOTOR_REDUCTION     = 5.0;
         public static final double  INTAKE_SPEED        = 3.5 / Constants.General.MOTOR_VOLTAGE; // What we had when we were measuring in volts
-        public static final double  SLOW_INTAKE_SPEED   = 2.5 / Constants.General.MOTOR_VOLTAGE;
+        public static final double  SLOW_INTAKE_SPEED   = 1.5 / Constants.General.MOTOR_VOLTAGE;
         public static final double  OUTPUT_SPEED        = 10.0 / Constants.General.MOTOR_VOLTAGE;
         public static final double  L1_SPEED_MULTIPLIER = 1.0;
         public static final double  DEBOUNCE_LOOP_COUNT = 0.2;
