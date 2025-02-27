@@ -2,6 +2,7 @@ package frc.robot.subsystems.dashboard;
 
 import org.littletonrobotics.junction.AutoLog;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.Constants;
 
@@ -27,6 +28,8 @@ public interface DashboardIO
 
         // Manipulator
         public double manipulatorIntakePercentSpeed = Constants.Manipulator.INTAKE_SPEED;
+        // public double manipulatorSlowIntakePercentSpeed =
+        // Constants.Manipulator.SLOW_INTAKE_SPEED;
         public double manipulatorOutputPercentSpeed = Constants.Manipulator.OUTPUT_SPEED;
         public double manipulatorL1SpeedMultiplier  = Constants.Manipulator.L1_SPEED_MULTIPLIER;
 
@@ -66,6 +69,10 @@ public interface DashboardIO
 
     }
 
+    public default void setRobotPose(Pose2d pose)
+    {
+    }
+
     public default void setElevatorHeight(double height)
     {
     }
@@ -79,6 +86,14 @@ public interface DashboardIO
     }
 
     public default void setManipulatorRightMotorOutputPercentSpeed(double speed)
+    {
+    }
+
+    public default void setManipulatorStartSensorTripped(boolean tripped)
+    {
+    }
+
+    public default void setManipulatorEndSensorTripped(boolean tripped)
     {
     }
 
@@ -119,6 +134,10 @@ public interface DashboardIO
     }
 
     public default void setDriveHeading(Rotation2d heading)
+    {
+    }
+
+    public default void setMatchTime(double time)
     {
     }
 

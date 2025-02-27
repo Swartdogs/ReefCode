@@ -77,68 +77,32 @@ public class RobotContainer
         // cameras/
         _driverJoystick.button(11).onTrue(DriveCommands.resetGyro());
 
-        _driverButtons.button(1).whileTrue(
-                DriveCommands.driveAtOrientation(
-                        () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> robotCentric(), () -> Constants.Field.BLUE_REEF_ANGLE_ONE,
-                        Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
-                )
-        );
+        _driverButtons.button(1)
+                .whileTrue(DriveCommands.driveAtOrientation(() -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> robotCentric(), () -> Constants.Field.BLUE_REEF_ANGLE_ONE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE));
 
-        _driverButtons.button(2).whileTrue(
-                DriveCommands.driveAtOrientation(
-                        () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> robotCentric(), () -> Constants.Field.BLUE_REEF_ANGLE_TWO,
-                        Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
-                )
-        );
+        _driverButtons.button(2)
+                .whileTrue(DriveCommands.driveAtOrientation(() -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> robotCentric(), () -> Constants.Field.BLUE_REEF_ANGLE_TWO, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE));
 
-        _driverButtons.button(3).whileTrue(
-                DriveCommands.driveAtOrientation(
-                        () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> robotCentric(), () -> Constants.Field.BLUE_REEF_ANGLE_THREE,
-                        Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
-                )
-        );
+        _driverButtons.button(3)
+                .whileTrue(DriveCommands.driveAtOrientation(() -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> robotCentric(), () -> Constants.Field.BLUE_REEF_ANGLE_THREE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE));
 
-        _driverButtons.button(4).whileTrue(
-                DriveCommands.driveAtOrientation(
-                        () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> robotCentric(), () -> Constants.Field.BLUE_REEF_ANGLE_FOUR,
-                        Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
-                )
-        );
+        _driverButtons.button(4)
+                .whileTrue(DriveCommands.driveAtOrientation(() -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> robotCentric(), () -> Constants.Field.BLUE_REEF_ANGLE_FOUR, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE));
 
-        _driverButtons.button(5).whileTrue(
-                DriveCommands.driveAtOrientation(
-                        () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> robotCentric(), () -> Constants.Field.BLUE_REEF_ANGLE_FIVE,
-                        Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
-                )
-        );
+        _driverButtons.button(5)
+                .whileTrue(DriveCommands.driveAtOrientation(() -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> robotCentric(), () -> Constants.Field.BLUE_REEF_ANGLE_FIVE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE));
 
-        _driverButtons.button(6).whileTrue(
-                DriveCommands.driveAtOrientation(
-                        () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> robotCentric(), () -> Constants.Field.BLUE_REEF_ANGLE_SIX,
-                        Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
-                )
-        );
+        _driverButtons.button(6)
+                .whileTrue(DriveCommands.driveAtOrientation(() -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> robotCentric(), () -> Constants.Field.BLUE_REEF_ANGLE_SIX, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE));
 
-        _driverButtons.button(7).whileTrue(
-                DriveCommands.driveAtOrientation(
-                        () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> robotCentric(), () -> Constants.Field.BLUE_RIGHT_STATION_ANGLE,
-                        Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
-                )
-        );
+        _driverButtons.button(7)
+                .whileTrue(DriveCommands.driveAtOrientation(() -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> robotCentric(), () -> Constants.Field.BLUE_RIGHT_STATION_ANGLE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE));
 
-        _driverButtons.button(8).whileTrue(
-                DriveCommands.driveAtOrientation(
-                        () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> robotCentric(), () -> Constants.Field.BLUE_LEFT_STATION_ANGLE,
-                        Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
-                )
-        );
+        _driverButtons.button(8)
+                .whileTrue(DriveCommands.driveAtOrientation(() -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> robotCentric(), () -> Constants.Field.BLUE_LEFT_STATION_ANGLE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE));
 
-        _driverButtons.button(9).whileTrue(
-                DriveCommands.driveAtOrientation(
-                        () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> robotCentric(), () -> Constants.Field.BLUE_PROCESSOR_ANGLE,
-                        Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
-                )
-        );
+        _driverButtons.button(9)
+                .whileTrue(DriveCommands.driveAtOrientation(() -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> robotCentric(), () -> Constants.Field.BLUE_PROCESSOR_ANGLE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE));
 
         // Operator Controls
         _operatorButtons.button(1).onTrue(ElevatorCommands.setHeight(ElevatorHeight.Level4));
@@ -162,7 +126,7 @@ public class RobotContainer
         // (_hasCoral.getAsBoolean() ? Constants.LED.GREEN : Constants.LED.RED)),
         // Set.of())));
 
-        _operatorButtons.button(6).onTrue(CompositeCommands.intake());
+        _operatorButtons.button(6).onTrue(ManipulatorCommands.intake());
         _operatorButtons.button(7).onTrue(ManipulatorCommands.stop());
         _operatorButtons.button(8).onTrue(CompositeCommands.output());
         _operatorButtons.button(9).onTrue(ElevatorCommands.modifyHeight(Constants.Elevator.ELEVATOR_MODIFICATION_HEIGHT));

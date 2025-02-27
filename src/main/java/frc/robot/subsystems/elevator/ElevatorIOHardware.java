@@ -29,7 +29,7 @@ public class ElevatorIOHardware implements ElevatorIO
         _leaderSparkFlex   = new SparkFlex(Constants.CAN.LEAD_ELEVATOR, MotorType.kBrushless);
         _followerSparkFlex = new SparkFlex(Constants.CAN.FOLLOWER_ELEVATOR, MotorType.kBrushless);
         _extensionEncoder  = _leaderSparkFlex.getEncoder();
-        _extensionPot      = new AnalogPotentiometer(Constants.AIO.EXTENSION_POT, Constants.Elevator.EXTENSION_SCALE, Constants.Elevator.EXTENSION_OFFSET);
+        _extensionPot      = new AnalogPotentiometer(Constants.AIO.EXTENSION_POT, 1,0);
 
         var leaderConfig = new SparkFlexConfig();
 

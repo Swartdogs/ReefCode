@@ -6,7 +6,6 @@ import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.dashboard.Dashboard;
-import frc.robot.subsystems.dashboard.Dashboard.DashboardSetting;
 import frc.robot.subsystems.elevator.Elevator;
 
 public class Manipulator extends SubsystemBase
@@ -55,18 +54,23 @@ public class Manipulator extends SubsystemBase
     {
         if (Elevator.getInstance().getExtension() < Constants.Elevator.L2_HEIGHT)
         {
-            _io.setLeftVolts(Dashboard.getInstance().getSetting(DashboardSetting.ManipulatorOutputSpeed) * Constants.General.MOTOR_VOLTAGE);
-            _io.setRightVolts(Dashboard.getInstance().getSetting(DashboardSetting.ManipulatorOutputSpeed) * Dashboard.getInstance().getSetting(DashboardSetting.ManipulatorL1SpeedMultiplier) * Constants.General.MOTOR_VOLTAGE);
+            _io.setLeftVolts(Dashboard.getInstance().getManipulatorOutputPercentSpeed() * Constants.General.MOTOR_VOLTAGE);
+            _io.setRightVolts(Dashboard.getInstance().getManipulatorOutputPercentSpeed() * Dashboard.getInstance().getManipulatorL1SpeedMultiplier() * Constants.General.MOTOR_VOLTAGE);
         }
         else
         {
-            _io.setVolts(Dashboard.getInstance().getSetting(DashboardSetting.ManipulatorOutputSpeed) * Constants.General.MOTOR_VOLTAGE);
+            _io.setVolts(Dashboard.getInstance().getManipulatorOutputPercentSpeed() * Constants.General.MOTOR_VOLTAGE);
         }
+    }
+
+    public void slowIntake()
+    {
+        _io.setVolts(Constants.Manipulator.SLOW_INTAKE_SPEED * Constants.General.MOTOR_VOLTAGE);
     }
 
     public void intake()
     {
-        _io.setVolts(Dashboard.getInstance().getSetting(DashboardSetting.ManipulatorIntakeSpeed) * Constants.General.MOTOR_VOLTAGE);
+        _io.setVolts(Dashboard.getInstance().getManipulatorIntakePercentSpeed() * Constants.General.MOTOR_VOLTAGE);
     }
 
     public void stop()
@@ -97,5 +101,15 @@ public class Manipulator extends SubsystemBase
     public double getRightOutputSpeed()
     {
         return _inputs.rightAppliedVolts / Constants.General.MOTOR_VOLTAGE;
+    }
+
+    public boolean isStartSensorTripped()
+    {
+        return _inputs.startSensorTripped;
+    }
+
+    public boolean isEndSensorTripped()
+    {
+        return _inputs.endSensorTripped;
     }
 }

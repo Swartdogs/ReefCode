@@ -106,6 +106,11 @@ public class Elevator extends SubsystemBase
 
     public void modifySetpoint(double modification)
     {
+        if (_extensionSetpoint == null)
+        {
+            _extensionSetpoint = Constants.Elevator.STOW_HEIGHT;
+        }
+
         _extensionSetpoint += modification;
     }
 
@@ -117,6 +122,11 @@ public class Elevator extends SubsystemBase
     public double getExtension()
     {
         return _inputs.extensionPosition;
+    }
+
+    public Double getSetpoint()
+    {
+        return _extensionSetpoint;
     }
 
     public void stop()

@@ -1,5 +1,6 @@
 package frc.robot.subsystems.dashboard;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -12,20 +13,22 @@ import frc.robot.Constants;
 public class DashboardIONetwork implements DashboardIO
 {
     // Dashboard Settings
-    private final String _elevatorMinHeightKey            = "Dashboard/Dashboard Settings/Elevator Min Height";
-    private final String _elevatorMaxHeightKey            = "Dashboard/Dashboard Settings/Elevator Max Height";
-    private final String _elevatorStowHeightKey           = "Dashboard/Dashboard Settings/Elevator Stow Height";
-    private final String _elevatorL1HeightKey             = "Dashboard/Dashboard Settings/Elevator L1 Height";
-    private final String _elevatorL2HeightKey             = "Dashboard/Dashboard Settings/Elevator L2 Height";
-    private final String _elevatorL3HeightKey             = "Dashboard/Dashboard Settings/Elevator L3 Height";
-    private final String _elevatorL4HeightKey             = "Dashboard/Dashboard Settings/Elevator L4 Height";
-    private final String _elevatorHangHeightKey           = "Dashboard/Dashboard Settings/Elevator Hang Height";
-    private final String _elevatorHangSpeedKey            = "Dashboard/Dashboard Settings/Elevator Hang Speed";
-    private final String _elevatorKPKey                   = "Dashboard/Dashboard Settings/Elevator kP";
-    private final String _elevatorKDKey                   = "Dashboard/Dashboard Settings/Elevator kD";
-    private final String _elevatorMaxDownPercentKey       = "Dashboard/Dashboard Settings/Elevator Max Down Speed";
-    private final String _elevatorMaxUpPercentKey         = "Dashboard/Dashboard Settings/Elevator Max Up Speed";
-    private final String _manipulatorIntakePercentKey     = "Dashboard/Dashboard Settings/Manipulator Intake Speed";
+    private final String _elevatorMinHeightKey        = "Dashboard/Dashboard Settings/Elevator Min Height";
+    private final String _elevatorMaxHeightKey        = "Dashboard/Dashboard Settings/Elevator Max Height";
+    private final String _elevatorStowHeightKey       = "Dashboard/Dashboard Settings/Elevator Stow Height";
+    private final String _elevatorL1HeightKey         = "Dashboard/Dashboard Settings/Elevator L1 Height";
+    private final String _elevatorL2HeightKey         = "Dashboard/Dashboard Settings/Elevator L2 Height";
+    private final String _elevatorL3HeightKey         = "Dashboard/Dashboard Settings/Elevator L3 Height";
+    private final String _elevatorL4HeightKey         = "Dashboard/Dashboard Settings/Elevator L4 Height";
+    private final String _elevatorHangHeightKey       = "Dashboard/Dashboard Settings/Elevator Hang Height";
+    private final String _elevatorHangSpeedKey        = "Dashboard/Dashboard Settings/Elevator Hang Speed";
+    private final String _elevatorKPKey               = "Dashboard/Dashboard Settings/Elevator kP";
+    private final String _elevatorKDKey               = "Dashboard/Dashboard Settings/Elevator kD";
+    private final String _elevatorMaxDownPercentKey   = "Dashboard/Dashboard Settings/Elevator Max Down Speed";
+    private final String _elevatorMaxUpPercentKey     = "Dashboard/Dashboard Settings/Elevator Max Up Speed";
+    private final String _manipulatorIntakePercentKey = "Dashboard/Dashboard Settings/Manipulator Intake Speed";
+    // private final String _manipulatorSlowIntakePercentKey = "Dashboard/Dashboard
+    // Settings/Manipulator Slow Intake Speed";
     private final String _manipulatorOutputPercentKey     = "Dashboard/Dashboard Settings/Manipulator Output Speed";
     private final String _manipulatorL1SpeedMultiplierKey = "Dashboard/Dashboard Settings/Manipulator L1 Speed Multiplier";
     private final String _funnelRetractPercentKey         = "Dashboard/Dashboard Settings/Funnel Retract Speed";
@@ -40,7 +43,10 @@ public class DashboardIONetwork implements DashboardIO
     private final NetworkTableEntry _elevatorSetpoint;
     private final NetworkTableEntry _manipulatorLeftOutputPercent;
     private final NetworkTableEntry _manipulatorRightOutputPercent;
+    private final NetworkTableEntry _manipulatorStartSensorTripped;
+    private final NetworkTableEntry _manipulatorEndSensorTripped;
     private final NetworkTableEntry _funnelIsDropped;
+    private final NetworkTableEntry _matchTime;
     private Rotation2d              _driveFLAngle    = Constants.Drive.FL_ZERO_ROTATION;
     private Rotation2d              _driveFRAngle    = Constants.Drive.FR_ZERO_ROTATION;
     private Rotation2d              _driveBLAngle    = Constants.Drive.BL_ZERO_ROTATION;
@@ -90,6 +96,8 @@ public class DashboardIONetwork implements DashboardIO
         Preferences.initDouble(_elevatorMaxDownPercentKey, Constants.Elevator.MAX_DOWNWARDS_SPEED);
         Preferences.initDouble(_elevatorMaxUpPercentKey, Constants.Elevator.MAX_UPWARDS_SPEED);
         Preferences.initDouble(_manipulatorIntakePercentKey, Constants.Manipulator.INTAKE_SPEED);
+        // Preferences.initDouble(_manipulatorSlowIntakePercentKey,
+        // Constants.Manipulator.SLOW_INTAKE_SPEED);
         Preferences.initDouble(_manipulatorOutputPercentKey, Constants.Manipulator.OUTPUT_SPEED);
         Preferences.initDouble(_manipulatorL1SpeedMultiplierKey, Constants.Manipulator.L1_SPEED_MULTIPLIER);
         Preferences.initDouble(_funnelRetractPercentKey, Constants.Funnel.RETRACT_SPEED);
@@ -104,12 +112,20 @@ public class DashboardIONetwork implements DashboardIO
         _elevatorSetpoint              = NetworkTableInstance.getDefault().getEntry("Dashboard/Robot Values/Elevator Setpoint");
         _manipulatorLeftOutputPercent  = NetworkTableInstance.getDefault().getEntry("Dashboard/Robot Values/Manipulator Left Percent Output");
         _manipulatorRightOutputPercent = NetworkTableInstance.getDefault().getEntry("Dashboard/Robot Values/Manipulator Right Percent Output");
+        _manipulatorStartSensorTripped = NetworkTableInstance.getDefault().getEntry("Dashboard/Robot Values/Manipulator Start Sensor Tripped");
+        _manipulatorEndSensorTripped   = NetworkTableInstance.getDefault().getEntry("Dashboard/Robot Values/Manipulator End Sensor Tripped");
         _funnelIsDropped               = NetworkTableInstance.getDefault().getEntry("Dashboard/Robot Values/Funnel Is Dropped");
+        _matchTime                     = NetworkTableInstance.getDefault().getEntry("Dashboard/Robot Values/Match Time");
 
         _elevatorHeight.setDouble(Constants.Elevator.MIN_EXTENSION);
         _elevatorSetpoint.setDouble(0);
+
         _manipulatorLeftOutputPercent.setDouble(0);
         _manipulatorRightOutputPercent.setDouble(0);
+        _manipulatorStartSensorTripped.setBoolean(false);
+        _manipulatorEndSensorTripped.setBoolean(false);
+        _matchTime.setDouble(0);
+
         _funnelIsDropped.setBoolean(false);
 
         SmartDashboard.putData("Swerve", builder ->
@@ -210,6 +226,9 @@ public class DashboardIONetwork implements DashboardIO
 
         // Manipulator
         inputs.manipulatorIntakePercentSpeed = Preferences.getDouble(_manipulatorIntakePercentKey, Constants.Manipulator.INTAKE_SPEED);
+        // inputs.manipulatorSlowIntakePercentSpeed =
+        // Preferences.getDouble(_manipulatorSlowIntakePercentKey,
+        // Constants.Manipulator.SLOW_INTAKE_SPEED);
         inputs.manipulatorOutputPercentSpeed = Preferences.getDouble(_manipulatorOutputPercentKey, Constants.Manipulator.OUTPUT_SPEED);
         inputs.manipulatorL1SpeedMultiplier  = Preferences.getDouble(_manipulatorL1SpeedMultiplierKey, Constants.Manipulator.L1_SPEED_MULTIPLIER);
 
@@ -245,6 +264,15 @@ public class DashboardIONetwork implements DashboardIO
     }
 
     @Override
+    public void setRobotPose(Pose2d pose)
+    {
+        if (pose != null)
+        {
+            _field.setRobotPose(pose);
+        }
+    }
+
+    @Override
     public void setElevatorHeight(double height)
     {
         _elevatorHeight.setDouble(height);
@@ -266,6 +294,18 @@ public class DashboardIONetwork implements DashboardIO
     public void setManipulatorRightMotorOutputPercentSpeed(double speed)
     {
         _manipulatorRightOutputPercent.setDouble(speed);
+    }
+
+    @Override
+    public void setManipulatorStartSensorTripped(boolean tripped)
+    {
+        _manipulatorStartSensorTripped.setBoolean(tripped);
+    }
+
+    @Override
+    public void setManipulatorEndSensorTripped(boolean tripped)
+    {
+        _manipulatorEndSensorTripped.setBoolean(tripped);
     }
 
     @Override
@@ -326,6 +366,12 @@ public class DashboardIONetwork implements DashboardIO
     public void setDriveHeading(Rotation2d heading)
     {
         _gyroHeading = heading;
+    }
+
+    @Override
+    public void setMatchTime(double time)
+    {
+        _matchTime.setDouble(time);
     }
 
     @Override
