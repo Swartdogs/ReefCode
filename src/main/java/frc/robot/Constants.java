@@ -118,7 +118,7 @@ public final class Constants
         public static final double          TURN_SIM_KD                   = 0.0;
         public static final double          ODOMETRY_FREQUENCY            = 100.0; // ms
         public static final double          ROTATE_KP                     = 2.35;
-        public static final double          ROTATE_KD                     = 0.08;
+        public static final double          ROTATE_KD                     = 0.085;
         public static final double          MAX_SPEED_ELEVATOR_MULTIPLIER = 1;
         public static final double          MIN_SPEED_ELEVATOR_MULTIPLIER = 0.3;
         public static final double          MAX_SPEED_ELEVATOR_HEIGHT     = Constants.Elevator.L1_HEIGHT;
@@ -162,8 +162,8 @@ public final class Constants
 
     public static class Elevator
     {
-        public static final double  RAW_SENSOR_MIN               = 0.652;
-        public static final double  RAW_SENSOR_MAX               = 0.412;
+        public static final double  RAW_SENSOR_MIN               = 0.634;
+        public static final double  RAW_SENSOR_MAX               = 0.394;
         public static final double  MIN_EXTENSION                = 16.0;
         public static final double  MAX_EXTENSION                = 77.0;
         public static final double  EXTENSION_KP                 = 0.5;
