@@ -21,19 +21,19 @@ public class ManipulatorCommands
         return Manipulator.getInstance().runOnce(() -> Manipulator.getInstance().setVolts(-1)).andThen(Commands.waitSeconds(0.5)).finallyDo(() -> Manipulator.getInstance().stop());
     }
 
-    // public static Command output()
-    // {
-    // return Manipulator.getInstance().runOnce(() ->
-    // Manipulator.getInstance().output()).andThen(Commands.waitUntil(() ->
-    // !Manipulator.getInstance().detectedCoral())).finallyDo(() ->
-    // Manipulator.getInstance().stop())
-    // .unless(() -> !Manipulator.getInstance().detectedCoral());
-    // }
-
     public static Command output()
     {
-        return Manipulator.getInstance().runOnce(() -> Manipulator.getInstance().output()).andThen(Commands.waitSeconds(0.5).finallyDo(() -> Manipulator.getInstance().stop()));
+    return Manipulator.getInstance().runOnce(() ->
+    Manipulator.getInstance().output()).andThen(Commands.waitUntil(() ->
+    !Manipulator.getInstance().detectedCoral())).finallyDo(() ->
+    Manipulator.getInstance().stop())
+    .unless(() -> !Manipulator.getInstance().detectedCoral());
     }
+
+    // public static Command output()
+    // {
+    //     return Manipulator.getInstance().runOnce(() -> Manipulator.getInstance().output()).andThen(Commands.waitSeconds(0.5).finallyDo(() -> Manipulator.getInstance().stop()));
+    // }
 
     public static Command stop()
     {
