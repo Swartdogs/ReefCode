@@ -15,27 +15,12 @@ public class ManipulatorCommands
         // @formatter:off
         return Commands.sequence
         (
-            // Turn intake on
             Manipulator.getInstance().runOnce(() -> Manipulator.getInstance().intake()),
-
-            // Wait until the end light sensor is triggered
             Commands.waitUntil(() -> Manipulator.getInstance().isEndSensorTripped()),
-
-            // Come back to here (see comments below)
-            Commands.repeatingSequence
-            (
-                // Slow down intake
-                Manipulator.getInstance().runOnce(() -> Manipulator.getInstance().slowIntake()),
-
-                // Wait until we detect coral
-                Commands.waitUntil(() -> Manipulator.getInstance().detectedCoral()),
-
-                // Stop intake
-                Manipulator.getInstance().runOnce(() -> Manipulator.getInstance().stop())
-            )
-            // Repeat above sequence until we have coral
-            .until(() -> Manipulator.getInstance().hasCoral())
+            Manipulator.getInstance().runOnce(() -> Manipulator.getInstance().slowIntake()),
+            Commands.waitUntil(() -> Manipulator.getInstance().hasCoral())
         )
+        .finallyDo(() -> Manipulator.getInstance().stop())
         .unless(() -> Manipulator.getInstance().hasCoral());
         // @formatter:on
     }
