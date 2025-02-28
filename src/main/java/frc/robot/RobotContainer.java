@@ -127,7 +127,7 @@ public class RobotContainer
         // Set.of())));
 
         _operatorButtons.button(6).onTrue(ManipulatorCommands.intake());
-        _operatorButtons.button(7).onTrue(ManipulatorCommands.stop());
+        _operatorButtons.button(7).onTrue(ManipulatorCommands.intake3());
         _operatorButtons.button(8).onTrue(CompositeCommands.output());
         _operatorButtons.button(9).onTrue(ElevatorCommands.modifyHeight(Constants.Elevator.ELEVATOR_MODIFICATION_HEIGHT));
         _operatorButtons.button(10).onTrue(ElevatorCommands.modifyHeight(-Constants.Elevator.ELEVATOR_MODIFICATION_HEIGHT));
