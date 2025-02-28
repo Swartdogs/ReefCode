@@ -59,6 +59,11 @@ public class CompositeCommands
         }, Drive.getInstance());
     }
 
+    public static Command intake()
+    {
+        return Commands.repeatingSequence(ManipulatorCommands.intake()).until(() -> Manipulator.getInstance().hasCoral()).andThen(Commands.waitSeconds(0.5)).andThen(() -> Elevator.getInstance().setExtension(Constants.Elevator.L1_HEIGHT)).unless(() -> Manipulator.getInstance().hasCoral());
+    }
+
     public static Command output()
     {
         return Commands.sequence(ManipulatorCommands.output(), Commands.waitSeconds(Constants.Elevator.WAIT_TIME), ElevatorCommands.setHeight(ElevatorHeight.Stow)).unless(() -> !Manipulator.getInstance().detectedCoral());
