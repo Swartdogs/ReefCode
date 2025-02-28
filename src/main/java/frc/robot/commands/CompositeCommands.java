@@ -61,7 +61,8 @@ public class CompositeCommands
 
     public static Command intake()
     {
-        return Commands.repeatingSequence(ManipulatorCommands.intake()).until(() -> Manipulator.getInstance().hasCoral()).andThen(Commands.waitSeconds(0.5)).andThen(() -> Elevator.getInstance().setExtension(Constants.Elevator.L1_HEIGHT)).unless(() -> Manipulator.getInstance().hasCoral());
+        return Commands.repeatingSequence(ManipulatorCommands.intake()).until(() -> Manipulator.getInstance().hasCoral()).andThen(Commands.waitSeconds(0.5)).andThen(() -> Elevator.getInstance().setExtension(Constants.Elevator.L1_HEIGHT))
+                .unless(() -> Manipulator.getInstance().hasCoral());
     }
 
     public static Command output()

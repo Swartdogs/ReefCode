@@ -13,7 +13,7 @@ public class ManipulatorCommands
     public static Command intake()
     {
         return Manipulator.getInstance().runOnce(() -> Manipulator.getInstance().intake()).andThen(Commands.waitUntil(() -> Manipulator.getInstance().detectedCoral())).finallyDo(() -> Manipulator.getInstance().stop())
-        .unless(() -> Manipulator.getInstance().detectedCoral());
+                .unless(() -> Manipulator.getInstance().detectedCoral());
     }
 
     public static Command output()

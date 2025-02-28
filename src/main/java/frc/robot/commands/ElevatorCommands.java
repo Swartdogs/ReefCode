@@ -62,7 +62,9 @@ public class ElevatorCommands
 
         return Commands.sequence(
                 // Elevator.getInstance().runOnce(() -> limiter.reset(0)),
-                Elevator.getInstance().run(() -> Elevator.getInstance().setVolts(-Constants.Elevator.HANG_SPEED * Constants.General.MOTOR_VOLTAGE))
-        ).finallyDo(() -> Elevator.getInstance().stop()).unless(() -> !Funnel.getInstance().isDropped());
+                Elevator.getInstance().run(() -> Elevator
+                .getInstance().setVolts(-Constants.Elevator.HANG_SPEED * Constants.General.MOTOR_VOLTAGE))
+        ).finallyDo(() -> Elevator.getInstance().stop());
+        
     }
 }
