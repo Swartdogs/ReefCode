@@ -23,13 +23,16 @@ public class ManipulatorCommands
 
     // public static Command output()
     // {
-    //     return Manipulator.getInstance().runOnce(() -> Manipulator.getInstance().output()).andThen(Commands.waitUntil(() -> !Manipulator.getInstance().detectedCoral())).finallyDo(() -> Manipulator.getInstance().stop())
-    //             .unless(() -> !Manipulator.getInstance().detectedCoral());
+    // return Manipulator.getInstance().runOnce(() ->
+    // Manipulator.getInstance().output()).andThen(Commands.waitUntil(() ->
+    // !Manipulator.getInstance().detectedCoral())).finallyDo(() ->
+    // Manipulator.getInstance().stop())
+    // .unless(() -> !Manipulator.getInstance().detectedCoral());
     // }
 
     public static Command output()
     {
-        return Manipulator.getInstance().runOnce(() -> Manipulator.getInstance().output()).andThen(Commands.waitSeconds(2).finallyDo(() -> Manipulator.getInstance().stop()));
+        return Manipulator.getInstance().runOnce(() -> Manipulator.getInstance().output()).andThen(Commands.waitSeconds(1).finallyDo(() -> Manipulator.getInstance().stop()));
     }
 
     public static Command stop()

@@ -71,7 +71,7 @@ public class CompositeCommands
 
     public static Command output()
     {
-        return Commands.sequence(ManipulatorCommands.output(), Commands.waitSeconds(Constants.Elevator.WAIT_TIME), ElevatorCommands.setHeight(ElevatorHeight.Stow)).unless(() -> !Manipulator.getInstance().detectedCoral());
+        return Commands.sequence(ManipulatorCommands.output(), Commands.waitSeconds(Constants.Elevator.WAIT_TIME), ElevatorCommands.setHeight(ElevatorHeight.Stow));
     }
 
     public static Command setHeight(ElevatorHeight height)
