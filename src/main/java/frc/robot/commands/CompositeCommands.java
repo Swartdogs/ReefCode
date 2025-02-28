@@ -61,8 +61,7 @@ public class CompositeCommands
 
     public static Command intake()
     {
-        return Commands.repeatingSequence(ManipulatorCommands.intake()).until(() -> Manipulator.getInstance().hasCoral())
-                .unless(() -> Manipulator.getInstance().hasCoral());
+        return Commands.repeatingSequence(ManipulatorCommands.intake()).until(() -> Manipulator.getInstance().hasCoral()).unless(() -> Manipulator.getInstance().hasCoral());
     }
 
     public static Command output()

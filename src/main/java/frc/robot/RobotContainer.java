@@ -134,12 +134,12 @@ public class RobotContainer
         // _operatorButtons.button(11).onTrue(null);// replace with algae intake
         // _operatorButtons.button(12).onTrue(null);// replace with algae output
         // _operatorButton12.onTrue(null);// replace with algae stop
-        _operatorButton15.whileTrue(ElevatorCommands.hangExecute());
+        (_operatorButton14.or(_operatorButtons.povUp())).whileTrue(ElevatorCommands.hangExecute());
         // .alongWith(LEDCommands.flashColor(Constants.LED.RED)).until(() ->
         // _elevator.atSetpoint())
         // .andThen(LEDCommands.setDefaultColor(Constants.LED.YELLOW))
         // );
-        _operatorButton14.and(_driverJoystick.button(4)).onTrue(FunnelCommands.drop().alongWith(ElevatorCommands.setHeight(ElevatorHeight.Hang)));
+        (_operatorButton15.or(_operatorButtons.povDown())).and(_driverJoystick.button(4)).onTrue(FunnelCommands.drop().alongWith(ElevatorCommands.setHeight(ElevatorHeight.Hang)));
 
         // _hasCoral.onTrue(LEDCommands.setDefaultColor(Constants.LED.GREEN));
         // _hasCoral.onFalse(LEDCommands.setDefaultColor(Constants.LED.RED));
