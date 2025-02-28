@@ -176,7 +176,7 @@ public final class Constants
         public static final double  L3_HEIGHT                    = MIN_EXTENSION + 32.5;
         public static final double  L4_HEIGHT                    = MIN_EXTENSION + 59.5;
         public static final double  HANG_HEIGHT                  = MIN_EXTENSION + 24.0;
-        public static final double  MAX_UPWARDS_SPEED            = 1.0;
+        public static final double  MAX_UPWARDS_SPEED            = 0.8;
         public static final double  MAX_DOWNWARDS_SPEED          = 0.2;
         public static final double  EXTENSION_SCALE              = (MAX_EXTENSION - MIN_EXTENSION) / (RAW_SENSOR_MAX - RAW_SENSOR_MIN);
         public static final double  EXTENSION_MOTOR_REDUCTION    = 5.0;

@@ -1,0 +1,61 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "Delay"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ExtendToL3"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "MiddleToG"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ExtendToL4"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Output"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Stow"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "GTowardRightCS"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "2-Coral Auto",
+  "choreoAuto": false
+}

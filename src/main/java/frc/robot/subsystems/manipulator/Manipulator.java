@@ -78,6 +78,11 @@ public class Manipulator extends SubsystemBase
         _io.setVolts(0);
     }
 
+    public void setVolts(double volts)
+    {
+        _io.setVolts(volts);
+    }
+
     public boolean detectedCoral()
     {
         return _coralDetected;

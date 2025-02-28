@@ -127,12 +127,12 @@ public class RobotContainer
         // Set.of())));
 
         _operatorButtons.button(6).onTrue(CompositeCommands.intake());
-        _operatorButtons.button(7).onTrue(ManipulatorCommands.stop());
+        _operatorButtons.button(7).onTrue(CompositeCommands.fancyIntake());
         _operatorButtons.button(8).onTrue(CompositeCommands.output());
         _operatorButtons.button(9).onTrue(ElevatorCommands.modifyHeight(Constants.Elevator.ELEVATOR_MODIFICATION_HEIGHT));
         _operatorButtons.button(10).onTrue(ElevatorCommands.modifyHeight(-Constants.Elevator.ELEVATOR_MODIFICATION_HEIGHT));
         // _operatorButtons.button(11).onTrue(null);// replace with algae intake
-        // _operatorButtons.button(12).onTrue(null);// replace with algae output
+        // _operatorButtons.button(12).onTrue(null);// replace with algaei output
         // _operatorButton12.onTrue(null);// replace with algae stop
         (_operatorButton14.or(_operatorButtons.povUp())).whileTrue(ElevatorCommands.hangExecute());
         // .alongWith(LEDCommands.flashColor(Constants.LED.RED)).until(() ->

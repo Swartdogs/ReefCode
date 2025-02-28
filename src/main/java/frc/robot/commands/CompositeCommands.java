@@ -63,6 +63,11 @@ public class CompositeCommands
     {
         return Commands.repeatingSequence(ManipulatorCommands.intake()).until(() -> Manipulator.getInstance().hasCoral()).unless(() -> Manipulator.getInstance().hasCoral());
     }
+    
+    public static Command fancyIntake()
+    {
+        return Commands.repeatingSequence(ManipulatorCommands.intake()).until(() -> Manipulator.getInstance().hasCoral()).andThen(ManipulatorCommands.index()).unless(() -> Manipulator.getInstance().hasCoral());
+    }
 
     public static Command output()
     {
