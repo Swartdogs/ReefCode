@@ -121,7 +121,7 @@ public class Robot extends LoggedRobot
     @Override
     public void teleopInit()
     {
-//        if (DriverStation.isFMSAttached())
+        // if (DriverStation.isFMSAttached())
         {
             Elastic.selectTab("Teleoperated");
         }

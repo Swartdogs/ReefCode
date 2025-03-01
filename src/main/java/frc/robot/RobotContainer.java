@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -16,6 +17,7 @@ import frc.robot.commands.ManipulatorCommands;
 import frc.robot.subsystems.dashboard.Dashboard;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.elevator.Elevator.ElevatorHeight;
+import frc.robot.util.Elastic;
 
 public class RobotContainer
 {
@@ -24,6 +26,8 @@ public class RobotContainer
     private final CommandJoystick       _driverButtons   = new CommandJoystick(1);
     private final CommandJoystick       _operatorButtons = new CommandJoystick(2);
     private final CommandXboxController _controller      = new CommandXboxController(3); // This is just for testing
+
+    private String _elasticTab = "Teleoperated";
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -140,6 +144,19 @@ public class RobotContainer
         // .andThen(LEDCommands.setDefaultColor(Constants.LED.YELLOW))
         // );
         (_operatorButton15.or(_operatorButtons.povDown())).and(_driverJoystick.button(4)).onTrue(FunnelCommands.drop().alongWith(ElevatorCommands.setHeight(ElevatorHeight.Hang)));
+
+        (_operatorButton14.or(_operatorButtons.povUp())).and(_operatorButton15.or(_operatorButtons.povDown())).onTrue(Commands.runOnce(() -> {
+                if (_elasticTab == "Teleoperated")
+                {
+                        _elasticTab = "Programmer";
+                }
+                else
+                {
+                        _elasticTab = "Teleoperated";
+                }
+
+                Elastic.selectTab(_elasticTab);
+        }).ignoringDisable(true));
 
         // _hasCoral.onTrue(LEDCommands.setDefaultColor(Constants.LED.GREEN));
         // _hasCoral.onFalse(LEDCommands.setDefaultColor(Constants.LED.RED));
