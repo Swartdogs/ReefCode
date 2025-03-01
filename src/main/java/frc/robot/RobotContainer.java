@@ -144,7 +144,7 @@ public class RobotContainer
         // );
         (_operatorButton15.or(_operatorButtons.povDown())).and(_driverJoystick.button(4)).onTrue(FunnelCommands.drop().alongWith(ElevatorCommands.setHeight(ElevatorHeight.Hang)));
 
-        (_operatorButton14.or(_operatorButtons.povUp())).and(_operatorButton15.or(_operatorButtons.povDown())).onTrue(Commands.runOnce(() ->
+        _operatorButtons.button(9).and(_operatorButtons.button(10)).onTrue(Commands.runOnce(() ->
         {
             if (_elasticTab == "Teleoperated")
             {
