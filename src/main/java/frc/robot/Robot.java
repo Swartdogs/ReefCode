@@ -122,9 +122,9 @@ public class Robot extends LoggedRobot
     public void teleopInit()
     {
         // if (DriverStation.isFMSAttached())
-        {
-            Elastic.selectTab("Teleoperated");
-        }
+        // {
+        //     Elastic.selectTab("Teleoperated");
+        // }
 
         // This makes sure that the autonomous stops running when
         // teleop starts running. If you want the autonomous to

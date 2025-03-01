@@ -144,19 +144,19 @@ public class RobotContainer
         // );
         (_operatorButton15.or(_operatorButtons.povDown())).and(_driverJoystick.button(4)).onTrue(FunnelCommands.drop().alongWith(ElevatorCommands.setHeight(ElevatorHeight.Hang)));
 
-        _operatorButtons.button(9).and(_operatorButtons.button(10)).onTrue(Commands.runOnce(() ->
-        {
-            if (_elasticTab == "Teleoperated")
-            {
-                _elasticTab = "Programmer";
-            }
-            else
-            {
-                _elasticTab = "Teleoperated";
-            }
+        // _operatorButtons.button(9).and(_operatorButtons.button(10)).onTrue(Commands.runOnce(() ->
+        // {
+        //     if (_elasticTab == "Teleoperated")
+        //     {
+        //         _elasticTab = "Programmer";
+        //     }
+        //     else
+        //     {
+        //         _elasticTab = "Teleoperated";
+        //     }
 
-            Elastic.selectTab(_elasticTab);
-        }).andThen(Commands.print("Swap")).ignoringDisable(true));
+        //     Elastic.selectTab(_elasticTab);
+        // }).andThen(Commands.print("Swap")).ignoringDisable(true));
 
         // _hasCoral.onTrue(LEDCommands.setDefaultColor(Constants.LED.GREEN));
         // _hasCoral.onFalse(LEDCommands.setDefaultColor(Constants.LED.RED));
