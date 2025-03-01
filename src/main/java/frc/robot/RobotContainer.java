@@ -26,8 +26,7 @@ public class RobotContainer
     private final CommandJoystick       _driverButtons   = new CommandJoystick(1);
     private final CommandJoystick       _operatorButtons = new CommandJoystick(2);
     private final CommandXboxController _controller      = new CommandXboxController(3); // This is just for testing
-
-    private String _elasticTab = "Teleoperated";
+    private String                      _elasticTab      = "Teleoperated";
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -145,18 +144,19 @@ public class RobotContainer
         // );
         (_operatorButton15.or(_operatorButtons.povDown())).and(_driverJoystick.button(4)).onTrue(FunnelCommands.drop().alongWith(ElevatorCommands.setHeight(ElevatorHeight.Hang)));
 
-        (_operatorButton14.or(_operatorButtons.povUp())).and(_operatorButton15.or(_operatorButtons.povDown())).onTrue(Commands.runOnce(() -> {
-                if (_elasticTab == "Teleoperated")
-                {
-                        _elasticTab = "Programmer";
-                }
-                else
-                {
-                        _elasticTab = "Teleoperated";
-                }
+        (_operatorButton14.or(_operatorButtons.povUp())).and(_operatorButton15.or(_operatorButtons.povDown())).onTrue(Commands.runOnce(() ->
+        {
+            if (_elasticTab == "Teleoperated")
+            {
+                _elasticTab = "Programmer";
+            }
+            else
+            {
+                _elasticTab = "Teleoperated";
+            }
 
-                Elastic.selectTab(_elasticTab);
-        }).ignoringDisable(true));
+            Elastic.selectTab(_elasticTab);
+        }).andThen(Commands.print("Swap")).ignoringDisable(true));
 
         // _hasCoral.onTrue(LEDCommands.setDefaultColor(Constants.LED.GREEN));
         // _hasCoral.onFalse(LEDCommands.setDefaultColor(Constants.LED.RED));
