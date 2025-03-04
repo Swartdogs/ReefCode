@@ -3,9 +3,7 @@ package frc.robot.subsystems.elevator;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
-import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
@@ -18,8 +16,6 @@ import frc.robot.Constants;
 
 public class ElevatorIOSim implements ElevatorIO
 {
-    private DCMotorSim      _leaderMotorSim;
-    private DCMotorSim      _followerMotorSim;
     private MechanismRoot2d _leftStageOneRoot;
     private MechanismRoot2d _rightStageOneRoot;
     private MechanismRoot2d _leftStageTwoRoot;
@@ -64,15 +60,6 @@ public class ElevatorIOSim implements ElevatorIO
                 Constants.Elevator.ELEVATOR_GEARBOX, 0.0, Units.inchesToMeters(Constants.Elevator.MAX_EXTENSION), true, 0.0
         );
         SmartDashboard.putData("Elevator", mechanism);
-
-        // _leaderMotorSim = new
-        // DCMotorSim(LinearSystemId.createDCMotorSystem(Constants.Elevator.ELEVATOR_GEARBOX,
-        // 0.004, Constants.Elevator.EXTENSION_MOTOR_REDUCTION),
-        // Constants.Elevator.ELEVATOR_GEARBOX);
-        // _followerMotorSim = new
-        // DCMotorSim(LinearSystemId.createDCMotorSystem(Constants.Elevator.ELEVATOR_GEARBOX,
-        // 0.004, Constants.Elevator.EXTENSION_MOTOR_REDUCTION),
-        // Constants.Elevator.ELEVATOR_GEARBOX);
     }
 
     @Override
@@ -99,7 +86,6 @@ public class ElevatorIOSim implements ElevatorIO
         _elevatorSim.update(Constants.General.LOOP_PERIOD_SECS);
 
         RoboRioSim.setVInVoltage(BatterySim.calculateDefaultBatteryLoadedVoltage(_elevatorSim.getCurrentDrawAmps()));
-
     }
 
     @Override

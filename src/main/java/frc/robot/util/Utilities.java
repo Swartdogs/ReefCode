@@ -5,12 +5,13 @@ import java.util.function.DoubleConsumer;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
+import com.ctre.phoenix6.StatusCode;
 import com.revrobotics.REVLibError;
 import com.revrobotics.spark.SparkBase;
 
-public class SparkUtil
+public final class Utilities
 {
-    private SparkUtil()
+    private Utilities()
     {
     }
 
@@ -61,6 +62,19 @@ public class SparkUtil
             else
             {
                 sparkStickyFault = true;
+            }
+        }
+    }
+
+    public static void tryUntilOk(int maxAttempts, Supplier<StatusCode> command)
+    {
+        for (int i = 0; i < maxAttempts; i++)
+        {
+            var error = command.get();
+
+            if (error.isOK())
+            {
+                break;
             }
         }
     }
