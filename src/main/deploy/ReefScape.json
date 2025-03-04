@@ -52,42 +52,27 @@
             }
           },
           {
-            "title": "First Coral",
+            "title": "Number of Coral",
             "x": 1632.0,
             "y": 256.0,
             "width": 288.0,
             "height": 128.0,
-            "type": "ComboBox Chooser",
+            "type": "Split Button Chooser",
             "properties": {
-              "topic": "/SmartDashboard/First Coral",
-              "period": 0.02,
-              "sort_options": false
+              "topic": "/SmartDashboard/Number of Coral",
+              "period": 0.02
             }
           },
           {
-            "title": "Second Coral",
+            "title": "Alerts",
             "x": 1632.0,
             "y": 384.0,
             "width": 288.0,
-            "height": 128.0,
-            "type": "ComboBox Chooser",
+            "height": 352.0,
+            "type": "Alerts",
             "properties": {
-              "topic": "/SmartDashboard/Second Coral",
-              "period": 0.02,
-              "sort_options": false
-            }
-          },
-          {
-            "title": "Third Coral",
-            "x": 1632.0,
-            "y": 512.0,
-            "width": 288.0,
-            "height": 128.0,
-            "type": "ComboBox Chooser",
-            "properties": {
-              "topic": "/SmartDashboard/Third Coral",
-              "period": 0.02,
-              "sort_options": false
+              "topic": "/SmartDashboard/Alerts",
+              "period": 0.02
             }
           }
         ]
@@ -99,22 +84,6 @@
         "layouts": [],
         "containers": [
           {
-            "title": "Elevator Setpoint",
-            "x": 0.0,
-            "y": 0.0,
-            "width": 1344.0,
-            "height": 736.0,
-            "type": "Match Time",
-            "properties": {
-              "topic": "Dashboard/Robot Values/Elevator Setpoint",
-              "period": 0.02,
-              "data_type": "double",
-              "time_display_mode": "Seconds Only",
-              "red_start_time": 15,
-              "yellow_start_time": 30
-            }
-          },
-          {
             "title": "Alerts",
             "x": 1344.0,
             "y": 0.0,
@@ -124,6 +93,22 @@
             "properties": {
               "topic": "/SmartDashboard/Alerts",
               "period": 0.02
+            }
+          },
+          {
+            "title": "Match Time",
+            "x": 0.0,
+            "y": 0.0,
+            "width": 1344.0,
+            "height": 736.0,
+            "type": "Match Time",
+            "properties": {
+              "topic": "Dashboard/Robot Values/Match Time",
+              "period": 0.02,
+              "data_type": "double",
+              "time_display_mode": "Minutes and Seconds",
+              "red_start_time": 15,
+              "yellow_start_time": 30
             }
           }
         ]
@@ -704,9 +689,9 @@
           {
             "title": "Left Output",
             "x": 480.0,
-            "y": 32.0,
+            "y": 0.0,
             "width": 128.0,
-            "height": 256.0,
+            "height": 224.0,
             "type": "Number Bar",
             "properties": {
               "topic": "Dashboard/Robot Values/Manipulator Left Percent Output",
@@ -722,9 +707,9 @@
           {
             "title": "Right Output",
             "x": 608.0,
-            "y": 32.0,
+            "y": 0.0,
             "width": 128.0,
-            "height": 256.0,
+            "height": 224.0,
             "type": "Number Bar",
             "properties": {
               "topic": "Dashboard/Robot Values/Manipulator Right Percent Output",
@@ -773,7 +758,7 @@
           },
           {
             "title": "L1 Speed Multiplier",
-            "x": 480.0,
+            "x": 736.0,
             "y": 288.0,
             "width": 256.0,
             "height": 128.0,
@@ -789,14 +774,14 @@
             }
           },
           {
-            "title": "Dropped",
-            "x": 736.0,
-            "y": 288.0,
-            "width": 128.0,
+            "title": "End Sensor",
+            "x": 480.0,
+            "y": 224.0,
+            "width": 256.0,
             "height": 128.0,
             "type": "Boolean Box",
             "properties": {
-              "topic": "Dashboard/Robot Values/Funnel Is Dropped",
+              "topic": "Dashboard/Robot Values/Manipulator End Sensor Tripped",
               "period": 0.02,
               "data_type": "boolean",
               "true_color": 4283215696,
@@ -806,14 +791,14 @@
             }
           },
           {
-            "title": "Dropped",
-            "x": 864.0,
-            "y": 288.0,
-            "width": 128.0,
+            "title": "Start Sensor",
+            "x": 480.0,
+            "y": 352.0,
+            "width": 256.0,
             "height": 128.0,
             "type": "Boolean Box",
             "properties": {
-              "topic": "Dashboard/Robot Values/Funnel Is Dropped",
+              "topic": "Dashboard/Robot Values/Manipulator Start Sensor Tripped",
               "period": 0.02,
               "data_type": "boolean",
               "true_color": 4283215696,
