@@ -5,7 +5,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -17,7 +16,6 @@ import frc.robot.commands.ManipulatorCommands;
 import frc.robot.subsystems.dashboard.Dashboard;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.elevator.Elevator.ElevatorHeight;
-import frc.robot.util.Elastic;
 
 public class RobotContainer
 {
@@ -26,7 +24,6 @@ public class RobotContainer
     private final CommandJoystick       _driverButtons   = new CommandJoystick(1);
     private final CommandJoystick       _operatorButtons = new CommandJoystick(2);
     private final CommandXboxController _controller      = new CommandXboxController(3); // This is just for testing
-    private String                      _elasticTab      = "Teleoperated";
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -64,14 +61,10 @@ public class RobotContainer
     {
         // Trigger _hasCoral = new Trigger(() -> _manipulator.hasCoral());
         // Trigger _manipulatorRunning = new Trigger(() -> _manipulator.isRunning());
-        // Trigger _operatorButton12 = _operatorButtons.axisGreaterThan(0, 0.5);
         Trigger _operatorButton14 = _operatorButtons.axisLessThan(1, -0.5);
         Trigger _operatorButton15 = _operatorButtons.axisGreaterThan(1, 0.5);
 
         // Default command, normal field-relative drive
-        // Drive.getInstance().setDefaultCommand(DriveCommands.joystickDrive(() ->
-        // -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () ->
-        // -_driverJoystick.getZ(), () -> robotCentric()));
         Drive.getInstance().setDefaultCommand(CompositeCommands.joystickDrive(() -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> -_driverJoystick.getZ(), () -> robotCentric(), 2, 5));
 
         // Driver Controls
@@ -143,21 +136,6 @@ public class RobotContainer
         // .andThen(LEDCommands.setDefaultColor(Constants.LED.YELLOW))
         // );
         (_operatorButton15.or(_operatorButtons.povDown())).and(_driverJoystick.button(4)).onTrue(FunnelCommands.drop().alongWith(ElevatorCommands.setHeight(ElevatorHeight.Hang)));
-
-        // _operatorButtons.button(9).and(_operatorButtons.button(10)).onTrue(Commands.runOnce(()
-        // ->
-        // {
-        // if (_elasticTab == "Teleoperated")
-        // {
-        // _elasticTab = "Programmer";
-        // }
-        // else
-        // {
-        // _elasticTab = "Teleoperated";
-        // }
-
-        // Elastic.selectTab(_elasticTab);
-        // }).andThen(Commands.print("Swap")).ignoringDisable(true));
 
         // _hasCoral.onTrue(LEDCommands.setDefaultColor(Constants.LED.GREEN));
         // _hasCoral.onFalse(LEDCommands.setDefaultColor(Constants.LED.RED));
