@@ -172,8 +172,8 @@ public final class Constants
         public static final double  L3_HEIGHT                    = MIN_EXTENSION + 32.5;
         public static final double  L4_HEIGHT                    = MIN_EXTENSION + 59.5;
         public static final double  HANG_HEIGHT                  = MIN_EXTENSION + 24.0;
-        public static final double  MAX_UPWARDS_SPEED            = 0.8;
-        public static final double  MAX_DOWNWARDS_SPEED          = 0.2;
+        public static final double  MAX_ASCENT_SPEED             = 0.8;
+        public static final double  MAX_DESCENT_SPEED            = 0.2;
         public static final double  EXTENSION_SCALE              = (MAX_EXTENSION - MIN_EXTENSION) / (RAW_SENSOR_MAX - RAW_SENSOR_MIN);
         public static final double  EXTENSION_MOTOR_REDUCTION    = 5.0;
         public static final DCMotor ELEVATOR_GEARBOX             = DCMotor.getNeoVortex(2);
@@ -183,7 +183,7 @@ public final class Constants
         public static final double  ELEVATOR_FEED_FORWARD        = 0.7;
         public static final double  ELEVATOR_MODIFICATION_HEIGHT = 0.5;
         public static final double  HANG_SPEED                   = 1.0;
-        public static final double  WAIT_TIME                    = 1;
+        public static final double  WAIT_TIME                    = 1.0;
     }
 
     public static class Funnel
@@ -214,12 +214,14 @@ public final class Constants
 
     public static class Manipulator
     {
-        public static final DCMotor MANIPULATOR_MOTOR   = DCMotor.getVex775Pro(1);
+        public static final DCMotor MANIPULATOR_MOTOR   = DCMotor.getNeo550(2);
         public static final double  MOTOR_REDUCTION     = 5.0;
-        public static final double  INTAKE_SPEED        = 3.5 / Constants.General.MOTOR_VOLTAGE; // What we had when we were measuring in volts
+        public static final double  INTAKE_SPEED        = 3.5 / Constants.General.MOTOR_VOLTAGE;
         public static final double  SLOW_INTAKE_SPEED   = 1.5 / Constants.General.MOTOR_VOLTAGE;
         public static final double  OUTPUT_SPEED        = 10.0 / Constants.General.MOTOR_VOLTAGE;
         public static final double  L1_SPEED_MULTIPLIER = 1.0;
-        public static final double  DEBOUNCE_LOOP_COUNT = 0.2;
+        public static final double  DEBOUNCE_LOOP_SECS  = 0.2;
+        public static final double  INDEX_VOLTS         = -1.0;
+        public static final double  INDEX_TIME          = 0.35;
     }
 }

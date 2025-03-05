@@ -31,7 +31,7 @@ public class CompositeCommands
             double     linearMagnitude = MathUtil.applyDeadband(Math.hypot(xSupplier.getAsDouble(), ySupplier.getAsDouble()), Constants.Controls.JOYSTICK_DEADBAND);
             Rotation2d linearDirection = new Rotation2d(xSupplier.getAsDouble(), ySupplier.getAsDouble());
             double     omega           = MathUtil.applyDeadband(omegaSupplier.getAsDouble(), Constants.Controls.JOYSTICK_DEADBAND);
-            double     clamp           = MathUtil
+            double     speedModifier   = MathUtil
                     .clamp((Constants.Drive.SPEED_ELEVATOR_M * Elevator.getInstance().getExtension() + Constants.Drive.SPEED_ELEVATOR_B), Constants.Drive.MIN_SPEED_ELEVATOR_MULTIPLIER, Constants.Drive.MAX_SPEED_ELEVATOR_MULTIPLIER);
 
             // Square values
@@ -44,14 +44,17 @@ public class CompositeCommands
             // Convert to field relative speeds & send command
             if (robotCentric.getAsBoolean())
             {
-                var chassisSpeeds = new ChassisSpeeds(linearVelocity.getX() * Constants.Drive.MAX_LINEAR_SPEED * clamp, linearVelocity.getY() * Constants.Drive.MAX_LINEAR_SPEED * clamp, omega * Constants.Drive.MAX_ANGULAR_SPEED * clamp);
+                var chassisSpeeds = new ChassisSpeeds(
+                        linearVelocity.getX() * Constants.Drive.MAX_LINEAR_SPEED * speedModifier, linearVelocity.getY() * Constants.Drive.MAX_LINEAR_SPEED * speedModifier, omega * Constants.Drive.MAX_ANGULAR_SPEED * speedModifier
+                );
 
                 Drive.getInstance().runVelocity(chassisSpeeds);
             }
             else
             {
                 var chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
-                        linearVelocity.getX() * Constants.Drive.MAX_LINEAR_SPEED * clamp, linearVelocity.getY() * Constants.Drive.MAX_LINEAR_SPEED * clamp, omega * Constants.Drive.MAX_ANGULAR_SPEED * clamp, Drive.getInstance().getRotation()
+                        linearVelocity.getX() * Constants.Drive.MAX_LINEAR_SPEED * speedModifier, linearVelocity.getY() * Constants.Drive.MAX_LINEAR_SPEED * speedModifier, omega * Constants.Drive.MAX_ANGULAR_SPEED * speedModifier,
+                        Drive.getInstance().getRotation()
                 );
 
                 Drive.getInstance().runVelocity(chassisSpeeds);
@@ -60,11 +63,6 @@ public class CompositeCommands
     }
 
     public static Command intake()
-    {
-        return Commands.repeatingSequence(ManipulatorCommands.intake()).until(() -> Manipulator.getInstance().hasCoral()).unless(() -> Manipulator.getInstance().hasCoral());
-    }
-
-    public static Command fancyIntake()
     {
         return Commands.repeatingSequence(ManipulatorCommands.intake()).until(() -> Manipulator.getInstance().hasCoral()).andThen(ManipulatorCommands.index()).unless(() -> Manipulator.getInstance().hasCoral());
     }

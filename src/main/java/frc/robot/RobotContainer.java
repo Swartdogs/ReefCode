@@ -69,8 +69,6 @@ public class RobotContainer
 
         // Driver Controls
         _driverJoystick.button(2).whileTrue(DriveCommands.reduceSpeed());
-        // _driverJoystick.button(3).onTrue(null); // replace this with switching
-        // cameras/
         _driverJoystick.button(11).onTrue(DriveCommands.resetGyro());
 
         _driverButtons.button(1)
@@ -122,7 +120,7 @@ public class RobotContainer
         // (_hasCoral.getAsBoolean() ? Constants.LED.GREEN : Constants.LED.RED)),
         // Set.of())));
 
-        _operatorButtons.button(6).onTrue(CompositeCommands.fancyIntake());
+        _operatorButtons.button(6).onTrue(CompositeCommands.intake());
         _operatorButtons.button(7).onTrue(ManipulatorCommands.stop());
         _operatorButtons.button(8).onTrue(CompositeCommands.output());
         _operatorButtons.button(9).onTrue(ElevatorCommands.modifyHeight(Constants.Elevator.ELEVATOR_MODIFICATION_HEIGHT));
@@ -131,8 +129,7 @@ public class RobotContainer
         // _operatorButtons.button(12).onTrue(null);// replace with algaei output
         // _operatorButton12.onTrue(null);// replace with algae stop
         (_operatorButton14.or(_operatorButtons.povUp())).whileTrue(ElevatorCommands.hangExecute());
-        // .alongWith(LEDCommands.flashColor(Constants.LED.RED)).until(() ->
-        // _elevator.atSetpoint())
+        // .alongWith(LEDCommands.flashColor(Constants.LED.RED));
         // .andThen(LEDCommands.setDefaultColor(Constants.LED.YELLOW))
         // );
         (_operatorButton15.or(_operatorButtons.povDown())).and(_driverJoystick.button(4)).onTrue(FunnelCommands.drop().alongWith(ElevatorCommands.setHeight(ElevatorHeight.Hang)));
