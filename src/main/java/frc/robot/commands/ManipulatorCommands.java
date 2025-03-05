@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.Constants;
 import frc.robot.subsystems.manipulator.Manipulator;
 
 public class ManipulatorCommands
@@ -18,7 +19,7 @@ public class ManipulatorCommands
 
     public static Command index()
     {
-        return Manipulator.getInstance().runOnce(() -> Manipulator.getInstance().setVolts(-1)).andThen(Commands.waitSeconds(0.35)).finallyDo(() -> Manipulator.getInstance().stop());
+        return Manipulator.getInstance().runOnce(() -> Manipulator.getInstance().setVolts(Constants.Manipulator.INDEX_VOLTS)).andThen(Commands.waitSeconds(Constants.Manipulator.INDEX_TIME)).finallyDo(() -> Manipulator.getInstance().stop());
     }
 
     public static Command output()
@@ -26,13 +27,6 @@ public class ManipulatorCommands
         return Manipulator.getInstance().runOnce(() -> Manipulator.getInstance().output()).andThen(Commands.waitUntil(() -> !Manipulator.getInstance().isEndSensorTripped())).finallyDo(() -> Manipulator.getInstance().stop())
                 .unless(() -> !Manipulator.getInstance().isEndSensorTripped());
     }
-
-    // public static Command output()
-    // {
-    // return Manipulator.getInstance().runOnce(() ->
-    // Manipulator.getInstance().output()).andThen(Commands.waitSeconds(0.5).finallyDo(()
-    // -> Manipulator.getInstance().stop()));
-    // }
 
     public static Command stop()
     {

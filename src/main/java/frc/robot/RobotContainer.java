@@ -5,7 +5,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -64,20 +63,15 @@ public class RobotContainer
     {
         // Trigger _hasCoral = new Trigger(() -> _manipulator.hasCoral());
         // Trigger _manipulatorRunning = new Trigger(() -> _manipulator.isRunning());
-        // Trigger _operatorButton12 = _operatorButtons.axisGreaterThan(0, 0.5);
+        // Trigger _operatorButton13 = _operatorButtons.axisGreaterThan(0, 0.5);
         Trigger _operatorButton14 = _operatorButtons.axisLessThan(1, -0.5);
         Trigger _operatorButton15 = _operatorButtons.axisGreaterThan(1, 0.5);
 
         // Default command, normal field-relative drive
-        // Drive.getInstance().setDefaultCommand(DriveCommands.joystickDrive(() ->
-        // -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () ->
-        // -_driverJoystick.getZ(), () -> robotCentric()));
         Drive.getInstance().setDefaultCommand(CompositeCommands.joystickDrive(() -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> -_driverJoystick.getZ(), () -> robotCentric(), 2, 5));
 
         // Driver Controls
         _driverJoystick.button(2).whileTrue(DriveCommands.reduceSpeed());
-        // _driverJoystick.button(3).onTrue(null); // replace this with switching
-        // cameras/
         _driverJoystick.button(11).onTrue(DriveCommands.resetGyro());
 
         _driverButtons.button(1)
@@ -129,7 +123,7 @@ public class RobotContainer
         // (_hasCoral.getAsBoolean() ? Constants.LED.GREEN : Constants.LED.RED)),
         // Set.of())));
 
-        _operatorButtons.button(6).onTrue(CompositeCommands.fancyIntake());
+        _operatorButtons.button(6).onTrue(CompositeCommands.intake());
         _operatorButtons.button(7).onTrue(ManipulatorCommands.stop());
         _operatorButtons.button(8).onTrue(CompositeCommands.output());
         _operatorButtons.button(9).onTrue(ElevatorCommands.modifyHeight(Constants.Elevator.ELEVATOR_MODIFICATION_HEIGHT));
@@ -138,26 +132,10 @@ public class RobotContainer
         // _operatorButtons.button(12).onTrue(null);// replace with algaei output
         // _operatorButton12.onTrue(null);// replace with algae stop
         (_operatorButton14.or(_operatorButtons.povUp())).whileTrue(ElevatorCommands.hangExecute());
-        // .alongWith(LEDCommands.flashColor(Constants.LED.RED)).until(() ->
-        // _elevator.atSetpoint())
+        // .alongWith(LEDCommands.flashColor(Constants.LED.RED));
         // .andThen(LEDCommands.setDefaultColor(Constants.LED.YELLOW))
         // );
         (_operatorButton15.or(_operatorButtons.povDown())).and(_driverJoystick.button(4)).onTrue(FunnelCommands.drop().alongWith(ElevatorCommands.setHeight(ElevatorHeight.Hang)));
-
-        // _operatorButtons.button(9).and(_operatorButtons.button(10)).onTrue(Commands.runOnce(()
-        // ->
-        // {
-        // if (_elasticTab == "Teleoperated")
-        // {
-        // _elasticTab = "Programmer";
-        // }
-        // else
-        // {
-        // _elasticTab = "Teleoperated";
-        // }
-
-        // Elastic.selectTab(_elasticTab);
-        // }).andThen(Commands.print("Swap")).ignoringDisable(true));
 
         // _hasCoral.onTrue(LEDCommands.setDefaultColor(Constants.LED.GREEN));
         // _hasCoral.onFalse(LEDCommands.setDefaultColor(Constants.LED.RED));

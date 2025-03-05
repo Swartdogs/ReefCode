@@ -37,7 +37,7 @@ public class Manipulator extends SubsystemBase
     private Manipulator(ManipulatorIO io)
     {
         _io        = io;
-        _debouncer = new Debouncer(Constants.Manipulator.DEBOUNCE_LOOP_COUNT);
+        _debouncer = new Debouncer(Constants.Manipulator.DEBOUNCE_LOOP_SECS);
     }
 
     @Override

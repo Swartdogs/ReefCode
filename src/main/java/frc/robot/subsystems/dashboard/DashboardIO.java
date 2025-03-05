@@ -22,8 +22,8 @@ public interface DashboardIO
         public double elevatorHangHeight              = Constants.Elevator.HANG_HEIGHT;
         public double elevatorKP                      = Constants.Elevator.EXTENSION_KP;
         public double elevatorKD                      = Constants.Elevator.EXTENSION_KD;
-        public double elevatorMaxUpwardPercentSpeed   = Constants.Elevator.MAX_UPWARDS_SPEED;
-        public double elevatorMaxDownwardPercentSpeed = Constants.Elevator.MAX_DOWNWARDS_SPEED;
+        public double elevatorMaxUpwardPercentSpeed   = Constants.Elevator.MAX_ASCENT_SPEED;
+        public double elevatorMaxDownwardPercentSpeed = Constants.Elevator.MAX_DESCENT_SPEED;
         public double elevatorHangSpeed               = Constants.Elevator.HANG_SPEED;
 
         // Manipulator

@@ -93,8 +93,8 @@ public class DashboardIONetwork implements DashboardIO
         Preferences.initDouble(_elevatorHangSpeedKey, Constants.Elevator.HANG_SPEED);
         Preferences.initDouble(_elevatorKPKey, Constants.Elevator.EXTENSION_KP);
         Preferences.initDouble(_elevatorKDKey, Constants.Elevator.EXTENSION_KD);
-        Preferences.initDouble(_elevatorMaxDownPercentKey, Constants.Elevator.MAX_DOWNWARDS_SPEED);
-        Preferences.initDouble(_elevatorMaxUpPercentKey, Constants.Elevator.MAX_UPWARDS_SPEED);
+        Preferences.initDouble(_elevatorMaxDownPercentKey, Constants.Elevator.MAX_DESCENT_SPEED);
+        Preferences.initDouble(_elevatorMaxUpPercentKey, Constants.Elevator.MAX_ASCENT_SPEED);
         Preferences.initDouble(_manipulatorIntakePercentKey, Constants.Manipulator.INTAKE_SPEED);
         // Preferences.initDouble(_manipulatorSlowIntakePercentKey,
         // Constants.Manipulator.SLOW_INTAKE_SPEED);
@@ -220,8 +220,8 @@ public class DashboardIONetwork implements DashboardIO
         inputs.elevatorHangHeight              = Preferences.getDouble(_elevatorHangHeightKey, Constants.Elevator.HANG_HEIGHT);
         inputs.elevatorKP                      = Preferences.getDouble(_elevatorKPKey, Constants.Elevator.EXTENSION_KP);
         inputs.elevatorKD                      = Preferences.getDouble(_elevatorKDKey, Constants.Elevator.EXTENSION_KD);
-        inputs.elevatorMaxDownwardPercentSpeed = Preferences.getDouble(_elevatorMaxDownPercentKey, Constants.Elevator.MAX_DOWNWARDS_SPEED);
-        inputs.elevatorMaxUpwardPercentSpeed   = Preferences.getDouble(_elevatorMaxUpPercentKey, Constants.Elevator.MAX_UPWARDS_SPEED);
+        inputs.elevatorMaxDownwardPercentSpeed = Preferences.getDouble(_elevatorMaxDownPercentKey, Constants.Elevator.MAX_DESCENT_SPEED);
+        inputs.elevatorMaxUpwardPercentSpeed   = Preferences.getDouble(_elevatorMaxUpPercentKey, Constants.Elevator.MAX_ASCENT_SPEED);
         inputs.elevatorHangSpeed               = Preferences.getDouble(_elevatorHangSpeedKey, Constants.Elevator.HANG_SPEED);
 
         // Manipulator
