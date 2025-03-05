@@ -1,9 +1,5 @@
 package frc.robot;
 
-import com.pathplanner.lib.commands.PathPlannerAuto;
-import com.pathplanner.lib.config.ModuleConfig;
-import com.pathplanner.lib.config.RobotConfig;
-
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -40,14 +36,6 @@ public final class Constants
         public static final int BL_ENCODER    = 2;
         public static final int BR_ENCODER    = 3;
         public static final int EXTENSION_POT = 4;
-    }
-
-    public static class Autos
-    {
-        public static final PathPlannerAuto LEFT_1_CORAL_AUTO   = new PathPlannerAuto("Left_J");
-        public static final PathPlannerAuto MIDDLE_1_CORAL_AUTO = new PathPlannerAuto("Middle_G");
-        public static final PathPlannerAuto RIGHT_1_CORAL_AUTO  = new PathPlannerAuto("Right_E");
-        public static final PathPlannerAuto RIGHT_2_CORAL_AUTO  = new PathPlannerAuto("Right_DC");
     }
 
     public static class CAN
@@ -225,18 +213,5 @@ public final class Constants
         public static final double  OUTPUT_SPEED        = 10.0 / Constants.General.MOTOR_VOLTAGE;
         public static final double  L1_SPEED_MULTIPLIER = 1.0;
         public static final double  DEBOUNCE_LOOP_COUNT = 0.2;
-    }
-
-    public static class PathPlanner
-    {
-        public static final double       DRIVE_KP      = 3.0;
-        public static final double       DRIVE_KD      = 0.0;
-        public static final double       TURN_KP       = 1.5;
-        public static final double       TURN_KD       = 0.0;
-        public static final double       WHEEL_COF     = 1.2;
-        public static final double       ROBOT_MASS    = 63.27614;
-        public static final double       ROBOT_MOI     = 6.883;
-        public static final ModuleConfig MODULE_CONFIG = new ModuleConfig(Drive.WHEEL_RADIUS, Drive.MAX_LINEAR_SPEED, WHEEL_COF, Drive.DRIVE_GEARBOX, Drive.DRIVE_MOTOR_REDUCTION, Drive.DRIVE_MOTOR_CURRENT_LIMIT, 1);
-        public static final RobotConfig  ROBOT_CONFIG  = new RobotConfig(ROBOT_MASS, ROBOT_MOI, MODULE_CONFIG, Drive.MODULE_TRANSLATIONS);
     }
 }

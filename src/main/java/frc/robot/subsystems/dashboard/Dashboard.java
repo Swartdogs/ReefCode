@@ -1,24 +1,15 @@
 package frc.robot.subsystems.dashboard;
 
-import java.util.Set;
-
 import org.littletonrobotics.junction.Logger;
-
-import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.commands.CompositeCommands;
-import frc.robot.commands.ManipulatorCommands;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.elevator.Elevator;
-import frc.robot.subsystems.elevator.Elevator.ElevatorHeight;
 import frc.robot.subsystems.funnel.Funnel;
 import frc.robot.subsystems.manipulator.Manipulator;
 
@@ -45,22 +36,13 @@ public class Dashboard extends SubsystemBase
     private final DashboardIO                 _io;
     private final DashboardIOInputsAutoLogged _inputs = new DashboardIOInputsAutoLogged();
     private final Alert                       _nullAuto;
-    private PathPlannerAuto                   _selectedAuto;
+    private Command                   _selectedAuto;
 
     private Dashboard(DashboardIO io)
     {
         _io = io;
 
         _nullAuto = new Alert("No Auto Detected", AlertType.kWarning);
-
-        NamedCommands.registerCommand("ExtendToL1", CompositeCommands.setHeight(ElevatorHeight.Level1));
-        NamedCommands.registerCommand("ExtendToL2", CompositeCommands.setHeight(ElevatorHeight.Level2));
-        NamedCommands.registerCommand("ExtendToL3", CompositeCommands.setHeight(ElevatorHeight.Level3));
-        NamedCommands.registerCommand("ExtendToL4", CompositeCommands.setHeight(ElevatorHeight.Level4));
-        NamedCommands.registerCommand("Stow", CompositeCommands.setHeight(ElevatorHeight.Stow));
-        NamedCommands.registerCommand("Intake", ManipulatorCommands.intake());
-        NamedCommands.registerCommand("Output", CompositeCommands.output());
-        NamedCommands.registerCommand("Delay", Commands.defer(() -> Commands.waitSeconds(_inputs.autoDelay), Set.of()));
     }
 
     @Override
@@ -160,43 +142,7 @@ public class Dashboard extends SubsystemBase
         // Match Time
         _io.setMatchTime(DriverStation.getMatchTime());
 
-        // Autonomous
-        if (_inputs.autoStartPosition != null)
-        {
-            switch (_inputs.autoStartPosition)
-            {
-                case "Left":
-                    _selectedAuto = Constants.Autos.LEFT_1_CORAL_AUTO;
-                    break;
-
-                case "Right":
-                    if (_inputs.autoNumCoral == 2)
-                    {
-                        _selectedAuto = Constants.Autos.RIGHT_2_CORAL_AUTO;
-                    }
-                    else
-                    {
-                        _selectedAuto = Constants.Autos.RIGHT_1_CORAL_AUTO;
-                    }
-                    break;
-
-                case "Middle":
-                    _selectedAuto = Constants.Autos.MIDDLE_1_CORAL_AUTO;
-                    break;
-
-                default:
-                    _selectedAuto = null;
-            }
-        }
-
-        if (_selectedAuto != null)
-        {
-            _io.setRobotPose(_selectedAuto.getStartingPose());
-        }
-        else
-        {
-            _io.setRobotPose(null);
-        }
+        // TODO: Autonomous
 
         _nullAuto.set(_selectedAuto == null);
     }

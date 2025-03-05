@@ -2,13 +2,6 @@ package frc.robot.subsystems.drive;
 
 import org.littletonrobotics.junction.Logger;
 
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.config.PIDConstants;
-import com.pathplanner.lib.config.RobotConfig;
-import com.pathplanner.lib.controllers.PPHolonomicDriveController;
-import com.pathplanner.lib.pathfinding.Pathfinding;
-import com.pathplanner.lib.util.PathPlannerLogging;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -21,7 +14,6 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.util.LocalADStarAK;
 
 public class Drive extends SubsystemBase
 {
@@ -89,34 +81,6 @@ public class Drive extends SubsystemBase
         _rotatePID.enableContinuousInput(-Math.PI, Math.PI);
 
         _speedMultiplier = 1;
-
-        RobotConfig config;
-
-        try
-        {
-            config = RobotConfig.fromGUISettings();
-        }
-        catch (Exception e)
-        {
-            config = Constants.PathPlanner.ROBOT_CONFIG;
-        }
-
-        AutoBuilder.configure(
-                this::getPose, this::setPose, this::getChassisSpeeds, (speeds, feedforwards) -> runVelocity(speeds),
-                new PPHolonomicDriveController(new PIDConstants(Constants.PathPlanner.DRIVE_KP, Constants.PathPlanner.DRIVE_KD), new PIDConstants(Constants.PathPlanner.TURN_KP, Constants.PathPlanner.TURN_KD)), config, () -> false, this
-        );
-
-        Pathfinding.setPathfinder(new LocalADStarAK());
-
-        PathPlannerLogging.setLogActivePathCallback((activePath) ->
-        {
-            Logger.recordOutput("Odometry/Trajectory", activePath.toArray(new Pose2d[activePath.size()]));
-        });
-
-        PathPlannerLogging.setLogTargetPoseCallback((targetPose) ->
-        {
-            Logger.recordOutput("Odometry/TrajectorySetpoint", targetPose);
-        });
 
         _poseEstimator = new SwerveDrivePoseEstimator(_kinematics, new Rotation2d(), getModulePositions(), new Pose2d());
     }
