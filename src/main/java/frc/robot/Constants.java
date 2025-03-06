@@ -239,4 +239,14 @@ public final class Constants
         public static final ModuleConfig MODULE_CONFIG = new ModuleConfig(Drive.WHEEL_RADIUS, Drive.MAX_LINEAR_SPEED, WHEEL_COF, Drive.DRIVE_GEARBOX, Drive.DRIVE_MOTOR_REDUCTION, Drive.DRIVE_MOTOR_CURRENT_LIMIT, 1);
         public static final RobotConfig  ROBOT_CONFIG  = new RobotConfig(ROBOT_MASS, ROBOT_MOI, MODULE_CONFIG, Drive.MODULE_TRANSLATIONS);
     }
+
+    public static class Vision
+    {
+        public static final double VISION_STD_DEV_BASE_XY     = 0.5; // meters
+        public static final double VISION_STD_DEV_BASE_THETA  = Units.degreesToRadians(30);
+        public static final double VISION_STD_DEV_MULTI_XY    = 0.1;
+        public static final double VISION_STD_DEV_MULTI_THETA = Units.degreesToRadians(10);
+        public static final double VISION_DISTANCE_SCALE      = 0.2; // How much to increase uncertainty per meter
+        public static final double MAX_DETECTION_RANGE        = Units.inchesToMeters(300);
+    }
 }
