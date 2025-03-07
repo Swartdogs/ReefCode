@@ -2,6 +2,7 @@ package frc.robot.subsystems.drive;
 
 import org.littletonrobotics.junction.Logger;
 
+import choreo.trajectory.SwerveSample;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -64,6 +65,10 @@ public class Drive extends SubsystemBase
     private final Module[]                 _modules    = new Module[4]; // FL, FR, BL, BR
     private final SwerveDrivePoseEstimator _poseEstimator;
     private final SwerveDriveKinematics    _kinematics = new SwerveDriveKinematics(Constants.Drive.MODULE_TRANSLATIONS);
+    private final PIDController _headingController = new PIDController(Constants.Choreo.TURN_KP, 0, Constants.Choreo.TURN_KD);
+    private final PIDController _xController = new PIDController(Constants.Choreo.DRIVE_KP, 0, Constants.Choreo.TURN_KD);
+    private final PIDController _yController = new PIDController(Constants.Choreo.DRIVE_KP, 0, Constants.Choreo.TURN_KP);
+    
     private PIDController                  _rotatePID;
     private double                         _maxSpeed;
     private double                         _speedMultiplier;
@@ -76,6 +81,8 @@ public class Drive extends SubsystemBase
         _modules[1] = new Module(frModuleIO, 1);
         _modules[2] = new Module(blModuleIO, 2);
         _modules[3] = new Module(brModuleIO, 3);
+
+        _headingController.enableContinuousInput(-Math.PI, Math.PI);
 
         _rotatePID = new PIDController(Constants.Drive.ROTATE_KP, 0, Constants.Drive.ROTATE_KD);
         _rotatePID.enableContinuousInput(-Math.PI, Math.PI);
@@ -152,6 +159,19 @@ public class Drive extends SubsystemBase
 
         // Log optimized setpoint states
         Logger.recordOutput("SwerveStates/SetpointsOptimized", optimizedSetpointStates);
+    }
+
+    public void followTrajectory(SwerveSample sample)
+    {
+        Pose2d pose = getPose();
+
+        ChassisSpeeds speeds = new ChassisSpeeds(
+            sample.vx + _xController.calculate(pose.getX(), sample.x),
+            sample.vy + _yController.calculate(pose.getY(), sample.y),
+            sample.omega + _headingController.calculate(pose.getRotation().getRadians(), sample.heading)
+        );
+
+        runVelocity(speeds);
     }
 
     public void runVolts(double volts)
