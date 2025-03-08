@@ -2,7 +2,6 @@ package frc.robot;
 
 import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.wpilibj.Alert;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj.Alert.AlertType;
@@ -121,10 +120,7 @@ public class Robot extends LoggedRobot
     @Override
     public void teleopInit()
     {
-        // if (DriverStation.isFMSAttached())
-        // {
-        // Elastic.selectTab("Teleoperated");
-        // }
+        Elastic.selectTab("Teleoperated");
 
         // This makes sure that the autonomous stops running when
         // teleop starts running. If you want the autonomous to
