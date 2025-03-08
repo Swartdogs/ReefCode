@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.commands.Autos;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.funnel.Funnel;
@@ -36,7 +37,7 @@ public class Dashboard extends SubsystemBase
     private final DashboardIO                 _io;
     private final DashboardIOInputsAutoLogged _inputs = new DashboardIOInputsAutoLogged();
     private final Alert                       _nullAuto;
-    private Command                   _selectedAuto;
+    private Command                           _selectedAuto;
 
     private Dashboard(DashboardIO io)
     {
@@ -143,8 +144,39 @@ public class Dashboard extends SubsystemBase
         _io.setMatchTime(DriverStation.getMatchTime());
 
         // TODO: Autonomous
+        if (_inputs.autoStartPosition != null)
+        {
+            _selectedAuto = switch (_inputs.autoStartPosition)
+            {
+                case "Left" -> switch (_inputs.autoNumCoral)
+                    {
+                        case 1 -> Autos.ONE_PIECE_LEFT;
+                        case 2 -> Autos.TWO_PIECE_LEFT;
+                        case 3 -> Autos.THREE_PIECE_LEFT;
+                        default -> null;
+                    };
+                case "Middle" -> Autos.ONE_PIECE_MIDDLE;
+                case "Right" -> switch (_inputs.autoNumCoral)
+                    {
+                        case 1 -> Autos.ONE_PIECE_RIGHT;
+                        case 2 -> Autos.TWO_PIECE_RIGHT;
+                        case 3 -> Autos.THREE_PIECE_RIGHT;
+                        default -> null;
+                    };
+                default -> null;
+            };
+        }
+        else
+        {
+            _selectedAuto = null;
+        }
 
         _nullAuto.set(_selectedAuto == null);
+    }
+
+    public double getAutoDelay()
+    {
+        return _inputs.autoDelay;
     }
 
     public Command getSelectedAuto()
