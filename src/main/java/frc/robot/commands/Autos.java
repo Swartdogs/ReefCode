@@ -71,4 +71,33 @@ public class Autos
             CompositeCommands.output()
         );
     }
+
+    public Command fourCoralAuto(String pathToPegOne, String pathToCSOne, String pathToPegTwo, String pathToCSTwo, String pathToPegThree, String pathToCSThree, String pathToPegFour)
+    {
+        return Commands.sequence(
+            autoFactory.resetOdometry(pathToPegOne),
+            CompositeCommands.setHeight(ElevatorHeight.Level3),
+            autoFactory.trajectoryCmd(pathToPegOne),
+            CompositeCommands.setHeight(ElevatorHeight.Level4),
+            CompositeCommands.output(),
+            autoFactory.trajectoryCmd(pathToCSOne),
+            CompositeCommands.intake(),
+            CompositeCommands.setHeight(ElevatorHeight.Level3),
+            autoFactory.trajectoryCmd(pathToPegTwo),
+            CompositeCommands.setHeight(ElevatorHeight.Level4),
+            CompositeCommands.output(),
+            autoFactory.trajectoryCmd(pathToCSTwo),
+            CompositeCommands.intake(),
+            CompositeCommands.setHeight(ElevatorHeight.Level3),
+            autoFactory.trajectoryCmd(pathToPegThree),
+            CompositeCommands.setHeight(ElevatorHeight.Level4),
+            CompositeCommands.output(),
+            autoFactory.trajectoryCmd(pathToCSThree),
+            CompositeCommands.intake(),
+            CompositeCommands.setHeight(ElevatorHeight.Level3),
+            autoFactory.trajectoryCmd(pathToPegFour),
+            CompositeCommands.setHeight(ElevatorHeight.Level4),
+            CompositeCommands.output()
+        );
+    }
 }
