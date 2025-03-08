@@ -66,8 +66,8 @@ public class Drive extends SubsystemBase
     private final SwerveDrivePoseEstimator _poseEstimator;
     private final SwerveDriveKinematics    _kinematics        = new SwerveDriveKinematics(Constants.Drive.MODULE_TRANSLATIONS);
     private final PIDController            _headingController = new PIDController(Constants.Choreo.TURN_KP, 0, Constants.Choreo.TURN_KD);
-    private final PIDController            _xController       = new PIDController(Constants.Choreo.DRIVE_KP, 0, Constants.Choreo.TURN_KD);
-    private final PIDController            _yController       = new PIDController(Constants.Choreo.DRIVE_KP, 0, Constants.Choreo.TURN_KP);
+    private final PIDController            _xController       = new PIDController(Constants.Choreo.DRIVE_KP, 0, Constants.Choreo.DRIVE_KD);
+    private final PIDController            _yController       = new PIDController(Constants.Choreo.DRIVE_KP, 0, Constants.Choreo.DRIVE_KD);
     private PIDController                  _rotatePID;
     private double                         _maxSpeed;
     private double                         _speedMultiplier;
@@ -168,7 +168,7 @@ public class Drive extends SubsystemBase
                 sample.vx + _xController.calculate(pose.getX(), sample.x), sample.vy + _yController.calculate(pose.getY(), sample.y), sample.omega + _headingController.calculate(pose.getRotation().getRadians(), sample.heading)
         );
 
-        runVelocity(speeds);
+        runVelocity(ChassisSpeeds.fromFieldRelativeSpeeds(speeds, getRotation()));
     }
 
     public void runVolts(double volts)
