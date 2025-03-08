@@ -113,8 +113,8 @@ public final class Constants
         public static final double          TURN_SIM_KP                   = 8.0;
         public static final double          TURN_SIM_KD                   = 0.0;
         public static final double          ODOMETRY_FREQUENCY            = 100.0; // ms
-        public static final double          ROTATE_KP                     = 2.35;
-        public static final double          ROTATE_KD                     = 0.085;
+        public static final double          ROTATE_KP                     = 2.1;
+        public static final double          ROTATE_KD                     = 0.1;
         public static final double          MAX_SPEED_ELEVATOR_MULTIPLIER = 1;
         public static final double          MIN_SPEED_ELEVATOR_MULTIPLIER = 0.3;
         public static final double          MAX_SPEED_ELEVATOR_HEIGHT     = Constants.Elevator.L1_HEIGHT;
@@ -124,7 +124,7 @@ public final class Constants
         public static final double          MAX_LINEAR_SPEED              = 4.8; // m/s
         public static final double          MAX_ANGULAR_SPEED             = MAX_LINEAR_SPEED / DRIVE_BASE_RADIUS;
         public static final double          SPEED_MOTION_THRESHOLD        = 0.02 * MAX_LINEAR_SPEED;
-        public static final double          ROTATION_MOTION_THRESHOLD     = 0.02 * MAX_ANGULAR_SPEED;
+        public static final double          ROTATION_MOTION_THRESHOLD     = 0.01 * MAX_ANGULAR_SPEED;
         public static final double          MAX_SNAP_SPEED_PERCENTAGE     = 0.7;
     }
 
@@ -158,20 +158,20 @@ public final class Constants
 
     public static class Elevator
     {
-        public static final double  RAW_SENSOR_MIN               = 0.634;
-        public static final double  RAW_SENSOR_MAX               = 0.394;
+        public static final double  RAW_SENSOR_MIN               = 0.628;
+        public static final double  RAW_SENSOR_MAX               = 0.3877;
         public static final double  MIN_EXTENSION                = 16.0;
-        public static final double  MAX_EXTENSION                = 77.0;
+        public static final double  MAX_EXTENSION                = 76.5;
         public static final double  EXTENSION_KP                 = 0.5;
         public static final double  EXTENSION_KI                 = 0.0;
         public static final double  EXTENSION_KD                 = 0.02; // anything above 0.18 causes "shake"
         public static final double  EXTENSION_TOLERANCE          = 1.0;
         public static final double  STOW_HEIGHT                  = MIN_EXTENSION + 2.0;
         public static final double  L1_HEIGHT                    = MIN_EXTENSION + 11.0;
-        public static final double  L2_HEIGHT                    = MIN_EXTENSION + 17.4;
-        public static final double  L3_HEIGHT                    = MIN_EXTENSION + 32.5;
+        public static final double  L2_HEIGHT                    = MIN_EXTENSION + 18.0;
+        public static final double  L3_HEIGHT                    = MIN_EXTENSION + 33.2;
         public static final double  L4_HEIGHT                    = MIN_EXTENSION + 59.5;
-        public static final double  HANG_HEIGHT                  = MIN_EXTENSION + 24.0;
+        public static final double  HANG_HEIGHT                  = (L2_HEIGHT + L3_HEIGHT) / 2;
         public static final double  MAX_ASCENT_SPEED             = 0.8;
         public static final double  MAX_DESCENT_SPEED            = 0.2;
         public static final double  EXTENSION_SCALE              = (MAX_EXTENSION - MIN_EXTENSION) / (RAW_SENSOR_MAX - RAW_SENSOR_MIN);
@@ -198,7 +198,6 @@ public final class Constants
         public static final double MOTOR_VOLTAGE    = 12.0;
     }
 
-    // TODO: Not used yet
     public static class LED
     {
         public static final double FLASH_TIME_SECS = 1.0;

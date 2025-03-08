@@ -66,7 +66,7 @@ public final class DriveCommands
 
     public static Command driveAtOrientation(DoubleSupplier xSupplier, DoubleSupplier ySupplier, BooleanSupplier robotCentric, Supplier<Rotation2d> setpoint, double maxSpeed)
     {
-        return Commands.sequence(Drive.getInstance().runOnce(() -> Drive.getInstance().rotateInit(setpoint.get(), maxSpeed)), joystickDrive(xSupplier, ySupplier, () -> Drive.getInstance().rotateExecute(), robotCentric, 2, 1));
+        return Commands.runOnce(() -> Drive.getInstance().rotateInit(setpoint.get(), maxSpeed)).andThen(joystickDrive(xSupplier, ySupplier, () -> Drive.getInstance().rotateExecute(), robotCentric, 2, 1));
     }
 
     public static Command resetGyro()
