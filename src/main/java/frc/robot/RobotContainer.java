@@ -16,6 +16,8 @@ import frc.robot.commands.ManipulatorCommands;
 import frc.robot.subsystems.dashboard.Dashboard;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.elevator.Elevator.ElevatorHeight;
+import frc.robot.subsystems.vision.Vision;
+import frc.robot.subsystems.vision.Vision.Camera;
 
 public class RobotContainer
 {
@@ -31,6 +33,7 @@ public class RobotContainer
     public RobotContainer()
     {
         DriverStation.silenceJoystickConnectionWarning(true);
+        Vision.getInstance(Camera.Front);
 
         Dashboard.getInstance();
 
