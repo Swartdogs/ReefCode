@@ -6,6 +6,7 @@ import com.pathplanner.lib.config.RobotConfig;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -248,5 +249,11 @@ public final class Constants
         public static final double VISION_STD_DEV_MULTI_THETA = Units.degreesToRadians(10);
         public static final double VISION_DISTANCE_SCALE      = 0.2; // How much to increase uncertainty per meter
         public static final double MAX_DETECTION_RANGE        = Units.inchesToMeters(300);
+        public static final double TURN_KP = 0.0;
+        public static final double TURN_KD = 0.0;
+        public static final double DRIVE_KP = 0.0;
+        public static final double DRIVE_KD = 0.0;
+        public static final Pose2d LEFT_REFERENCE = new Pose2d(Units.inchesToMeters(0), Units.inchesToMeters(0), Rotation2d.fromDegrees(180)); //set values
+        public static final Pose2d RIGHT_REFERENCE = new Pose2d(Units.inchesToMeters(0), Units.inchesToMeters(0), Rotation2d.fromDegrees(180)); //set values
     }
 }

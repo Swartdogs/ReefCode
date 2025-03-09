@@ -13,6 +13,7 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 import org.photonvision.targeting.TargetCorner;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.NetworkTableEvent;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.Constants;
@@ -33,8 +34,7 @@ public class VisionIOPhotonLib implements VisionIO
     private double[]                  _targetPitches     = new double[] {};
     private double[]                  _targetAreas       = new double[] {};
     private int                       _numProcessedTargets;
-    private double[]                  _cornerX           = new double[] {};
-    private double[]                  _cornerY           = new double[] {};
+    private Translation2d[]           _corners           = new Translation2d[] {};
 
     public VisionIOPhotonLib(Camera cameraSettings)
     {
@@ -42,7 +42,7 @@ public class VisionIOPhotonLib implements VisionIO
         _camera         = new PhotonCamera(_cameraSettings.cameraName);
 
         _poseEstimator = new PhotonPoseEstimator(Constants.Field.APRIL_TAG_FIELD_LAYOUT, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, _cameraSettings.robotToCamera);
-        _poseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
+        _poseEstimator.setMultiTagFallbackStrategy(PoseStrategy.CLOSEST_TO_REFERENCE_POSE);
 
         NetworkTableInstance.getDefault().addListener(NetworkTableInstance.getDefault().getEntry("/photonvision/" + _cameraSettings.cameraName + "/latencyMillis"), EnumSet.of(NetworkTableEvent.Kind.kValueRemote), event ->
         {
@@ -63,8 +63,7 @@ public class VisionIOPhotonLib implements VisionIO
             List<Double>              pitches          = new ArrayList<>();
             List<Double>              areas            = new ArrayList<>();
             List<PhotonTrackedTarget> processedTargets = new ArrayList<>();
-            List<Double>              cornerXList      = new ArrayList<>();
-            List<Double>              cornerYList      = new ArrayList<>();
+            List<Translation2d>       cornerList       = new ArrayList<>();
 
             // Process all targets
             for (PhotonTrackedTarget target : targets)
@@ -76,8 +75,7 @@ public class VisionIOPhotonLib implements VisionIO
 
                 for (TargetCorner corner : target.getDetectedCorners())
                 {
-                    cornerXList.add(corner.x);
-                    cornerYList.add(corner.y);
+                    cornerList.add(new Translation2d(corner.x, corner.y));
                 }
 
                 var transform = target.getBestCameraToTarget();
@@ -113,8 +111,7 @@ public class VisionIOPhotonLib implements VisionIO
                 _targetYaws          = yaws.stream().mapToDouble(Double::doubleValue).toArray();
                 _targetPitches       = pitches.stream().mapToDouble(Double::doubleValue).toArray();
                 _targetAreas         = areas.stream().mapToDouble(Double::doubleValue).toArray();
-                _cornerX             = cornerXList.stream().mapToDouble(Double::doubleValue).toArray();
-                _cornerY             = cornerYList.stream().mapToDouble(Double::doubleValue).toArray();
+                _corners             = cornerList.stream().map(t -> t).toArray(Translation2d[]::new);
             }
         });
     }
@@ -131,7 +128,6 @@ public class VisionIOPhotonLib implements VisionIO
         inputs.targetYaws       = _targetYaws;
         inputs.targetPitches    = _targetPitches;
         inputs.targetAreas      = _targetAreas;
-        inputs.cornerX          = _cornerX;
-        inputs.cornerY          = _cornerY;
+        inputs.corners          = _corners;
     }
 }

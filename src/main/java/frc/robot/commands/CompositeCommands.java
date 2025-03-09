@@ -16,6 +16,8 @@ import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.Elevator.ElevatorHeight;
 import frc.robot.subsystems.manipulator.Manipulator;
+import frc.robot.subsystems.vision.Vision;
+import frc.robot.subsystems.vision.Vision.Camera;
 
 public class CompositeCommands
 {
@@ -57,6 +59,11 @@ public class CompositeCommands
                 Drive.getInstance().runVelocity(chassisSpeeds);
             }
         }, Drive.getInstance());
+    }
+
+    public static Command autoAlign(Camera camera, int id, Pose2d reference)
+    {
+        return Commands.sequence(Commands.runOnce(() -> Vision.getInstance(camera).setVisionReference(id, reference)), joystickDrive(() -> Vision.getInstance(camera).getXDistanceCalculation(), () -> Vision.getInstance(camera).getYDistanceCalculation(), () -> Vision.getInstance(camera).getAngleCalculation(), () -> true, 1, 1));
     }
 
     public static Command intake()
