@@ -195,7 +195,6 @@ public class Dashboard extends SubsystemBase
     }
 
     public double getManipulatorIntakePercentSpeed()
-
     {
 
         return _inputs.manipulatorIntakePercentSpeed;

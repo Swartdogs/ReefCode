@@ -5,6 +5,7 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants;
+import frc.robot.subsystems.dashboard.Dashboard;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.Elevator.ElevatorHeight;
 
@@ -12,11 +13,6 @@ public class ElevatorCommands
 {
     private ElevatorCommands()
     {
-    }
-
-    public static Command setHeight(double height)
-    {
-        return Elevator.getInstance().runOnce(() -> Elevator.getInstance().setExtension(height));
     }
 
     public static Command setHeight(ElevatorHeight height)
@@ -56,6 +52,9 @@ public class ElevatorCommands
 
     public static Command hangExecute()
     {
-        return Commands.sequence(Elevator.getInstance().run(() -> Elevator.getInstance().setVolts(-Constants.Elevator.HANG_SPEED * Constants.General.MOTOR_VOLTAGE))).finallyDo(() -> Elevator.getInstance().stop());
+        return Commands.sequence(
+                Elevator.getInstance().run(() -> Elevator.getInstance().setVolts(-Dashboard.getInstance().getElevatorHangSpeed() * Constants.General.MOTOR_VOLTAGE))
+        ).finallyDo(() -> Elevator.getInstance().stop());
+
     }
 }

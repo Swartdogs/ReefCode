@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
+import frc.robot.subsystems.elevator.Elevator;
 
 public class DashboardIONetwork implements DashboardIO
 {
@@ -27,8 +28,6 @@ public class DashboardIONetwork implements DashboardIO
     private final String _elevatorMaxDownPercentKey   = "Dashboard/Dashboard Settings/Elevator Max Down Speed";
     private final String _elevatorMaxUpPercentKey     = "Dashboard/Dashboard Settings/Elevator Max Up Speed";
     private final String _manipulatorIntakePercentKey = "Dashboard/Dashboard Settings/Manipulator Intake Speed";
-    // private final String _manipulatorSlowIntakePercentKey = "Dashboard/Dashboard
-    // Settings/Manipulator Slow Intake Speed";
     private final String _manipulatorOutputPercentKey     = "Dashboard/Dashboard Settings/Manipulator Output Speed";
     private final String _manipulatorL1SpeedMultiplierKey = "Dashboard/Dashboard Settings/Manipulator L1 Speed Multiplier";
     private final String _funnelRetractPercentKey         = "Dashboard/Dashboard Settings/Funnel Retract Speed";
@@ -47,6 +46,7 @@ public class DashboardIONetwork implements DashboardIO
     private final NetworkTableEntry _manipulatorEndSensorTripped;
     private final NetworkTableEntry _funnelIsDropped;
     private final NetworkTableEntry _matchTime;
+
     private Rotation2d              _driveFLAngle    = Constants.Drive.FL_ZERO_ROTATION;
     private Rotation2d              _driveFRAngle    = Constants.Drive.FR_ZERO_ROTATION;
     private Rotation2d              _driveBLAngle    = Constants.Drive.BL_ZERO_ROTATION;
@@ -96,8 +96,6 @@ public class DashboardIONetwork implements DashboardIO
         Preferences.initDouble(_elevatorMaxDownPercentKey, Constants.Elevator.MAX_DESCENT_SPEED);
         Preferences.initDouble(_elevatorMaxUpPercentKey, Constants.Elevator.MAX_ASCENT_SPEED);
         Preferences.initDouble(_manipulatorIntakePercentKey, Constants.Manipulator.INTAKE_SPEED);
-        // Preferences.initDouble(_manipulatorSlowIntakePercentKey,
-        // Constants.Manipulator.SLOW_INTAKE_SPEED);
         Preferences.initDouble(_manipulatorOutputPercentKey, Constants.Manipulator.OUTPUT_SPEED);
         Preferences.initDouble(_manipulatorL1SpeedMultiplierKey, Constants.Manipulator.L1_SPEED_MULTIPLIER);
         Preferences.initDouble(_funnelRetractPercentKey, Constants.Funnel.RETRACT_SPEED);
@@ -196,12 +194,13 @@ public class DashboardIONetwork implements DashboardIO
         _autoCoralCountChooser.addOption("1", 1);
         _autoCoralCountChooser.addOption("2", 2);
 
+        // Field
+        _field = new Field2d();
+        
+        // Add sendable elements to NetworkTables
         SmartDashboard.putData("Auto Delay", _autoDelayChooser);
         SmartDashboard.putData("Start Position", _autoStartPositionChooser);
         SmartDashboard.putData("Number of Coral", _autoCoralCountChooser);
-
-        // Field
-        _field = new Field2d();
 
         SmartDashboard.putData("Field", _field);
     }
@@ -226,9 +225,6 @@ public class DashboardIONetwork implements DashboardIO
 
         // Manipulator
         inputs.manipulatorIntakePercentSpeed = Preferences.getDouble(_manipulatorIntakePercentKey, Constants.Manipulator.INTAKE_SPEED);
-        // inputs.manipulatorSlowIntakePercentSpeed =
-        // Preferences.getDouble(_manipulatorSlowIntakePercentKey,
-        // Constants.Manipulator.SLOW_INTAKE_SPEED);
         inputs.manipulatorOutputPercentSpeed = Preferences.getDouble(_manipulatorOutputPercentKey, Constants.Manipulator.OUTPUT_SPEED);
         inputs.manipulatorL1SpeedMultiplier  = Preferences.getDouble(_manipulatorL1SpeedMultiplierKey, Constants.Manipulator.L1_SPEED_MULTIPLIER);
 
@@ -389,36 +385,42 @@ public class DashboardIONetwork implements DashboardIO
     @Override
     public void releaseElevatorStowHeightZeroButton()
     {
+        Preferences.setDouble(_elevatorStowHeightKey, Elevator.getInstance().getExtension());
         _elevatorZeroStowHeightButton.setBoolean(false);
     }
 
     @Override
     public void releaseElevatorL1HeightZeroButton()
     {
+        Preferences.setDouble(_elevatorL1HeightKey, Elevator.getInstance().getExtension());
         _elevatorZeroL1HeightButton.setBoolean(false);
     }
 
     @Override
     public void releaseElevatorL2HeightZeroButton()
     {
+        Preferences.setDouble(_elevatorL2HeightKey, Elevator.getInstance().getExtension());
         _elevatorZeroL2HeightButton.setBoolean(false);
     }
 
     @Override
     public void releaseElevatorL3HeightZeroButton()
     {
+        Preferences.setDouble(_elevatorL3HeightKey, Elevator.getInstance().getExtension());
         _elevatorZeroL3HeightButton.setBoolean(false);
     }
 
     @Override
     public void releaseElevatorL4HeightZeroButton()
     {
+        Preferences.setDouble(_elevatorL4HeightKey, Elevator.getInstance().getExtension());
         _elevatorZeroL4HeightButton.setBoolean(false);
     }
 
     @Override
     public void releaseElevatorHangHeightZeroButton()
     {
+        Preferences.setDouble(_elevatorHangHeightKey, Elevator.getInstance().getExtension());
         _elevatorZeroHangHeightButton.setBoolean(false);
     }
 
@@ -451,50 +453,4 @@ public class DashboardIONetwork implements DashboardIO
     {
         _driveZeroModuleOffsetsButton.setBoolean(false);
     }
-
-    // private static void setLeftStartReefOptions(SendableSelector<String>
-    // selector)
-    // {
-    // setReefOptions(selector, NEXT_POSITIONS.get("Left"));
-    // }
-
-    // private static void setRightStartReefOptions(SendableSelector<String>
-    // selector)
-    // {
-    // setReefOptions(selector, NEXT_POSITIONS.get("Right"));
-    // }
-
-    // private static void setMiddleStartReefOptions(SendableSelector<String>
-    // selector)
-    // {
-    // setReefOptions(selector, NEXT_POSITIONS.get("Middle"));
-    // }
-
-    // private static void setReefOptions(SendableSelector<String> selector,
-    // List<String> options)
-    // {
-    // selector.clear();
-
-    // for (var option : options)
-    // {
-    // selector.addOption(option, option);
-    // }
-    // }
-
-    // // This function assumes we're already at a node
-    // // We need to first see which coral station(s) we can go to,
-    // // then we can see what nodes we can go to from those coral stations
-    // private static List<String> calculateNextAvailablePositions(String current)
-    // {
-    // var nextPositions = new ArrayList<String>();
-
-    // var coralStations = NEXT_POSITIONS.get(current);
-
-    // for (var coralStation : coralStations)
-    // {
-    // nextPositions.addAll(NEXT_POSITIONS.get(coralStation));
-    // }
-
-    // return nextPositions;
-    // }
 }

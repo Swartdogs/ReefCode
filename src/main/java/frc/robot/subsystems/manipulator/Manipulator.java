@@ -37,14 +37,15 @@ public class Manipulator extends SubsystemBase
     private Manipulator(ManipulatorIO io)
     {
         _io        = io;
-        _debouncer = new Debouncer(Constants.Manipulator.DEBOUNCE_LOOP_SECS);
+        _debouncer = new Debouncer(Constants.Manipulator.DEBOUNCE_TIMER);
     }
 
     @Override
     public void periodic()
     {
         _io.updateInputs(_inputs);
-        _coralDetected = (!_inputs.startSensorTripped && _inputs.endSensorTripped) || (Elevator.getInstance().getExtension() > ((Constants.Elevator.L3_HEIGHT + Constants.Elevator.L4_HEIGHT) / 2.0) && _inputs.endSensorTripped);
+        _coralDetected = (!_inputs.startSensorTripped && _inputs.endSensorTripped) || (Elevator.getInstance().getExtension() > ((Dashboard.getInstance().getElevatorL3Height() + Dashboard.getInstance().getElevatorL4Height()) / 2.0) && _inputs.endSensorTripped);
+
         Logger.processInputs("Manipulator", _inputs);
         Logger.recordOutput("Detected Coral", _coralDetected);
         Logger.recordOutput("Has Coral", hasCoral());
@@ -52,7 +53,7 @@ public class Manipulator extends SubsystemBase
 
     public void output()
     {
-        if (Elevator.getInstance().getExtension() < Constants.Elevator.L2_HEIGHT)
+        if (Elevator.getInstance().getExtension() < Dashboard.getInstance().getElevatorL2Height())
         {
             _io.setLeftVolts(Dashboard.getInstance().getManipulatorOutputPercentSpeed() * Constants.General.MOTOR_VOLTAGE);
             _io.setRightVolts(Dashboard.getInstance().getManipulatorOutputPercentSpeed() * Dashboard.getInstance().getManipulatorL1SpeedMultiplier() * Constants.General.MOTOR_VOLTAGE);
