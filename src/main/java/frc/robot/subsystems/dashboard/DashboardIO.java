@@ -28,8 +28,6 @@ public interface DashboardIO
 
         // Manipulator
         public double manipulatorIntakePercentSpeed = Constants.Manipulator.INTAKE_SPEED;
-        // public double manipulatorSlowIntakePercentSpeed =
-        // Constants.Manipulator.SLOW_INTAKE_SPEED;
         public double manipulatorOutputPercentSpeed = Constants.Manipulator.OUTPUT_SPEED;
         public double manipulatorL1SpeedMultiplier  = Constants.Manipulator.L1_SPEED_MULTIPLIER;
 

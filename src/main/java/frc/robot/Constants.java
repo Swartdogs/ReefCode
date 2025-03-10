@@ -167,7 +167,6 @@ public final class Constants
         public static final double  MIN_EXTENSION                = 16.0;
         public static final double  MAX_EXTENSION                = 77.0;
         public static final double  EXTENSION_KP                 = 0.5;
-        public static final double  EXTENSION_KI                 = 0.0;
         public static final double  EXTENSION_KD                 = 0.02; // anything above 0.18 causes "shake"
         public static final double  EXTENSION_TOLERANCE          = 1.0;
         public static final double  STOW_HEIGHT                  = MIN_EXTENSION + 2.0;
@@ -224,7 +223,7 @@ public final class Constants
         public static final double  SLOW_INTAKE_SPEED   = 1.5 / Constants.General.MOTOR_VOLTAGE;
         public static final double  OUTPUT_SPEED        = 10.0 / Constants.General.MOTOR_VOLTAGE;
         public static final double  L1_SPEED_MULTIPLIER = 1.0;
-        public static final double  DEBOUNCE_LOOP_COUNT = 0.2;
+        public static final double  DEBOUNCE_TIMER = 0.2;
     }
 
     public static class PathPlanner

@@ -4,29 +4,33 @@ import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.Alert;
-import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.subsystems.dashboard.Dashboard;
 
-import static frc.robot.Constants.Elevator.*;
+import java.util.function.DoubleSupplier;
 
 public class Elevator extends SubsystemBase
 {
     public enum ElevatorHeight
     {
-        Stow(STOW_HEIGHT), Level1(L1_HEIGHT), Level2(L2_HEIGHT), Level3(L3_HEIGHT), Level4(L4_HEIGHT), Hang(HANG_HEIGHT);
+        Stow(() -> Dashboard.getInstance().getElevatorStowHeight()),
+        Level1(() -> Dashboard.getInstance().getElevatorL1Height()),
+        Level2(() -> Dashboard.getInstance().getElevatorL2Height()),
+        Level3(() -> Dashboard.getInstance().getElevatorL3Height()),
+        Level4(() -> Dashboard.getInstance().getElevatorL4Height()),
+        Hang(() -> Dashboard.getInstance().getElevatorHangHeight());
 
-        private double _height;
+        private DoubleSupplier _heightSupplier;
 
-        private ElevatorHeight(double height)
+        private ElevatorHeight(DoubleSupplier heightSupplier)
         {
-            _height = height;
+            _heightSupplier = heightSupplier;
         }
 
         public double getHeight()
         {
-            return _height;
+            return _heightSupplier.getAsDouble();
         }
     }
 
@@ -52,18 +56,15 @@ public class Elevator extends SubsystemBase
     private final ElevatorIO                 _io;
     private final ElevatorIOInputsAutoLogged _inputs            = new ElevatorIOInputsAutoLogged();
     private final PIDController              _extensionPID;
+
     private Double                           _extensionSetpoint = null;
-    private final Alert                      _potAlert;
-    private double                           _lastPosition      = 0.0; // Last 20 milisecond elevator position
 
     private Elevator(ElevatorIO io)
     {
         _io = io;
 
-        _extensionPID = new PIDController(EXTENSION_KP, EXTENSION_KI, EXTENSION_KD);
-        _extensionPID.setTolerance(EXTENSION_TOLERANCE);
-
-        _potAlert = new Alert("Potentiometer has been disconnected", AlertType.kError);
+        _extensionPID = new PIDController(Constants.Elevator.EXTENSION_KP, 0, Constants.Elevator.EXTENSION_KD);
+        _extensionPID.setTolerance(Constants.Elevator.EXTENSION_TOLERANCE);
     }
 
     @Override
@@ -79,18 +80,6 @@ public class Elevator extends SubsystemBase
         }
 
         Logger.recordOutput("Has Extension Setpoint", _extensionSetpoint != null);
-
-        if (_inputs.leaderVolts != 0 && _lastPosition == _inputs.extensionPosition) // if voltage is not 0 and last position does not change then error
-        {
-            _potAlert.set(true);
-        }
-
-        _lastPosition = _inputs.extensionPosition;
-    }
-
-    public void setExtension(double height) // height is measured in inches
-    {
-        _extensionSetpoint = height;
     }
 
     public void setExtension(ElevatorHeight elevatorHeight) // height is measured in inches
@@ -108,7 +97,7 @@ public class Elevator extends SubsystemBase
     {
         if (_extensionSetpoint == null)
         {
-            _extensionSetpoint = Constants.Elevator.STOW_HEIGHT;
+            _extensionSetpoint = Dashboard.getInstance().getElevatorStowHeight();
         }
 
         _extensionSetpoint += modification;

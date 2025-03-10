@@ -160,44 +160,7 @@ public class Dashboard extends SubsystemBase
         // Match Time
         _io.setMatchTime(DriverStation.getMatchTime());
 
-        // Autonomous
-        if (_inputs.autoStartPosition != null)
-        {
-            switch (_inputs.autoStartPosition)
-            {
-                case "Left":
-                    _selectedAuto = Constants.Autos.LEFT_1_CORAL_AUTO;
-                    break;
-
-                case "Right":
-                    if (_inputs.autoNumCoral == 2)
-                    {
-                        _selectedAuto = Constants.Autos.RIGHT_2_CORAL_AUTO;
-                    }
-                    else
-                    {
-                        _selectedAuto = Constants.Autos.RIGHT_1_CORAL_AUTO;
-                    }
-                    break;
-
-                case "Middle":
-                    _selectedAuto = Constants.Autos.MIDDLE_1_CORAL_AUTO;
-                    break;
-
-                default:
-                    _selectedAuto = null;
-            }
-        }
-
-        if (_selectedAuto != null)
-        {
-            _io.setRobotPose(_selectedAuto.getStartingPose());
-        }
-        else
-        {
-            _io.setRobotPose(null);
-        }
-
+        // TODO: Autonomous
         _nullAuto.set(_selectedAuto == null);
     }
 
@@ -217,7 +180,6 @@ public class Dashboard extends SubsystemBase
     }
 
     public double getManipulatorIntakePercentSpeed()
-
     {
 
         return _inputs.manipulatorIntakePercentSpeed;
