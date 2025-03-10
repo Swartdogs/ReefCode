@@ -66,24 +66,52 @@ public class CompositeCommands
 
     public static Command autoAlign(Camera camera, int id, Pose2d reference)
     {
-        return Commands.sequence(
-                Commands.runOnce(() -> Vision.getInstance(camera).setVisionReference(id, reference)),
-                joystickDrive(() -> Vision.getInstance(camera).getXDistanceCalculation(), () -> Vision.getInstance(camera).getYDistanceCalculation(), () -> Vision.getInstance(camera).getAngleCalculation(), () -> true, 1, 1)
+        // @formatter:off
+        return Commands.sequence
+        (
+            Commands.runOnce(() -> Vision.getInstance(camera).setVisionReference(id, reference)),
+            joystickDrive(() -> Vision.getInstance(camera).getXDistanceCalculation(), () -> Vision.getInstance(camera).getYDistanceCalculation(), () -> Vision.getInstance(camera).getAngleCalculation(), () -> true, 1, 1)
         );
+        // @formatter:on
     }
 
     public static Command intake()
     {
-        return Commands.repeatingSequence(ManipulatorCommands.intake()).until(() -> Manipulator.getInstance().hasCoral()).andThen(ManipulatorCommands.index()).unless(() -> Manipulator.getInstance().hasCoral());
+        // @formatter:off
+        return Commands.sequence
+        (
+            Commands.repeatingSequence
+            (
+                ManipulatorCommands.intake()
+            )
+            .until(() -> Manipulator.getInstance().hasCoral()),
+
+            ManipulatorCommands.index()
+        )
+        .unless(() -> Manipulator.getInstance().hasCoral());
+        // @formatter:on
     }
 
     public static Command output()
     {
-        return Commands.sequence(ManipulatorCommands.output(), Commands.waitSeconds(Constants.Elevator.WAIT_TIME), ElevatorCommands.setHeight(ElevatorHeight.Stow));
+        // @formatter:off
+        return Commands.sequence
+        (
+            ManipulatorCommands.output(),
+            Commands.waitSeconds(Constants.Elevator.WAIT_TIME),
+            ElevatorCommands.setHeight(ElevatorHeight.Stow)
+        );
+        // @formatter:on
     }
 
     public static Command setHeight(ElevatorHeight height)
     {
-        return Commands.sequence(ElevatorCommands.setHeight(height), Commands.waitUntil(() -> Elevator.getInstance().atSetpoint()));
+        // @formatter:off
+        return Commands.sequence
+        (
+            ElevatorCommands.setHeight(height),
+            Commands.waitUntil(() -> Elevator.getInstance().atSetpoint())
+        );
+        // @formatter:on
     }
 }

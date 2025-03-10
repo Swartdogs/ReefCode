@@ -22,40 +22,97 @@ public class Autos
 
     public static Command oneCoralAuto(String path)
     {
-        return Commands.sequence(
-                Commands.defer(() -> Commands.waitSeconds(Dashboard.getInstance().getAutoDelay()), Set.of()), autoFactory.resetOdometry(path), CompositeCommands.setHeight(ElevatorHeight.Level3), autoFactory.trajectoryCmd(path),
-                CompositeCommands.setHeight(ElevatorHeight.Level4), CompositeCommands.output()
+        // @formatter:off
+        return Commands.sequence
+        (
+            Commands.defer(() -> Commands.waitSeconds(Dashboard.getInstance().getAutoDelay()), Set.of()),
+            autoFactory.resetOdometry(path),
+            CompositeCommands.setHeight(ElevatorHeight.Level3),
+            autoFactory.trajectoryCmd(path),
+            CompositeCommands.setHeight(ElevatorHeight.Level4),
+            CompositeCommands.output()
         );
+        // @formatter:on
     }
 
     public static Command twoCoralAuto(String pathToPegOne, String pathToCS, String pathToPegTwo)
     {
-        return Commands.sequence(
-                Commands.defer(() -> Commands.waitSeconds(Dashboard.getInstance().getAutoDelay()), Set.of()), autoFactory.resetOdometry(pathToPegOne), CompositeCommands.setHeight(ElevatorHeight.Level3),
-                autoFactory.trajectoryCmd(pathToPegOne), CompositeCommands.setHeight(ElevatorHeight.Level4), CompositeCommands.output(), autoFactory.trajectoryCmd(pathToCS), CompositeCommands.intake(),
-                CompositeCommands.setHeight(ElevatorHeight.Level3), autoFactory.trajectoryCmd(pathToPegTwo), CompositeCommands.setHeight(ElevatorHeight.Level4), CompositeCommands.output()
+        // @formatter:off
+        return Commands.sequence
+        (
+            Commands.defer(() -> Commands.waitSeconds(Dashboard.getInstance().getAutoDelay()), Set.of()),
+            autoFactory.resetOdometry(pathToPegOne),
+            CompositeCommands.setHeight(ElevatorHeight.Level3),
+            autoFactory.trajectoryCmd(pathToPegOne),
+            CompositeCommands.setHeight(ElevatorHeight.Level4),
+            CompositeCommands.output(),
+            autoFactory.trajectoryCmd(pathToCS),
+            CompositeCommands.intake(),
+            CompositeCommands.setHeight(ElevatorHeight.Level3),
+            autoFactory.trajectoryCmd(pathToPegTwo),
+            CompositeCommands.setHeight(ElevatorHeight.Level4),
+            CompositeCommands.output()
         );
+        // @formatter:on
     }
 
     public static Command threeCoralAuto(String pathToPegOne, String pathToCSOne, String pathToPegTwo, String pathToCSTwo, String pathToPegThree)
     {
-        return Commands.sequence(
-                Commands.defer(() -> Commands.waitSeconds(Dashboard.getInstance().getAutoDelay()), Set.of()), autoFactory.resetOdometry(pathToPegOne), CompositeCommands.setHeight(ElevatorHeight.Level3),
-                autoFactory.trajectoryCmd(pathToPegOne), CompositeCommands.setHeight(ElevatorHeight.Level4), CompositeCommands.output(), autoFactory.trajectoryCmd(pathToCSOne), CompositeCommands.intake(),
-                CompositeCommands.setHeight(ElevatorHeight.Level3), autoFactory.trajectoryCmd(pathToPegTwo), CompositeCommands.setHeight(ElevatorHeight.Level4), CompositeCommands.output(), autoFactory.trajectoryCmd(pathToCSTwo),
-                CompositeCommands.intake(), CompositeCommands.setHeight(ElevatorHeight.Level3), autoFactory.trajectoryCmd(pathToPegThree), CompositeCommands.setHeight(ElevatorHeight.Level4), CompositeCommands.output()
+        // @formatter:off
+        return Commands.sequence
+        (
+            Commands.defer(() -> Commands.waitSeconds(Dashboard.getInstance().getAutoDelay()), Set.of()),
+            autoFactory.resetOdometry(pathToPegOne),
+            CompositeCommands.setHeight(ElevatorHeight.Level3),
+            autoFactory.trajectoryCmd(pathToPegOne),
+            CompositeCommands.setHeight(ElevatorHeight.Level4),
+            CompositeCommands.output(),
+            autoFactory.trajectoryCmd(pathToCSOne),
+            CompositeCommands.intake(),
+            CompositeCommands.setHeight(ElevatorHeight.Level3),
+            autoFactory.trajectoryCmd(pathToPegTwo),
+            CompositeCommands.setHeight(ElevatorHeight.Level4),
+            CompositeCommands.output(),
+            autoFactory.trajectoryCmd(pathToCSTwo),
+            CompositeCommands.intake(),
+            CompositeCommands.setHeight(ElevatorHeight.Level3),
+            autoFactory.trajectoryCmd(pathToPegThree),
+            CompositeCommands.setHeight(ElevatorHeight.Level4),
+            CompositeCommands.output()
         );
+        // @formatter:on
     }
 
     public static Command fourCoralAuto(String pathToPegOne, String pathToCSOne, String pathToPegTwo, String pathToCSTwo, String pathToPegThree, String pathToCSThree, String pathToPegFour)
     {
-        return Commands.sequence(
-                Commands.defer(() -> Commands.waitSeconds(Dashboard.getInstance().getAutoDelay()), Set.of()), autoFactory.resetOdometry(pathToPegOne), CompositeCommands.setHeight(ElevatorHeight.Level3),
-                autoFactory.trajectoryCmd(pathToPegOne), CompositeCommands.setHeight(ElevatorHeight.Level4), CompositeCommands.output(), autoFactory.trajectoryCmd(pathToCSOne), CompositeCommands.intake(),
-                CompositeCommands.setHeight(ElevatorHeight.Level3), autoFactory.trajectoryCmd(pathToPegTwo), CompositeCommands.setHeight(ElevatorHeight.Level4), CompositeCommands.output(), autoFactory.trajectoryCmd(pathToCSTwo),
-                CompositeCommands.intake(), CompositeCommands.setHeight(ElevatorHeight.Level3), autoFactory.trajectoryCmd(pathToPegThree), CompositeCommands.setHeight(ElevatorHeight.Level4), CompositeCommands.output(),
-                autoFactory.trajectoryCmd(pathToCSThree), CompositeCommands.intake(), CompositeCommands.setHeight(ElevatorHeight.Level3), autoFactory.trajectoryCmd(pathToPegFour), CompositeCommands.setHeight(ElevatorHeight.Level4),
-                CompositeCommands.output()
+        // @formatter:off
+        return Commands.sequence
+        (
+            Commands.defer(() -> Commands.waitSeconds(Dashboard.getInstance().getAutoDelay()), Set.of()),
+            autoFactory.resetOdometry(pathToPegOne),
+            CompositeCommands.setHeight(ElevatorHeight.Level3),
+            autoFactory.trajectoryCmd(pathToPegOne),
+            CompositeCommands.setHeight(ElevatorHeight.Level4),
+            CompositeCommands.output(),
+            autoFactory.trajectoryCmd(pathToCSOne),
+            CompositeCommands.intake(),
+            CompositeCommands.setHeight(ElevatorHeight.Level3),
+            autoFactory.trajectoryCmd(pathToPegTwo),
+            CompositeCommands.setHeight(ElevatorHeight.Level4),
+            CompositeCommands.output(),
+            autoFactory.trajectoryCmd(pathToCSTwo),
+            CompositeCommands.intake(),
+            CompositeCommands.setHeight(ElevatorHeight.Level3),
+            autoFactory.trajectoryCmd(pathToPegThree),
+            CompositeCommands.setHeight(ElevatorHeight.Level4),
+            CompositeCommands.output(),
+            autoFactory.trajectoryCmd(pathToCSThree),
+            CompositeCommands.intake(),
+            CompositeCommands.setHeight(ElevatorHeight.Level3),
+            autoFactory.trajectoryCmd(pathToPegFour),
+            CompositeCommands.setHeight(ElevatorHeight.Level4),
+            CompositeCommands.output()
         );
+        // @formatter:on
     }
 }

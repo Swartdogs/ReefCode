@@ -9,7 +9,6 @@ public class LEDCommands
 {
     private LEDCommands()
     {
-
     }
 
     public static Command setColor(Color color)
@@ -19,11 +18,18 @@ public class LEDCommands
 
     public static Command flashColor(Color color)
     {
-        return LED.getInstance().runOnce(() ->
-        {
-            LED.getInstance().setFlashing(true);
-            LED.getInstance().setColor(color);
-        }).andThen(Commands.idle(LED.getInstance())).finallyDo(() -> LED.getInstance().setFlashing(false));
+        // @formatter:off
+        return Commands.sequence
+        (
+            LED.getInstance().runOnce(() ->
+            {
+                LED.getInstance().setFlashing(true);
+                LED.getInstance().setColor(color);
+            }),
+            Commands.idle(LED.getInstance())
+        )
+        .finallyDo(() -> LED.getInstance().setFlashing(false));
+        // @formatter:on
     }
 
     public static Command setDefaultColor(Color color)

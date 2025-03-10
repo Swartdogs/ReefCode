@@ -66,16 +66,28 @@ public final class DriveCommands
 
     public static Command driveAtOrientation(DoubleSupplier xSupplier, DoubleSupplier ySupplier, BooleanSupplier robotCentric, Supplier<Rotation2d> setpoint, double maxSpeed)
     {
-        return Commands.runOnce(() -> Drive.getInstance().rotateInit(setpoint.get(), maxSpeed)).andThen(joystickDrive(xSupplier, ySupplier, () -> Drive.getInstance().rotateExecute(), robotCentric, 2, 1));
+        // @formatter:off
+        return Commands.sequence
+        (
+            Commands.runOnce(() -> Drive.getInstance().rotateInit(setpoint.get(), maxSpeed)),
+            joystickDrive(xSupplier, ySupplier, () -> Drive.getInstance().rotateExecute(), robotCentric, 2, 1)
+        );
+        // @formatter:on
     }
 
     public static Command resetGyro()
     {
-        return Commands.runOnce(() ->
-        {
-            var pose = Drive.getInstance().getPose();
-            Drive.getInstance().setPose(new Pose2d(pose.getX(), pose.getY(), Rotation2d.fromDegrees(0)));
-        }).ignoringDisable(true);
+        // @formatter:off
+        return Commands.runOnce
+        (
+            () ->
+            {
+                var pose = Drive.getInstance().getPose();
+                Drive.getInstance().setPose(new Pose2d(pose.getX(), pose.getY(), Rotation2d.fromDegrees(0)));
+            }
+        )
+        .ignoringDisable(true);
+        // @formatter:on
     }
 
     public static Command driveVolts(double volts)
@@ -85,7 +97,13 @@ public final class DriveCommands
 
     public static Command reduceSpeed()
     {
-        return Commands.startEnd(() -> Drive.getInstance().setSpeedMultiplier(0.2), () -> Drive.getInstance().setSpeedMultiplier(1.0));
+        // @formatter:off
+        return Commands.startEnd
+        (
+            () -> Drive.getInstance().setSpeedMultiplier(0.2),
+            () -> Drive.getInstance().setSpeedMultiplier(1.0)
+        );
+        // @formatter:on
     }
 
     public static Command stop()

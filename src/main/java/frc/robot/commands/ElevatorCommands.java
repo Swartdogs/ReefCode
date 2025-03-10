@@ -17,22 +17,30 @@ public class ElevatorCommands
 
     public static Command setHeight(ElevatorHeight height)
     {
+        Command command;
+
         if (height == ElevatorHeight.Stow)
         {
-            return stow();
+            command = stow();
         }
         else
         {
-            return Elevator.getInstance().runOnce(() -> Elevator.getInstance().setExtension(height));
+            command = Elevator.getInstance().runOnce(() -> Elevator.getInstance().setExtension(height));
         }
+
+        return command;
     }
 
     public static Command stow()
     {
-        return Commands.sequence(
-                Elevator.getInstance().runOnce(() -> Elevator.getInstance().setExtension(ElevatorHeight.Stow)), Commands.waitUntil(() -> Elevator.getInstance().atSetpoint()),
-                Elevator.getInstance().runOnce(() -> Elevator.getInstance().stop())
+        // @formatter:off
+        return Commands.sequence
+        (
+            Elevator.getInstance().runOnce(() -> Elevator.getInstance().setExtension(ElevatorHeight.Stow)),
+            Commands.waitUntil(() -> Elevator.getInstance().atSetpoint()),
+            Elevator.getInstance().runOnce(() -> Elevator.getInstance().stop())
         );
+        // @formatter:on
     }
 
     public static Command setVolts(double volts)
@@ -52,7 +60,9 @@ public class ElevatorCommands
 
     public static Command hangExecute()
     {
-        return Commands.sequence(Elevator.getInstance().run(() -> Elevator.getInstance().setVolts(-Dashboard.getInstance().getElevatorHangSpeed() * Constants.General.MOTOR_VOLTAGE))).finallyDo(() -> Elevator.getInstance().stop());
-
+        // @formatter:off
+        return Elevator.getInstance().run(() -> Elevator.getInstance().setVolts(-Dashboard.getInstance().getElevatorHangSpeed() * Constants.General.MOTOR_VOLTAGE))
+            .finallyDo(() -> Elevator.getInstance().stop());
+        // @formatter:on
     }
 }

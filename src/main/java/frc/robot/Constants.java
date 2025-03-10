@@ -220,7 +220,7 @@ public final class Constants
         public static final double  OUTPUT_SPEED        = 10.0 / Constants.General.MOTOR_VOLTAGE;
         public static final double  L1_SPEED_MULTIPLIER = 1.0;
         public static final double  DEBOUNCE_TIMER      = 0.2;
-        public static final double  INDEX_VOLTS         = -1.0;
+        public static final double  INDEX_SPEED         = 1.0 / Constants.General.MOTOR_VOLTAGE;
         public static final double  INDEX_TIME          = 0.35;
     }
 
