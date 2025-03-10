@@ -14,12 +14,8 @@ public class Elevator extends SubsystemBase
 {
     public enum ElevatorHeight
     {
-        Stow(() -> Dashboard.getInstance().getElevatorStowHeight()),
-        Level1(() -> Dashboard.getInstance().getElevatorL1Height()),
-        Level2(() -> Dashboard.getInstance().getElevatorL2Height()),
-        Level3(() -> Dashboard.getInstance().getElevatorL3Height()),
-        Level4(() -> Dashboard.getInstance().getElevatorL4Height()),
-        Hang(() -> Dashboard.getInstance().getElevatorHangHeight());
+        Stow(() -> Dashboard.getInstance().getElevatorStowHeight()), Level1(() -> Dashboard.getInstance().getElevatorL1Height()), Level2(() -> Dashboard.getInstance().getElevatorL2Height()),
+        Level3(() -> Dashboard.getInstance().getElevatorL3Height()), Level4(() -> Dashboard.getInstance().getElevatorL4Height()), Hang(() -> Dashboard.getInstance().getElevatorHangHeight());
 
         private DoubleSupplier _heightSupplier;
 
@@ -56,7 +52,6 @@ public class Elevator extends SubsystemBase
     private final ElevatorIO                 _io;
     private final ElevatorIOInputsAutoLogged _inputs            = new ElevatorIOInputsAutoLogged();
     private final PIDController              _extensionPID;
-
     private Double                           _extensionSetpoint = null;
 
     private Elevator(ElevatorIO io)

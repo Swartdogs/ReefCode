@@ -66,7 +66,10 @@ public class CompositeCommands
 
     public static Command autoAlign(Camera camera, int id, Pose2d reference)
     {
-        return Commands.sequence(Commands.runOnce(() -> Vision.getInstance(camera).setVisionReference(id, reference)), joystickDrive(() -> Vision.getInstance(camera).getXDistanceCalculation(), () -> Vision.getInstance(camera).getYDistanceCalculation(), () -> Vision.getInstance(camera).getAngleCalculation(), () -> true, 1, 1));
+        return Commands.sequence(
+                Commands.runOnce(() -> Vision.getInstance(camera).setVisionReference(id, reference)),
+                joystickDrive(() -> Vision.getInstance(camera).getXDistanceCalculation(), () -> Vision.getInstance(camera).getYDistanceCalculation(), () -> Vision.getInstance(camera).getAngleCalculation(), () -> true, 1, 1)
+        );
     }
 
     public static Command intake()

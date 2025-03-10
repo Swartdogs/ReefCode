@@ -220,6 +220,8 @@ public final class Constants
         public static final double  OUTPUT_SPEED        = 10.0 / Constants.General.MOTOR_VOLTAGE;
         public static final double  L1_SPEED_MULTIPLIER = 1.0;
         public static final double  DEBOUNCE_TIMER      = 0.2;
+        public static final double  INDEX_VOLTS         = -1.0;
+        public static final double  INDEX_TIME          = 0.35;
     }
 
     public static class Vision
@@ -230,11 +232,11 @@ public final class Constants
         public static final double VISION_STD_DEV_MULTI_THETA = Units.degreesToRadians(10);
         public static final double VISION_DISTANCE_SCALE      = 0.2; // How much to increase uncertainty per meter
         public static final double MAX_DETECTION_RANGE        = Units.inchesToMeters(300);
-        public static final double TURN_KP = 0.0;
-        public static final double TURN_KD = 0.0;
-        public static final double DRIVE_KP = 0.0;
-        public static final double DRIVE_KD = 0.0;
-        public static final Pose2d LEFT_REFERENCE = new Pose2d(Units.inchesToMeters(0), Units.inchesToMeters(0), Rotation2d.fromDegrees(180)); //set values
-        public static final Pose2d RIGHT_REFERENCE = new Pose2d(Units.inchesToMeters(0), Units.inchesToMeters(0), Rotation2d.fromDegrees(180)); //set values
+        public static final double TURN_KP                    = 0.0;
+        public static final double TURN_KD                    = 0.0;
+        public static final double DRIVE_KP                   = 0.0;
+        public static final double DRIVE_KD                   = 0.0;
+        public static final Pose2d LEFT_REFERENCE             = new Pose2d(Units.inchesToMeters(0), Units.inchesToMeters(0), Rotation2d.fromDegrees(180)); // set values
+        public static final Pose2d RIGHT_REFERENCE            = new Pose2d(Units.inchesToMeters(0), Units.inchesToMeters(0), Rotation2d.fromDegrees(180)); // set values
     }
 }

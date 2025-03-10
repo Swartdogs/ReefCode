@@ -52,9 +52,7 @@ public class ElevatorCommands
 
     public static Command hangExecute()
     {
-        return Commands.sequence(
-                Elevator.getInstance().run(() -> Elevator.getInstance().setVolts(-Dashboard.getInstance().getElevatorHangSpeed() * Constants.General.MOTOR_VOLTAGE))
-        ).finallyDo(() -> Elevator.getInstance().stop());
+        return Commands.sequence(Elevator.getInstance().run(() -> Elevator.getInstance().setVolts(-Dashboard.getInstance().getElevatorHangSpeed() * Constants.General.MOTOR_VOLTAGE))).finallyDo(() -> Elevator.getInstance().stop());
 
     }
 }

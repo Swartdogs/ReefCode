@@ -44,7 +44,8 @@ public class Manipulator extends SubsystemBase
     public void periodic()
     {
         _io.updateInputs(_inputs);
-        _coralDetected = (!_inputs.startSensorTripped && _inputs.endSensorTripped) || (Elevator.getInstance().getExtension() > ((Dashboard.getInstance().getElevatorL3Height() + Dashboard.getInstance().getElevatorL4Height()) / 2.0) && _inputs.endSensorTripped);
+        _coralDetected = (!_inputs.startSensorTripped && _inputs.endSensorTripped)
+                || (Elevator.getInstance().getExtension() > ((Dashboard.getInstance().getElevatorL3Height() + Dashboard.getInstance().getElevatorL4Height()) / 2.0) && _inputs.endSensorTripped);
 
         Logger.processInputs("Manipulator", _inputs);
         Logger.recordOutput("Detected Coral", _coralDetected);

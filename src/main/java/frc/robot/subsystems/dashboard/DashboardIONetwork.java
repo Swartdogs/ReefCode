@@ -14,20 +14,20 @@ import frc.robot.subsystems.elevator.Elevator;
 public class DashboardIONetwork implements DashboardIO
 {
     // Dashboard Settings
-    private final String _elevatorMinHeightKey        = "Dashboard/Dashboard Settings/Elevator Min Height";
-    private final String _elevatorMaxHeightKey        = "Dashboard/Dashboard Settings/Elevator Max Height";
-    private final String _elevatorStowHeightKey       = "Dashboard/Dashboard Settings/Elevator Stow Height";
-    private final String _elevatorL1HeightKey         = "Dashboard/Dashboard Settings/Elevator L1 Height";
-    private final String _elevatorL2HeightKey         = "Dashboard/Dashboard Settings/Elevator L2 Height";
-    private final String _elevatorL3HeightKey         = "Dashboard/Dashboard Settings/Elevator L3 Height";
-    private final String _elevatorL4HeightKey         = "Dashboard/Dashboard Settings/Elevator L4 Height";
-    private final String _elevatorHangHeightKey       = "Dashboard/Dashboard Settings/Elevator Hang Height";
-    private final String _elevatorHangSpeedKey        = "Dashboard/Dashboard Settings/Elevator Hang Speed";
-    private final String _elevatorKPKey               = "Dashboard/Dashboard Settings/Elevator kP";
-    private final String _elevatorKDKey               = "Dashboard/Dashboard Settings/Elevator kD";
-    private final String _elevatorMaxDownPercentKey   = "Dashboard/Dashboard Settings/Elevator Max Down Speed";
-    private final String _elevatorMaxUpPercentKey     = "Dashboard/Dashboard Settings/Elevator Max Up Speed";
-    private final String _manipulatorIntakePercentKey = "Dashboard/Dashboard Settings/Manipulator Intake Speed";
+    private final String _elevatorMinHeightKey            = "Dashboard/Dashboard Settings/Elevator Min Height";
+    private final String _elevatorMaxHeightKey            = "Dashboard/Dashboard Settings/Elevator Max Height";
+    private final String _elevatorStowHeightKey           = "Dashboard/Dashboard Settings/Elevator Stow Height";
+    private final String _elevatorL1HeightKey             = "Dashboard/Dashboard Settings/Elevator L1 Height";
+    private final String _elevatorL2HeightKey             = "Dashboard/Dashboard Settings/Elevator L2 Height";
+    private final String _elevatorL3HeightKey             = "Dashboard/Dashboard Settings/Elevator L3 Height";
+    private final String _elevatorL4HeightKey             = "Dashboard/Dashboard Settings/Elevator L4 Height";
+    private final String _elevatorHangHeightKey           = "Dashboard/Dashboard Settings/Elevator Hang Height";
+    private final String _elevatorHangSpeedKey            = "Dashboard/Dashboard Settings/Elevator Hang Speed";
+    private final String _elevatorKPKey                   = "Dashboard/Dashboard Settings/Elevator kP";
+    private final String _elevatorKDKey                   = "Dashboard/Dashboard Settings/Elevator kD";
+    private final String _elevatorMaxDownPercentKey       = "Dashboard/Dashboard Settings/Elevator Max Down Speed";
+    private final String _elevatorMaxUpPercentKey         = "Dashboard/Dashboard Settings/Elevator Max Up Speed";
+    private final String _manipulatorIntakePercentKey     = "Dashboard/Dashboard Settings/Manipulator Intake Speed";
     private final String _manipulatorOutputPercentKey     = "Dashboard/Dashboard Settings/Manipulator Output Speed";
     private final String _manipulatorL1SpeedMultiplierKey = "Dashboard/Dashboard Settings/Manipulator L1 Speed Multiplier";
     private final String _funnelRetractPercentKey         = "Dashboard/Dashboard Settings/Funnel Retract Speed";
@@ -46,7 +46,6 @@ public class DashboardIONetwork implements DashboardIO
     private final NetworkTableEntry _manipulatorEndSensorTripped;
     private final NetworkTableEntry _funnelIsDropped;
     private final NetworkTableEntry _matchTime;
-
     private Rotation2d              _driveFLAngle    = Constants.Drive.FL_ZERO_ROTATION;
     private Rotation2d              _driveFRAngle    = Constants.Drive.FR_ZERO_ROTATION;
     private Rotation2d              _driveBLAngle    = Constants.Drive.BL_ZERO_ROTATION;
@@ -196,7 +195,7 @@ public class DashboardIONetwork implements DashboardIO
 
         // Field
         _field = new Field2d();
-        
+
         // Add sendable elements to NetworkTables
         SmartDashboard.putData("Auto Delay", _autoDelayChooser);
         SmartDashboard.putData("Start Position", _autoStartPositionChooser);

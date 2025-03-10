@@ -49,14 +49,12 @@ public class Vision extends SubsystemBase
     }
 
     private final VisionIO                 _io;
-    private final VisionIOInputsAutoLogged _inputs = new VisionIOInputsAutoLogged();
+    private final VisionIOInputsAutoLogged _inputs             = new VisionIOInputsAutoLogged();
     private final Camera                   _camera;
-
-    private final PIDController _anglePIDController  = new PIDController(Constants.Vision.TURN_KP, 0, Constants.Vision.TURN_KD);
-    private final PIDController _xDriveController = new PIDController(Constants.Vision.DRIVE_KP, 0, Constants.Vision.DRIVE_KD); //forward and back
-    private final PIDController _yDriveController = new PIDController(Constants.Vision.DRIVE_KP, 0, Constants.Vision.DRIVE_KD); //left to right
-
-    private int _pidTagId = 0;
+    private final PIDController            _anglePIDController = new PIDController(Constants.Vision.TURN_KP, 0, Constants.Vision.TURN_KD);
+    private final PIDController            _xDriveController   = new PIDController(Constants.Vision.DRIVE_KP, 0, Constants.Vision.DRIVE_KD); // forward and back
+    private final PIDController            _yDriveController   = new PIDController(Constants.Vision.DRIVE_KP, 0, Constants.Vision.DRIVE_KD); // left to right
+    private int                            _pidTagId           = 0;
 
     private Vision(VisionIO io, Camera camera)
     {
@@ -104,7 +102,7 @@ public class Vision extends SubsystemBase
     }
 
     public boolean hasTarget(int id)
-    { 
+    {
         return getTagIndex(id) != -1;
     }
 
@@ -112,7 +110,7 @@ public class Vision extends SubsystemBase
     {
         int index = getTagIndex(id);
 
-        if(index != -1)
+        if (index != -1)
         {
             return _inputs.targetDistances[index];
         }
@@ -126,7 +124,7 @@ public class Vision extends SubsystemBase
     {
         int index = getTagIndex(id);
 
-        if(index != -1)
+        if (index != -1)
         {
             return _inputs.targetYaws[index];
         }
@@ -157,7 +155,7 @@ public class Vision extends SubsystemBase
     public void setVisionReference(int id, Pose2d reference)
     {
         _pidTagId = id;
-        
+
         _anglePIDController.setSetpoint(reference.getRotation().getDegrees());
         _xDriveController.setSetpoint(reference.getX());
         _yDriveController.setSetpoint(reference.getY());
@@ -165,7 +163,7 @@ public class Vision extends SubsystemBase
 
     public double getAngleCalculation()
     {
-        if(!hasTarget(_pidTagId))
+        if (!hasTarget(_pidTagId))
         {
             return 0;
         }
@@ -177,7 +175,7 @@ public class Vision extends SubsystemBase
 
     public double getXDistanceCalculation()
     {
-        if(!hasTarget(_pidTagId))
+        if (!hasTarget(_pidTagId))
         {
             return 0;
         }
@@ -189,7 +187,7 @@ public class Vision extends SubsystemBase
 
     public double getYDistanceCalculation()
     {
-        if(!hasTarget(_pidTagId))
+        if (!hasTarget(_pidTagId))
         {
             return 0;
         }
