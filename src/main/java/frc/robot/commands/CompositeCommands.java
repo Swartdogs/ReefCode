@@ -64,6 +64,11 @@ public class CompositeCommands
         }, Drive.getInstance());
     }
 
+    public static Command snapToBranch(Camera camera, int id)
+    {
+        return null;
+    }
+
     public static Command autoAlign(Camera camera, int id, Pose2d reference)
     {
         // @formatter:off

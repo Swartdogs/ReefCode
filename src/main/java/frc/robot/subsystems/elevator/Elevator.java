@@ -1,14 +1,18 @@
 package frc.robot.subsystems.elevator;
 
+import java.util.function.DoubleSupplier;
+
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 import frc.robot.subsystems.dashboard.Dashboard;
 
-import java.util.function.DoubleSupplier;
+import static edu.wpi.first.units.Units.*;
 
 public class Elevator extends SubsystemBase
 {
@@ -52,6 +56,7 @@ public class Elevator extends SubsystemBase
     private final ElevatorIO                 _io;
     private final ElevatorIOInputsAutoLogged _inputs            = new ElevatorIOInputsAutoLogged();
     private final PIDController              _extensionPID;
+    private final SysIdRoutine               _sysId;
     private Double                           _extensionSetpoint = null;
 
     private Elevator(ElevatorIO io)
@@ -60,6 +65,23 @@ public class Elevator extends SubsystemBase
 
         _extensionPID = new PIDController(Constants.Elevator.EXTENSION_KP, 0, Constants.Elevator.EXTENSION_KD);
         _extensionPID.setTolerance(Constants.Elevator.EXTENSION_TOLERANCE);
+
+        _sysId = new SysIdRoutine
+        (
+            new SysIdRoutine.Config
+            (
+                null,
+                null,
+                null,
+                (state) -> Logger.recordOutput("Elevator/SysIdState", state.toString())
+            ),
+            new SysIdRoutine.Mechanism
+            (
+                voltage -> setVolts(voltage.in(Volts)),
+                null,
+                this
+            )
+        );
     }
 
     @Override
@@ -117,5 +139,15 @@ public class Elevator extends SubsystemBase
     {
         _extensionSetpoint = null;
         _io.setVolts(0);
+    }
+
+    public Command sysIdQuasistatic(SysIdRoutine.Direction direction)
+    {
+        return _sysId.quasistatic(direction);
+    }
+
+    public Command sysIdDynamic(SysIdRoutine.Direction direction)
+    {
+        return _sysId.dynamic(direction);
     }
 }

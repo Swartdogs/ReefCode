@@ -1,5 +1,7 @@
 package frc.robot.subsystems.drive;
 
+import static edu.wpi.first.units.Units.Volts;
+
 import org.littletonrobotics.junction.Logger;
 
 import choreo.trajectory.SwerveSample;
@@ -16,7 +18,9 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 
 public class Drive extends SubsystemBase
@@ -74,6 +78,7 @@ public class Drive extends SubsystemBase
     private PIDController                  _rotatePID;
     private double                         _maxSpeed;
     private double                         _speedMultiplier;
+    private SysIdRoutine                   _sysId;
 
     private Drive(GyroIO gyroIO, ModuleIO flModuleIO, ModuleIO frModuleIO, ModuleIO blModuleIO, ModuleIO brModuleIO)
     {
@@ -92,6 +97,8 @@ public class Drive extends SubsystemBase
         _speedMultiplier = 1;
 
         _poseEstimator = new SwerveDrivePoseEstimator(_kinematics, new Rotation2d(), getModulePositions(), new Pose2d());
+
+        _sysId = new SysIdRoutine(new SysIdRoutine.Config(null, null, null, (state) -> Logger.recordOutput("Drive/SysIdState", state.toString())), new SysIdRoutine.Mechanism((voltage) -> runCharacterizationVolts(voltage.in(Volts)), null, this));
     }
 
     @Override
@@ -224,13 +231,13 @@ public class Drive extends SubsystemBase
     }
 
     /** Returns the average drive velocity in radians/sec */
-    public double getCharacterizationVelocity()
+    public double getFFCharacterizationVelocity()
     {
         double driveVelocityAverage = 0.0;
 
         for (var module : _modules)
         {
-            driveVelocityAverage += module.getCharacterizationVelocity();
+            driveVelocityAverage += module.getFFCharacterizationVelocity();
         }
 
         return driveVelocityAverage / _modules.length;
@@ -292,6 +299,18 @@ public class Drive extends SubsystemBase
         return _kinematics.toChassisSpeeds(getModuleStates());
     }
 
+    public double[] getWheelRadiusCharacterizationPositions()
+    {
+        double[] values = new double[_modules.length];
+
+        for (int i = 0; i < _modules.length; i++)
+        {
+            values[i] = _modules[i].getWheelRadiusCharacterizationPosition();
+        }
+
+        return values;
+    }
+
     public void setModuleAbsoluteEncoderOffset(int moduleIndex, Rotation2d offset)
     {
         _modules[moduleIndex].setAbsoluteEncoderOffset(offset);
@@ -322,6 +341,16 @@ public class Drive extends SubsystemBase
     public void setSpeedMultiplier(double speedMultiplier)
     {
         _speedMultiplier = speedMultiplier;
+    }
+
+    public Command sysIdQuasistatic(SysIdRoutine.Direction direction)
+    {
+        return run(() -> runCharacterizationVolts(0.0)).withTimeout(1.0).andThen(_sysId.quasistatic(direction));
+    }
+
+    public Command sysIdDynamic(SysIdRoutine.Direction direction)
+    {
+        return run(() -> runCharacterizationVolts(0.0)).withTimeout(1.0).andThen(_sysId.dynamic(direction));
     }
 
     public void addVisionMeasurement(Pose2d pose, double timestamp, Matrix<N3, N1> stdDevs)

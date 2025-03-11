@@ -7,6 +7,7 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import frc.robot.Constants;
 
 public class Module
@@ -184,10 +185,15 @@ public class Module
         return new SwerveModuleState(getVelocityMetersPerSec(), getAngle());
     }
 
-    /** Returns the drive velocity in radians/sec. */
-    public double getCharacterizationVelocity()
+    public double getWheelRadiusCharacterizationPosition()
     {
-        return _inputs.driveVelocityRadPerSec;
+        return _inputs.drivePositionRad;
+    }
+
+    /** Returns the drive velocity in radians/sec. */
+    public double getFFCharacterizationVelocity()
+    {
+        return Units.radiansToRotations(_inputs.driveVelocityRadPerSec);
     }
 
     public void setAbsoluteEncoderOffset(Rotation2d moduleOffset)

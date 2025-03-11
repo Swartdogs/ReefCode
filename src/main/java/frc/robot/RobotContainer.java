@@ -1,13 +1,19 @@
 package frc.robot;
 
+import java.util.Set;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.CompositeCommands;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.ElevatorCommands;
@@ -15,6 +21,7 @@ import frc.robot.commands.FunnelCommands;
 import frc.robot.commands.ManipulatorCommands;
 import frc.robot.subsystems.dashboard.Dashboard;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.Elevator.ElevatorHeight;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.Vision.Camera;
@@ -26,6 +33,7 @@ public class RobotContainer
     private final CommandJoystick       _driverButtons   = new CommandJoystick(1);
     private final CommandJoystick       _operatorButtons = new CommandJoystick(2);
     private final CommandXboxController _controller      = new CommandXboxController(3); // This is just for testing
+    private final SendableChooser<Command> _characterizationChooser = new SendableChooser<>();
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -36,6 +44,18 @@ public class RobotContainer
         Vision.getInstance(Camera.Front);
 
         Dashboard.getInstance();
+
+        _characterizationChooser.addOption("Drive Wheel Radius Characterization", DriveCommands.wheelRadiusCharacterization());
+        _characterizationChooser.addOption("Drive Simple FF Characterization", DriveCommands.feedforwardCharacterization());
+        _characterizationChooser.addOption("Drive SysId (Quasistatic Forward)", Drive.getInstance().sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+        _characterizationChooser.addOption("Drive SysId (Quasistatic Reverse)", Drive.getInstance().sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+        _characterizationChooser.addOption("Drive SysId (Dynamic Forward)", Drive.getInstance().sysIdDynamic(SysIdRoutine.Direction.kForward));
+        _characterizationChooser.addOption("Drive SysId (Dynamic Reverse)", Drive.getInstance().sysIdDynamic(SysIdRoutine.Direction.kReverse));
+        _characterizationChooser.addOption("Elevator SysId (Quasistatic Forward)", Elevator.getInstance().sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+        _characterizationChooser.addOption("Elevator SysId (Quasistatic Reverse)", Elevator.getInstance().sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+        _characterizationChooser.addOption("Elevator SysId (Dynamic Forward)", Elevator.getInstance().sysIdDynamic(SysIdRoutine.Direction.kForward));
+        _characterizationChooser.addOption("Elevator SysId (Dynamic Reverse)", Elevator.getInstance().sysIdDynamic(SysIdRoutine.Direction.kReverse));
+        SmartDashboard.putData("Characterization", _characterizationChooser);
 
         // Configure the button bindings
         configureButtonBindings();
@@ -57,6 +77,8 @@ public class RobotContainer
         _controller.leftStick().onTrue(ManipulatorCommands.intake());
         _controller.start().onTrue(CompositeCommands.output());
         _controller.rightStick().onTrue(ManipulatorCommands.stop());
+
+        _controller.rightTrigger().whileTrue(Commands.defer(() -> _characterizationChooser.getSelected(), Set.of(Drive.getInstance(), Elevator.getInstance())));
     }
 
     @SuppressWarnings("unused")
