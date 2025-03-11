@@ -98,7 +98,9 @@ public class Drive extends SubsystemBase
 
         _poseEstimator = new SwerveDrivePoseEstimator(_kinematics, new Rotation2d(), getModulePositions(), new Pose2d());
 
-        _sysId = new SysIdRoutine(new SysIdRoutine.Config(null, null, null, (state) -> Logger.recordOutput("Drive/SysIdState", state.toString())), new SysIdRoutine.Mechanism((voltage) -> runCharacterizationVolts(voltage.in(Volts)), null, this));
+        _sysId = new SysIdRoutine(
+                new SysIdRoutine.Config(null, null, null, (state) -> Logger.recordOutput("Drive/SysIdState", state.toString())), new SysIdRoutine.Mechanism((voltage) -> runCharacterizationVolts(voltage.in(Volts)), null, this)
+        );
     }
 
     @Override

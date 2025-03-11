@@ -29,10 +29,10 @@ import frc.robot.subsystems.vision.Vision.Camera;
 public class RobotContainer
 {
     // Controller
-    private final CommandJoystick       _driverJoystick  = new CommandJoystick(0);
-    private final CommandJoystick       _driverButtons   = new CommandJoystick(1);
-    private final CommandJoystick       _operatorButtons = new CommandJoystick(2);
-    private final CommandXboxController _controller      = new CommandXboxController(3); // This is just for testing
+    private final CommandJoystick          _driverJoystick          = new CommandJoystick(0);
+    private final CommandJoystick          _driverButtons           = new CommandJoystick(1);
+    private final CommandJoystick          _operatorButtons         = new CommandJoystick(2);
+    private final CommandXboxController    _controller              = new CommandXboxController(3); // This is just for testing
     private final SendableChooser<Command> _characterizationChooser = new SendableChooser<>();
 
     /**

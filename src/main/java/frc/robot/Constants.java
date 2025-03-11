@@ -127,15 +127,15 @@ public final class Constants
         public static final double          SPEED_MOTION_THRESHOLD        = 0.02 * MAX_LINEAR_SPEED;
         public static final double          ROTATION_MOTION_THRESHOLD     = 0.01 * MAX_ANGULAR_SPEED;
         public static final double          MAX_SNAP_SPEED_PERCENTAGE     = 0.7;
-        public static final double DEADBAND                  = 0.1;
-        public static final double ANGLE_KP                  = 5.0;
-        public static final double ANGLE_KD                  = 0.4;
-        public static final double ANGLE_MAX_VELOCITY        = 8.0;
-        public static final double ANGLE_MAX_ACCELERATION    = 20.0;
-        public static final double FF_START_DELAY            = 2.0; // Secs
-        public static final double FF_RAMP_RATE              = 0.1; // Volts/Sec
-        public static final double WHEEL_RADIUS_MAX_VELOCITY = 0.25; // Rad/Sec
-        public static final double WHEEL_RADIUS_RAMP_RATE    = 0.05; // Rad/Sec^2
+        public static final double          DEADBAND                      = 0.1;
+        public static final double          ANGLE_KP                      = 5.0;
+        public static final double          ANGLE_KD                      = 0.4;
+        public static final double          ANGLE_MAX_VELOCITY            = 8.0;
+        public static final double          ANGLE_MAX_ACCELERATION        = 20.0;
+        public static final double          FF_START_DELAY                = 2.0; // Secs
+        public static final double          FF_RAMP_RATE                  = 0.1; // Volts/Sec
+        public static final double          WHEEL_RADIUS_MAX_VELOCITY     = 0.25; // Rad/Sec
+        public static final double          WHEEL_RADIUS_RAMP_RATE        = 0.05; // Rad/Sec^2
     }
 
     public static class Field

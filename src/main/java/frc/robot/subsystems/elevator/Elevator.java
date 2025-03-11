@@ -66,22 +66,7 @@ public class Elevator extends SubsystemBase
         _extensionPID = new PIDController(Constants.Elevator.EXTENSION_KP, 0, Constants.Elevator.EXTENSION_KD);
         _extensionPID.setTolerance(Constants.Elevator.EXTENSION_TOLERANCE);
 
-        _sysId = new SysIdRoutine
-        (
-            new SysIdRoutine.Config
-            (
-                null,
-                null,
-                null,
-                (state) -> Logger.recordOutput("Elevator/SysIdState", state.toString())
-            ),
-            new SysIdRoutine.Mechanism
-            (
-                voltage -> setVolts(voltage.in(Volts)),
-                null,
-                this
-            )
-        );
+        _sysId = new SysIdRoutine(new SysIdRoutine.Config(null, null, null, (state) -> Logger.recordOutput("Elevator/SysIdState", state.toString())), new SysIdRoutine.Mechanism(voltage -> setVolts(voltage.in(Volts)), null, this));
     }
 
     @Override
