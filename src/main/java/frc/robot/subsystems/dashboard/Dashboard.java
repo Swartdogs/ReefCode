@@ -2,9 +2,11 @@ package frc.robot.subsystems.dashboard;
 
 import org.littletonrobotics.junction.Logger;
 
+import edu.wpi.first.apriltag.AprilTagFieldLayout.OriginPosition;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Alert.AlertType;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -169,6 +171,23 @@ public class Dashboard extends SubsystemBase
         else
         {
             _selectedAuto = null;
+        }
+
+        // Ensure the AprilTag layout is using the correct origin
+        var allianceOpt = DriverStation.getAlliance();
+
+        if (allianceOpt.isPresent())
+        {
+            var alliance = allianceOpt.get();
+
+            if (alliance == Alliance.Blue)
+            {
+                Constants.Field.APRIL_TAG_FIELD_LAYOUT.setOrigin(OriginPosition.kBlueAllianceWallRightSide);
+            }
+            else
+            {
+                Constants.Field.APRIL_TAG_FIELD_LAYOUT.setOrigin(OriginPosition.kRedAllianceWallRightSide);
+            }
         }
 
         _nullAuto.set(_selectedAuto == null);

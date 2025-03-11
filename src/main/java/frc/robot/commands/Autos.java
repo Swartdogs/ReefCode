@@ -11,7 +11,7 @@ import frc.robot.subsystems.elevator.Elevator.ElevatorHeight;
 
 public class Autos
 {
-    public static final AutoFactory autoFactory       = new AutoFactory(Drive.getInstance()::getPose, Drive.getInstance()::setPose, Drive.getInstance()::followTrajectory, true, Drive.getInstance());
+    public static final AutoFactory autoFactory       = new AutoFactory(Drive.getInstance()::getPose, Drive.getInstance()::setPose, Drive.getInstance()::followTrajectory, false, Drive.getInstance());
     public static final Command     ONE_PIECE_RIGHT   = oneCoralAuto("RightToE");
     public static final Command     ONE_PIECE_MIDDLE  = oneCoralAuto("MiddleToG");
     public static final Command     ONE_PIECE_LEFT    = oneCoralAuto("LeftToJ");
