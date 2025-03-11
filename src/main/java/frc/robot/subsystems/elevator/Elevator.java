@@ -7,9 +7,11 @@ import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
+import frc.robot.commands.CompositeCommands;
 import frc.robot.subsystems.dashboard.Dashboard;
 
 import static edu.wpi.first.units.Units.*;
@@ -66,7 +68,7 @@ public class Elevator extends SubsystemBase
         _extensionPID = new PIDController(Constants.Elevator.EXTENSION_KP, 0, Constants.Elevator.EXTENSION_KD);
         _extensionPID.setTolerance(Constants.Elevator.EXTENSION_TOLERANCE);
 
-        _sysId = new SysIdRoutine(new SysIdRoutine.Config(null, null, null, (state) -> Logger.recordOutput("Elevator/SysIdState", state.toString())), new SysIdRoutine.Mechanism(voltage -> setVolts(voltage.in(Volts)), null, this));
+        _sysId = new SysIdRoutine(new SysIdRoutine.Config(null, Volts.of(3), null, (state) -> Logger.recordOutput("Elevator/SysIdState", state.toString())), new SysIdRoutine.Mechanism(voltage -> setVolts(voltage.in(Volts)), null, this));
     }
 
     @Override
@@ -126,13 +128,23 @@ public class Elevator extends SubsystemBase
         _io.setVolts(0);
     }
 
-    public Command sysIdQuasistatic(SysIdRoutine.Direction direction)
+    public Command sysIdQuasistaticForward()
     {
-        return _sysId.quasistatic(direction);
+        return _sysId.quasistatic(SysIdRoutine.Direction.kForward).until(() -> getExtension() >= Dashboard.getInstance().getElevatorL4Height());
     }
 
-    public Command sysIdDynamic(SysIdRoutine.Direction direction)
+    public Command sysIdQuasistaticReverse()
     {
-        return _sysId.dynamic(direction);
+        return Commands.sequence(CompositeCommands.setHeight(ElevatorHeight.Level4).withTimeout(5.0), _sysId.quasistatic(SysIdRoutine.Direction.kReverse).until(() -> getExtension() <= Dashboard.getInstance().getElevatorL1Height()));
+    }
+
+    public Command sysIdDynamicForward()
+    {
+        return _sysId.dynamic(SysIdRoutine.Direction.kForward).until(() -> getExtension() >= Dashboard.getInstance().getElevatorL4Height());
+    }
+
+    public Command sysIdDynamicReverse()
+    {
+        return Commands.sequence(CompositeCommands.setHeight(ElevatorHeight.Level4).withTimeout(5.0), _sysId.dynamic(SysIdRoutine.Direction.kReverse).until(() -> getExtension() <= Dashboard.getInstance().getElevatorL1Height()));
     }
 }

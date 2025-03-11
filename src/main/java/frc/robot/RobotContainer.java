@@ -23,6 +23,8 @@ import frc.robot.subsystems.dashboard.Dashboard;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.Elevator.ElevatorHeight;
+import frc.robot.subsystems.funnel.Funnel;
+import frc.robot.subsystems.manipulator.Manipulator;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.Vision.Camera;
 
@@ -41,8 +43,12 @@ public class RobotContainer
     public RobotContainer()
     {
         DriverStation.silenceJoystickConnectionWarning(true);
-        Vision.getInstance(Camera.Front);
 
+        Drive.getInstance();
+        Elevator.getInstance();
+        Manipulator.getInstance();
+        Funnel.getInstance();
+        Vision.getInstance(Camera.Front);
         Dashboard.getInstance();
 
         _characterizationChooser.addOption("Drive Wheel Radius Characterization", DriveCommands.wheelRadiusCharacterization());
@@ -51,10 +57,10 @@ public class RobotContainer
         _characterizationChooser.addOption("Drive SysId (Quasistatic Reverse)", Drive.getInstance().sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
         _characterizationChooser.addOption("Drive SysId (Dynamic Forward)", Drive.getInstance().sysIdDynamic(SysIdRoutine.Direction.kForward));
         _characterizationChooser.addOption("Drive SysId (Dynamic Reverse)", Drive.getInstance().sysIdDynamic(SysIdRoutine.Direction.kReverse));
-        _characterizationChooser.addOption("Elevator SysId (Quasistatic Forward)", Elevator.getInstance().sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-        _characterizationChooser.addOption("Elevator SysId (Quasistatic Reverse)", Elevator.getInstance().sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-        _characterizationChooser.addOption("Elevator SysId (Dynamic Forward)", Elevator.getInstance().sysIdDynamic(SysIdRoutine.Direction.kForward));
-        _characterizationChooser.addOption("Elevator SysId (Dynamic Reverse)", Elevator.getInstance().sysIdDynamic(SysIdRoutine.Direction.kReverse));
+        _characterizationChooser.addOption("Elevator SysId (Quasistatic Forward)", Elevator.getInstance().sysIdQuasistaticForward());
+        _characterizationChooser.addOption("Elevator SysId (Quasistatic Reverse)", Elevator.getInstance().sysIdQuasistaticReverse());
+        _characterizationChooser.addOption("Elevator SysId (Dynamic Forward)", Elevator.getInstance().sysIdDynamicForward());
+        _characterizationChooser.addOption("Elevator SysId (Dynamic Reverse)", Elevator.getInstance().sysIdDynamicReverse());
         SmartDashboard.putData("Characterization", _characterizationChooser);
 
         // Configure the button bindings

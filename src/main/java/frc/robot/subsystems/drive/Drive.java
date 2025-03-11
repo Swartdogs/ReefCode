@@ -19,6 +19,7 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
@@ -347,12 +348,12 @@ public class Drive extends SubsystemBase
 
     public Command sysIdQuasistatic(SysIdRoutine.Direction direction)
     {
-        return run(() -> runCharacterizationVolts(0.0)).withTimeout(1.0).andThen(_sysId.quasistatic(direction));
+        return Commands.sequence(runOnce(() -> setPose(new Pose2d())), run(() -> runCharacterizationVolts(0.0)).withTimeout(1.0), _sysId.quasistatic(direction));
     }
 
     public Command sysIdDynamic(SysIdRoutine.Direction direction)
     {
-        return run(() -> runCharacterizationVolts(0.0)).withTimeout(1.0).andThen(_sysId.dynamic(direction));
+        return Commands.sequence(runOnce(() -> setPose(new Pose2d())), run(() -> runCharacterizationVolts(0.0)).withTimeout(1.0), _sysId.dynamic(direction));
     }
 
     public void addVisionMeasurement(Pose2d pose, double timestamp, Matrix<N3, N1> stdDevs)
