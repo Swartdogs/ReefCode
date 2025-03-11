@@ -1,5 +1,7 @@
 package frc.robot.subsystems.drive;
 
+import static edu.wpi.first.units.Units.Volts;
+
 import org.littletonrobotics.junction.Logger;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -22,7 +24,9 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 import frc.robot.util.LocalADStarAK;
 
@@ -78,6 +82,7 @@ public class Drive extends SubsystemBase
     private PIDController                  _rotatePID;
     private double                         _maxSpeed;
     private double                         _speedMultiplier;
+    private SysIdRoutine                   _sysId;
 
     private Drive(GyroIO gyroIO, ModuleIO flModuleIO, ModuleIO frModuleIO, ModuleIO blModuleIO, ModuleIO brModuleIO)
     {
@@ -122,6 +127,8 @@ public class Drive extends SubsystemBase
         });
 
         _poseEstimator = new SwerveDrivePoseEstimator(_kinematics, new Rotation2d(), getModulePositions(), new Pose2d());
+
+        _sysId = new SysIdRoutine(new SysIdRoutine.Config(null, null, null, (state) -> Logger.recordOutput("Drive/SysIdState", state.toString())), new SysIdRoutine.Mechanism((voltage) -> runCharacterizationVolts(voltage.in(Volts)), null, this));
     }
 
     @Override
@@ -341,6 +348,16 @@ public class Drive extends SubsystemBase
     public void setSpeedMultiplier(double speedMultiplier)
     {
         _speedMultiplier = speedMultiplier;
+    }
+
+    public Command sysIdQuasistatic(SysIdRoutine.Direction direction)
+    {
+        return run(() -> runCharacterizationVolts(0.0)).withTimeout(1.0).andThen(_sysId.quasistatic(direction));
+    }
+
+    public Command sysIdDynamic(SysIdRoutine.Direction direction)
+    {
+        return run(() -> runCharacterizationVolts(0.0)).withTimeout(1.0).andThen(_sysId.dynamic(direction));
     }
 
     public void addVisionMeasurement(Pose2d pose, double timestamp, Matrix<N3, N1> stdDevs)

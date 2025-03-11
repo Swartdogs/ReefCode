@@ -131,6 +131,15 @@ public final class Constants
         public static final double          SPEED_MOTION_THRESHOLD        = 0.02 * MAX_LINEAR_SPEED;
         public static final double          ROTATION_MOTION_THRESHOLD     = 0.02 * MAX_ANGULAR_SPEED;
         public static final double          MAX_SNAP_SPEED_PERCENTAGE     = 0.7;
+        public static final double DEADBAND                  = 0.1;
+        public static final double ANGLE_KP                  = 5.0;
+        public static final double ANGLE_KD                  = 0.4;
+        public static final double ANGLE_MAX_VELOCITY        = 8.0;
+        public static final double ANGLE_MAX_ACCELERATION    = 20.0;
+        public static final double FF_START_DELAY            = 2.0; // Secs
+        public static final double FF_RAMP_RATE              = 0.1; // Volts/Sec
+        public static final double WHEEL_RADIUS_MAX_VELOCITY = 0.25; // Rad/Sec
+        public static final double WHEEL_RADIUS_RAMP_RATE    = 0.05; // Rad/Sec^2
     }
 
     public static class Field
@@ -249,11 +258,11 @@ public final class Constants
         public static final double VISION_STD_DEV_MULTI_THETA = Units.degreesToRadians(10);
         public static final double VISION_DISTANCE_SCALE      = 0.2; // How much to increase uncertainty per meter
         public static final double MAX_DETECTION_RANGE        = Units.inchesToMeters(300);
-        public static final double TURN_KP = 0.0;
-        public static final double TURN_KD = 0.0;
-        public static final double DRIVE_KP = 0.0;
-        public static final double DRIVE_KD = 0.0;
-        public static final Pose2d LEFT_REFERENCE = new Pose2d(Units.inchesToMeters(0), Units.inchesToMeters(0), Rotation2d.fromDegrees(180)); //set values
-        public static final Pose2d RIGHT_REFERENCE = new Pose2d(Units.inchesToMeters(0), Units.inchesToMeters(0), Rotation2d.fromDegrees(180)); //set values
+        public static final double TURN_KP                    = 0.0;
+        public static final double TURN_KD                    = 0.0;
+        public static final double DRIVE_KP                   = 0.0;
+        public static final double DRIVE_KD                   = 0.0;
+        public static final Pose2d LEFT_REFERENCE             = new Pose2d(Units.inchesToMeters(0), Units.inchesToMeters(0), Rotation2d.fromDegrees(180)); // set values
+        public static final Pose2d RIGHT_REFERENCE            = new Pose2d(Units.inchesToMeters(0), Units.inchesToMeters(0), Rotation2d.fromDegrees(180)); // set values
     }
 }

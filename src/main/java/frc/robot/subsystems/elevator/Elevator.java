@@ -4,11 +4,18 @@ import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.units.measure.MutVoltage;
+import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 
+import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.Volts;
 import static frc.robot.Constants.Elevator.*;
 
 public class Elevator extends SubsystemBase
@@ -55,6 +62,7 @@ public class Elevator extends SubsystemBase
     private Double                           _extensionSetpoint = null;
     private final Alert                      _potAlert;
     private double                           _lastPosition      = 0.0; // Last 20 milisecond elevator position
+    private final SysIdRoutine               _sysId;
 
     private Elevator(ElevatorIO io)
     {
@@ -63,7 +71,11 @@ public class Elevator extends SubsystemBase
         _extensionPID = new PIDController(EXTENSION_KP, EXTENSION_KI, EXTENSION_KD);
         _extensionPID.setTolerance(EXTENSION_TOLERANCE);
 
-        _potAlert = new Alert("Potentiometer has been disconnected", AlertType.kError);
+        _potAlert     = new Alert("Potentiometer has been disconnected", AlertType.kError);
+        _sysId = new SysIdRoutine(new SysIdRoutine.Config(), new SysIdRoutine.Mechanism(voltage -> setVolts(voltage.magnitude()), log ->
+                      {
+                          log.motor("Elevator").voltage(Volts.ofBaseUnits(_inputs.leaderVolts)).linearPosition(Meters.ofBaseUnits(_inputs.extensionPosition)).linearVelocity(MetersPerSecond.ofBaseUnits(_inputs.extensionVelocity));
+                      }, this));
     }
 
     @Override
@@ -133,5 +145,15 @@ public class Elevator extends SubsystemBase
     {
         _extensionSetpoint = null;
         _io.setVolts(0);
+    }
+
+    public Command sysIdQuasistatic(SysIdRoutine.Direction direction)
+    {
+        return _sysId.quasistatic(direction);
+    }
+
+    public Command sysIdDynamic(SysIdRoutine.Direction direction)
+    {
+        return _sysId.dynamic(direction);
     }
 }

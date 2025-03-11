@@ -8,7 +8,11 @@ import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
+import frc.robot.commands.DriveCommands;
+import frc.robot.subsystems.drive.Drive;
 
 public class DashboardIONetwork implements DashboardIO
 {
@@ -76,6 +80,7 @@ public class DashboardIONetwork implements DashboardIO
     private final SendableChooser<Integer> _autoDelayChooser;
     private final SendableChooser<String>  _autoStartPositionChooser;
     private final SendableChooser<Integer> _autoCoralCountChooser;
+    private final SendableChooser<Command>  _characterizationChooser;
 
     // Field
     private final Field2d _field;
@@ -180,6 +185,7 @@ public class DashboardIONetwork implements DashboardIO
         _autoDelayChooser         = new SendableChooser<Integer>();
         _autoStartPositionChooser = new SendableChooser<String>();
         _autoCoralCountChooser    = new SendableChooser<Integer>();
+        _characterizationChooser  = new SendableChooser<Command>();
 
         _autoDelayChooser.setDefaultOption("0", 0);
         _autoDelayChooser.addOption("1", 1);
@@ -195,6 +201,13 @@ public class DashboardIONetwork implements DashboardIO
         _autoCoralCountChooser.setDefaultOption("0", 0);
         _autoCoralCountChooser.addOption("1", 1);
         _autoCoralCountChooser.addOption("2", 2);
+
+        _characterizationChooser.addOption("Drive Wheel Radius Characterization", DriveCommands.wheelRadiusCharacterization(Drive.getInstance()));
+        _characterizationChooser.addOption("Drive Simple FF Characterization", DriveCommands.feedforwardCharacterization(Drive.getInstance()));
+        _characterizationChooser.addOption("Drive SysId (Quasistatic Forward)", Drive.getInstance().sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+        _characterizationChooser.addOption("Drive SysId (Quasistatic Reverse)", Drive.getInstance().sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+        _characterizationChooser.addOption("Drive SysId (Dynamic Forward)", Drive.getInstance().sysIdDynamic(SysIdRoutine.Direction.kForward));
+        _characterizationChooser.addOption("Drive SysId (Dynamic Reverse)", Drive.getInstance().sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
         SmartDashboard.putData("Auto Delay", _autoDelayChooser);
         SmartDashboard.putData("Start Position", _autoStartPositionChooser);
