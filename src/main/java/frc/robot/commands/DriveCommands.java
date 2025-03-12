@@ -71,12 +71,12 @@ public final class DriveCommands
         }, Drive.getInstance());
     }
 
-    public static Command driveAtOrientation(DoubleSupplier xSupplier, DoubleSupplier ySupplier, BooleanSupplier robotCentric, Supplier<Rotation2d> setpoint, double maxSpeed)
+    public static Command driveAtOrientation(DoubleSupplier xSupplier, DoubleSupplier ySupplier, BooleanSupplier robotCentric, Rotation2d setpoint, double maxSpeed)
     {
         // @formatter:off
         return Commands.sequence
         (
-            Commands.runOnce(() -> Drive.getInstance().rotateInit(setpoint.get(), maxSpeed)),
+            Commands.runOnce(() -> Drive.getInstance().rotateInit(setpoint, maxSpeed)),
             joystickDrive(xSupplier, ySupplier, () -> Drive.getInstance().rotateExecute(), robotCentric, 2, 1)
         );
         // @formatter:on

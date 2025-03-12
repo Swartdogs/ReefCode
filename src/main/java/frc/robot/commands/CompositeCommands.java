@@ -1,9 +1,8 @@
 package frc.robot.commands;
 
+import java.util.Set;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
-import java.util.function.Supplier;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -19,6 +18,7 @@ import frc.robot.subsystems.elevator.Elevator.ElevatorHeight;
 import frc.robot.subsystems.manipulator.Manipulator;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.Vision.Camera;
+import frc.robot.util.Utilities;
 
 public class CompositeCommands
 {
@@ -65,9 +65,24 @@ public class CompositeCommands
         }, Drive.getInstance());
     }
 
-    public static Command snapToBranch(Camera camera, int id, DoubleSupplier xSupplier, DoubleSupplier ySupplier, BooleanSupplier robotCentric, double maxSpeed)
+    public static Command snapToBranch(Camera camera, char branch, DoubleSupplier xSupplier, DoubleSupplier ySupplier, BooleanSupplier robotCentric, double maxSpeed)
     {
-        return Commands.either(autoAlign(camera, id, id % 2 == 0 ? new Pose2d() : new Pose2d()), DriveCommands.driveAtOrientation(xSupplier, ySupplier, robotCentric, () -> Constants.Field.getTagAngle(id), Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE), null); // Pose2d's need updated
+        // @formatter:off
+        return Commands.defer(() -> 
+            snapToBranch(
+                camera, 
+                Utilities.isBlueAlliance() ? (1 - ((((int) branch) - 97) / 2)) % 6 + 17 : (((((int) branch) - 97) / 2) + 1) % 6 + 6, 
+                (int) branch % 2 == 0 ? new Pose2d() : new Pose2d(), // Pose2d's need updated
+                xSupplier, ySupplier, robotCentric, maxSpeed), Set.of(Drive.getInstance()));
+        // @formatter:on
+    }
+
+    public static Command snapToBranch(Camera camera, int id, Pose2d reference, DoubleSupplier xSupplier, DoubleSupplier ySupplier, BooleanSupplier robotCentric, double maxSpeed)
+    {
+        return Commands.either(
+                autoAlign(camera, id, reference), DriveCommands.driveAtOrientation(xSupplier, ySupplier, robotCentric, Constants.Field.getTagAngle(id), Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE),
+                () -> Vision.getInstance(camera).hasTarget(id)
+        );
     }
 
     public static Command autoAlign(Camera camera, int id, Pose2d reference)

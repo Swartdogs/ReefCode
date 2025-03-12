@@ -9,6 +9,9 @@ import com.ctre.phoenix6.StatusCode;
 import com.revrobotics.REVLibError;
 import com.revrobotics.spark.SparkBase;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+
 public final class Utilities
 {
     private Utilities()
@@ -77,5 +80,12 @@ public final class Utilities
                 break;
             }
         }
+    }
+
+    public static boolean isBlueAlliance()
+    {
+        var allianceOpt = DriverStation.getAlliance();
+
+        return allianceOpt.isPresent() && allianceOpt.get() == Alliance.Blue;
     }
 }

@@ -15,6 +15,7 @@ import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.funnel.Funnel;
 import frc.robot.subsystems.manipulator.Manipulator;
+import frc.robot.util.Utilities;
 
 public class Dashboard extends SubsystemBase
 {
@@ -174,21 +175,7 @@ public class Dashboard extends SubsystemBase
         }
 
         // Ensure the AprilTag layout is using the correct origin
-        var allianceOpt = DriverStation.getAlliance();
-
-        if (allianceOpt.isPresent())
-        {
-            var alliance = allianceOpt.get();
-
-            if (alliance == Alliance.Blue)
-            {
-                Constants.Field.APRIL_TAG_FIELD_LAYOUT.setOrigin(OriginPosition.kBlueAllianceWallRightSide);
-            }
-            else
-            {
-                Constants.Field.APRIL_TAG_FIELD_LAYOUT.setOrigin(OriginPosition.kRedAllianceWallRightSide);
-            }
-        }
+        Constants.Field.APRIL_TAG_FIELD_LAYOUT.setOrigin(Utilities.isBlueAlliance() ? OriginPosition.kBlueAllianceWallRightSide : OriginPosition.kRedAllianceWallRightSide);
 
         _nullAuto.set(_selectedAuto == null);
     }
