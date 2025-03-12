@@ -1,5 +1,9 @@
 package frc.robot;
 
+import java.lang.reflect.Array;
+import java.util.HashMap;
+import java.util.Map;
+
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -141,28 +145,38 @@ public final class Constants
     public static class Field
     {
         public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT   = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded);
-        public static final Rotation2d          BLUE_REEF_ANGLE_ONE      = getTagAngle(18);
-        public static final Rotation2d          BLUE_REEF_ANGLE_TWO      = getTagAngle(17);
-        public static final Rotation2d          BLUE_REEF_ANGLE_THREE    = getTagAngle(22);
-        public static final Rotation2d          BLUE_REEF_ANGLE_FOUR     = getTagAngle(21);
-        public static final Rotation2d          BLUE_REEF_ANGLE_FIVE     = getTagAngle(20);
-        public static final Rotation2d          BLUE_REEF_ANGLE_SIX      = getTagAngle(19);
-        public static final Rotation2d          RED_REEF_ANGLE_ONE       = getTagAngle(7);
-        public static final Rotation2d          RED_REEF_ANGLE_TWO       = getTagAngle(8);
-        public static final Rotation2d          RED_REEF_ANGLE_THREE     = getTagAngle(9);
-        public static final Rotation2d          RED_REEF_ANGLE_FOUR      = getTagAngle(10);
-        public static final Rotation2d          RED_REEF_ANGLE_FIVE      = getTagAngle(11);
-        public static final Rotation2d          RED_REEF_ANGLE_SIX       = getTagAngle(6);
-        public static final Rotation2d          BLUE_LEFT_STATION_ANGLE  = getTagAngle(13).plus(Rotation2d.fromDegrees(180));
-        public static final Rotation2d          BLUE_RIGHT_STATION_ANGLE = getTagAngle(12).plus(Rotation2d.fromDegrees(180));
-        public static final Rotation2d          RED_LEFT_STATION_ANGLE   = getTagAngle(1).plus(Rotation2d.fromDegrees(180));
-        public static final Rotation2d          RED_RIGHT_STATION_ANGLE  = getTagAngle(2).plus(Rotation2d.fromDegrees(180));
-        public static final Rotation2d          BLUE_PROCESSOR_ANGLE     = getTagAngle(16);
-        public static final Rotation2d          RED_PROCESSOR_ANGLE      = getTagAngle(3);
+        public static final Rotation2d          BLUE_REEF_ANGLE_ONE      = getFieldTagAngle(18);
+        public static final Rotation2d          BLUE_REEF_ANGLE_TWO      = getFieldTagAngle(17);
+        public static final Rotation2d          BLUE_REEF_ANGLE_THREE    = getFieldTagAngle(22);
+        public static final Rotation2d          BLUE_REEF_ANGLE_FOUR     = getFieldTagAngle(21);
+        public static final Rotation2d          BLUE_REEF_ANGLE_FIVE     = getFieldTagAngle(20);
+        public static final Rotation2d          BLUE_REEF_ANGLE_SIX      = getFieldTagAngle(19);
+        public static final Rotation2d          RED_REEF_ANGLE_ONE       = getFieldTagAngle(7);
+        public static final Rotation2d          RED_REEF_ANGLE_TWO       = getFieldTagAngle(8);
+        public static final Rotation2d          RED_REEF_ANGLE_THREE     = getFieldTagAngle(9);
+        public static final Rotation2d          RED_REEF_ANGLE_FOUR      = getFieldTagAngle(10);
+        public static final Rotation2d          RED_REEF_ANGLE_FIVE      = getFieldTagAngle(11);
+        public static final Rotation2d          RED_REEF_ANGLE_SIX       = getFieldTagAngle(6);
+        public static final Rotation2d          BLUE_LEFT_STATION_ANGLE  = getFieldTagAngle(13).plus(Rotation2d.fromDegrees(180));
+        public static final Rotation2d          BLUE_RIGHT_STATION_ANGLE = getFieldTagAngle(12).plus(Rotation2d.fromDegrees(180));
+        public static final Rotation2d          RED_LEFT_STATION_ANGLE   = getFieldTagAngle(1).plus(Rotation2d.fromDegrees(180));
+        public static final Rotation2d          RED_RIGHT_STATION_ANGLE  = getFieldTagAngle(2).plus(Rotation2d.fromDegrees(180));
+        public static final Rotation2d          BLUE_PROCESSOR_ANGLE     = getFieldTagAngle(16);
+        public static final Rotation2d          RED_PROCESSOR_ANGLE      = getFieldTagAngle(3);
 
-        private static Rotation2d getTagAngle(int tagID)
+        private static Rotation2d getFieldTagAngle(int tagID)
         {
             return APRIL_TAG_FIELD_LAYOUT.getTagPose(tagID).get().getRotation().toRotation2d().rotateBy(new Rotation2d(Math.PI));
+        }
+
+        public static final Map<Integer, Rotation2d[]> APRIL_TAG_ANGLES = new HashMap<Integer, Rotation2d[]>()
+        {
+            put(1, new Rotation2d());
+        };
+
+        public static Rotation2d getBranchAngle(int tagID)
+        {
+            return null;
         }
     }
 

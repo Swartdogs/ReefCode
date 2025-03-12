@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -64,9 +65,9 @@ public class CompositeCommands
         }, Drive.getInstance());
     }
 
-    public static Command snapToBranch(Camera camera, int id)
+    public static Command snapToBranch(Camera camera, int id, DoubleSupplier xSupplier, DoubleSupplier ySupplier, BooleanSupplier robotCentric, double maxSpeed)
     {
-        return null;
+        return Commands.either(autoAlign(camera, id, id % 2 == 0 ? new Pose2d() : new Pose2d()), DriveCommands.driveAtOrientation(xSupplier, ySupplier, robotCentric, () -> Constants.Field.getTagAngle(id), Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE), null); // Pose2d's need updated
     }
 
     public static Command autoAlign(Camera camera, int id, Pose2d reference)
