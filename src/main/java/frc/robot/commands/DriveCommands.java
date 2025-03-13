@@ -4,6 +4,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
@@ -74,10 +75,13 @@ public final class DriveCommands
     public static Command driveAtOrientation(DoubleSupplier xSupplier, DoubleSupplier ySupplier, BooleanSupplier robotCentric, Rotation2d setpoint, double maxSpeed)
     {
         // @formatter:off
-        return Commands.sequence
-        (
-            Commands.runOnce(() -> Drive.getInstance().rotateInit(setpoint, maxSpeed)),
-            joystickDrive(xSupplier, ySupplier, () -> Drive.getInstance().rotateExecute(), robotCentric, 2, 1)
+        return Commands.defer(() ->
+            Commands.sequence
+            (
+                Commands.runOnce(() -> Drive.getInstance().rotateInit(setpoint, maxSpeed)),
+                joystickDrive(xSupplier, ySupplier, () -> Drive.getInstance().rotateExecute(), robotCentric, 2, 1)
+            ),
+            Set.of(Drive.getInstance())
         );
         // @formatter:on
     }

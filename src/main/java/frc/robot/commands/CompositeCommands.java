@@ -68,21 +68,40 @@ public class CompositeCommands
     public static Command snapToBranch(Camera camera, char branch, DoubleSupplier xSupplier, DoubleSupplier ySupplier, BooleanSupplier robotCentric, double maxSpeed)
     {
         // @formatter:off
-        return Commands.defer(() -> 
-            snapToBranch(
+        return Commands.defer
+        (
+            () -> snapToBranch
+            (
                 camera, 
                 Utilities.isBlueAlliance() ? (1 - ((((int) branch) - 97) / 2)) % 6 + 17 : (((((int) branch) - 97) / 2) + 1) % 6 + 6, 
                 (int) branch % 2 == 0 ? new Pose2d() : new Pose2d(), // Pose2d's need updated
-                xSupplier, ySupplier, robotCentric, maxSpeed), Set.of(Drive.getInstance()));
+                xSupplier,
+                ySupplier,
+                robotCentric,
+                maxSpeed
+            ),
+            Set.of(Drive.getInstance())
+        );
         // @formatter:on
     }
 
     public static Command snapToBranch(Camera camera, int id, Pose2d reference, DoubleSupplier xSupplier, DoubleSupplier ySupplier, BooleanSupplier robotCentric, double maxSpeed)
     {
-        return Commands.either(
-                autoAlign(camera, id, reference), DriveCommands.driveAtOrientation(xSupplier, ySupplier, robotCentric, Constants.Field.getTagAngle(id), Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE),
-                () -> Vision.getInstance(camera).hasTarget(id)
+        // @formatter:off
+        return Commands.either
+        (
+            autoAlign(camera, id, reference),
+            DriveCommands.driveAtOrientation
+            (
+                xSupplier,
+                ySupplier,
+                robotCentric,
+                Constants.Field.getTagAngle(id),
+                maxSpeed
+            ),
+            () -> Vision.getInstance(camera).hasTarget(id)
         );
+        // @formatter:on
     }
 
     public static Command autoAlign(Camera camera, int id, Pose2d reference)

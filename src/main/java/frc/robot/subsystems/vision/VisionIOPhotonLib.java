@@ -13,6 +13,7 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 import org.photonvision.targeting.TargetCorner;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.NetworkTableEvent;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -30,8 +31,8 @@ public class VisionIOPhotonLib implements VisionIO
     private boolean                   _hasPose           = false;
     private double[]                  _distances         = new double[] {};
     private int[]                     _targetIds         = new int[] {};
-    private double[]                  _targetYaws        = new double[] {};
-    private double[]                  _targetPitches     = new double[] {};
+    private Rotation2d[]              _targetYaws        = new Rotation2d[] {};
+    private Rotation2d[]              _targetPitches     = new Rotation2d[] {};
     private double[]                  _targetAreas       = new double[] {};
     private int                       _numProcessedTargets;
     private Translation2d[]           _corners           = new Translation2d[] {};
@@ -42,7 +43,7 @@ public class VisionIOPhotonLib implements VisionIO
         _camera         = new PhotonCamera(_cameraSettings.cameraName);
 
         _poseEstimator = new PhotonPoseEstimator(Constants.Field.APRIL_TAG_FIELD_LAYOUT, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, _cameraSettings.robotToCamera);
-        _poseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
+        _poseEstimator.setMultiTagFallbackStrategy(PoseStrategy.CLOSEST_TO_LAST_POSE);
 
         NetworkTableInstance.getDefault().addListener(NetworkTableInstance.getDefault().getEntry("/photonvision/" + _cameraSettings.cameraName + "/latencyMillis"), EnumSet.of(NetworkTableEvent.Kind.kValueRemote), event ->
         {
@@ -59,8 +60,8 @@ public class VisionIOPhotonLib implements VisionIO
 
             List<Double>              distances        = new ArrayList<>();
             List<Integer>             ids              = new ArrayList<>();
-            List<Double>              yaws             = new ArrayList<>();
-            List<Double>              pitches          = new ArrayList<>();
+            List<Rotation2d>          yaws             = new ArrayList<>();
+            List<Rotation2d>          pitches          = new ArrayList<>();
             List<Double>              areas            = new ArrayList<>();
             List<PhotonTrackedTarget> processedTargets = new ArrayList<>();
             List<Translation2d>       cornerList       = new ArrayList<>();
@@ -69,8 +70,8 @@ public class VisionIOPhotonLib implements VisionIO
             for (PhotonTrackedTarget target : targets)
             {
                 ids.add(target.getFiducialId());
-                yaws.add(target.getYaw());
-                pitches.add(target.getPitch());
+                yaws.add(Rotation2d.fromDegrees(target.getYaw()));
+                pitches.add(Rotation2d.fromDegrees(target.getPitch()));
                 areas.add(target.getArea());
 
                 for (TargetCorner corner : target.getDetectedCorners())
@@ -108,8 +109,8 @@ public class VisionIOPhotonLib implements VisionIO
                 _numProcessedTargets = processedTargets.size();
                 _distances           = distances.stream().mapToDouble(Double::doubleValue).toArray();
                 _targetIds           = ids.stream().mapToInt(Integer::intValue).toArray();
-                _targetYaws          = yaws.stream().mapToDouble(Double::doubleValue).toArray();
-                _targetPitches       = pitches.stream().mapToDouble(Double::doubleValue).toArray();
+                _targetYaws          = yaws.stream().map(t -> t).toArray(Rotation2d[]::new);
+                _targetPitches       = pitches.stream().map(t -> t).toArray(Rotation2d[]::new);
                 _targetAreas         = areas.stream().mapToDouble(Double::doubleValue).toArray();
                 _corners             = cornerList.stream().map(t -> t).toArray(Translation2d[]::new);
             }

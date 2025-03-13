@@ -3,6 +3,7 @@ package frc.robot.subsystems.vision;
 import org.littletonrobotics.junction.AutoLog;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 
 public interface VisionIO
@@ -16,8 +17,8 @@ public interface VisionIO
         public int             numTargets       = 0;
         public double[]        targetDistances  = new double[] {}; // Target = specific april tag
         public int[]           targetIds        = new int[] {};
-        public double[]        targetYaws       = new double[] {};
-        public double[]        targetPitches    = new double[] {};
+        public Rotation2d[]    targetYaws       = new Rotation2d[] {};
+        public Rotation2d[]    targetPitches    = new Rotation2d[] {};
         public double[]        targetAreas      = new double[] {};
         public Translation2d[] corners          = new Translation2d[] {};
     }

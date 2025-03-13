@@ -9,7 +9,9 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -19,7 +21,8 @@ public class Vision extends SubsystemBase
 {
     public enum Camera
     {
-        Front("front", new Transform3d(new Translation3d(), new Rotation3d())), Back("back", new Transform3d(new Translation3d(), new Rotation3d()));
+        Front("front", new Transform3d(new Translation3d(Units.inchesToMeters(9), Units.inchesToMeters(12), Units.inchesToMeters(11.75)), new Rotation3d(Rotation2d.fromDegrees(-45)))),
+        Back("back", new Transform3d(new Translation3d(Units.inchesToMeters(1.25), Units.inchesToMeters(5.5), Units.inchesToMeters(35)), new Rotation3d(Rotation2d.fromDegrees(180))));
 
         public final String      cameraName;
         public final Transform3d robotToCamera;
@@ -54,6 +57,7 @@ public class Vision extends SubsystemBase
     private final PIDController            _anglePIDController = new PIDController(Constants.Vision.TURN_KP, 0, Constants.Vision.TURN_KD);
     private final PIDController            _xDriveController   = new PIDController(Constants.Vision.DRIVE_KP, 0, Constants.Vision.DRIVE_KD); // forward and back
     private final PIDController            _yDriveController   = new PIDController(Constants.Vision.DRIVE_KP, 0, Constants.Vision.DRIVE_KD); // left to right
+    private Pose2d                         _reference          = new Pose2d();
     private int                            _pidTagId           = 0;
 
     private Vision(VisionIO io, Camera camera)
@@ -120,7 +124,7 @@ public class Vision extends SubsystemBase
         }
     }
 
-    public double getTargetYaw(int id)
+    public Rotation2d getTargetYaw(int id)
     {
         int index = getTagIndex(id);
 
@@ -130,7 +134,7 @@ public class Vision extends SubsystemBase
         }
         else
         {
-            return -1;
+            return null;
         }
     }
 
@@ -142,23 +146,42 @@ public class Vision extends SubsystemBase
 
     public void setXDriveSetpoint(int id, double distanceOffset)
     {
-        _pidTagId = id;
+        _pidTagId  = id;
+        _reference = new Pose2d(distanceOffset, _reference.getY(), _reference.getRotation());
         _xDriveController.setSetpoint(distanceOffset);
     }
 
     public void setYDriveSetpoint(int id, double distanceOffset)
     {
-        _pidTagId = id;
+        _pidTagId  = id;
+        _reference = new Pose2d(_reference.getX(), distanceOffset, _reference.getRotation());
         _yDriveController.setSetpoint(distanceOffset);
     }
 
     public void setVisionReference(int id, Pose2d reference)
     {
-        _pidTagId = id;
+        _pidTagId  = id;
+        _reference = reference;
 
         _anglePIDController.setSetpoint(reference.getRotation().getDegrees());
         _xDriveController.setSetpoint(reference.getX());
         _yDriveController.setSetpoint(reference.getY());
+    }
+
+    private Rotation2d getAngleOffset()
+    {
+        return getTargetYaw(_pidTagId).minus(Drive.getInstance().getRotation().minus(Constants.Field.getTagAngle(_pidTagId)));
+    }
+
+    private double getXOffset()
+    {
+        return Math.cos(getAngleOffset().getDegrees()) * getTargetDistance(_pidTagId) + _reference.getX();
+    }
+
+    private double getYOffset()
+    {
+        return Math.sin(getAngleOffset().getDegrees()) * getTargetDistance(_pidTagId) + _reference.getY();
+
     }
 
     public double getAngleCalculation()
@@ -169,7 +192,7 @@ public class Vision extends SubsystemBase
         }
         else
         {
-            return _anglePIDController.calculate(getTargetYaw(_pidTagId));
+            return _anglePIDController.calculate(getAngleOffset().getDegrees());
         }
     }
 
@@ -181,7 +204,7 @@ public class Vision extends SubsystemBase
         }
         else
         {
-            return _xDriveController.calculate(getTargetDistance(_pidTagId));
+            return _xDriveController.calculate(getXOffset());
         }
     }
 
@@ -193,7 +216,7 @@ public class Vision extends SubsystemBase
         }
         else
         {
-            return _yDriveController.calculate(getTargetDistance(_pidTagId));
+            return _yDriveController.calculate(getYOffset());
         }
     }
 }
