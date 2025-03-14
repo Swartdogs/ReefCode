@@ -199,15 +199,26 @@ public class Dashboard extends SubsystemBase
         return _inputs.funnelRetractTime;
     }
 
-    public double getManipulatorIntakePercentSpeed()
+    public double getManipulatorCoralIntakePercentSpeed()
     {
 
-        return _inputs.manipulatorIntakePercentSpeed;
+        return _inputs.manipulatorCoralIntakePercentSpeed;
     }
 
-    public double getManipulatorOutputPercentSpeed()
+    public double getManipulatorCoralOutputPercentSpeed()
     {
-        return _inputs.manipulatorOutputPercentSpeed;
+        return _inputs.manipulatorCoralOutputPercentSpeed;
+    }
+
+    public double getManipulatorAlgaeIntakePercentSpeed()
+    {
+
+        return _inputs.manipulatorAlgaeIntakePercentSpeed;
+    }
+
+    public double getManipulatorAlgaeOutputPercentSpeed()
+    {
+        return _inputs.manipulatorAlgaeOutputPercentSpeed;
     }
 
     public double getManipulatorL1SpeedMultiplier()

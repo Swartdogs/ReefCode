@@ -81,7 +81,7 @@ public class RobotContainer
         _controller.povDown().onTrue(ElevatorCommands.setHeight(ElevatorHeight.Level3));
         _controller.povLeft().onTrue(ElevatorCommands.setHeight(ElevatorHeight.Level4));
 
-        _controller.leftStick().onTrue(ManipulatorCommands.intake());
+        _controller.leftStick().onTrue(ManipulatorCommands.coralIntake());
         _controller.start().onTrue(CompositeCommands.output());
         _controller.rightStick().onTrue(ManipulatorCommands.stop());
 
@@ -97,6 +97,7 @@ public class RobotContainer
 
         // Trigger _hasCoral = new Trigger(() -> _manipulator.hasCoral());
         // Trigger _manipulatorRunning = new Trigger(() -> _manipulator.isRunning());
+        Trigger _operatorButton13 = _operatorButtons.axisGreaterThan(0, 0.5);
         Trigger _operatorButton14 = _operatorButtons.axisLessThan(1, -0.5);
         Trigger _operatorButton15 = _operatorButtons.axisGreaterThan(1, 0.5);
 
@@ -106,6 +107,9 @@ public class RobotContainer
         // Driver Controls
         _driverJoystick.button(2).whileTrue(DriveCommands.reduceSpeed());
         _driverJoystick.button(11).onTrue(DriveCommands.resetGyro());
+
+        _driverJoystick.button(3).whileTrue(ManipulatorCommands.algaeIntake());
+        _driverJoystick.button(4).whileTrue(ManipulatorCommands.algaeOutput());
 
         _driverButtons.button(1).whileTrue(DriveCommands.driveAtOrientation(() -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric, Constants.Field.BLUE_REEF_ANGLE_ONE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE));
 
@@ -222,9 +226,9 @@ public class RobotContainer
         _operatorButtons.button(8).onTrue(CompositeCommands.output());
         _operatorButtons.button(9).onTrue(ElevatorCommands.modifyHeight(Constants.Elevator.ELEVATOR_MODIFICATION_HEIGHT));
         _operatorButtons.button(10).onTrue(ElevatorCommands.modifyHeight(-Constants.Elevator.ELEVATOR_MODIFICATION_HEIGHT));
-        // _operatorButtons.button(11).onTrue(null);// replace with algae intake
-        // _operatorButtons.button(12).onTrue(null);// replace with algaei output
-        // _operatorButton12.onTrue(null);// replace with algae stop
+        _operatorButtons.button(11).whileTrue(ManipulatorCommands.algaeIntake());// replace with algae intake
+        _operatorButtons.button(12).whileTrue(ManipulatorCommands.algaeOutput());// replace with algaei output
+        _operatorButton13.onTrue(ManipulatorCommands.stop()); // replace with algae stop
         (_operatorButton14.or(_operatorButtons.povUp())).whileTrue(ElevatorCommands.hangExecute());
         // .alongWith(LEDCommands.flashColor(Constants.LED.RED));
         // .andThen(LEDCommands.setDefaultColor(Constants.LED.YELLOW))
