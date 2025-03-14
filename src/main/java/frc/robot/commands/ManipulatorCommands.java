@@ -40,7 +40,11 @@ public class ManipulatorCommands
     public static Command algaeIntake()
     {
         // @formatter:off
-        return Manipulator.getInstance().runOnce(() -> Manipulator.getInstance().algaeIntake())
+        return Commands.sequence
+        (
+            Manipulator.getInstance().runOnce(() -> Manipulator.getInstance().algaeIntake()),
+            Commands.waitUntil(() -> false)
+        )
         .finallyDo(() -> Manipulator.getInstance().stop());
         // @formatter:on
     }
@@ -48,7 +52,11 @@ public class ManipulatorCommands
     public static Command algaeOutput()
     {
         // @formatter:off
-        return Manipulator.getInstance().runOnce(() -> Manipulator.getInstance().algaeOutput())
+        return Commands.sequence
+        (
+            Manipulator.getInstance().runOnce(() -> Manipulator.getInstance().algaeOutput()),
+            Commands.waitUntil(() -> false)
+        )
         .finallyDo(() -> Manipulator.getInstance().stop());
         // @formatter:on
     }
