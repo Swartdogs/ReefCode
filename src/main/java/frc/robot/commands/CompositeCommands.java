@@ -91,7 +91,7 @@ public class CompositeCommands
         {
             double  x                 = 0;
             double  y                 = 0;
-            double  rotate            = 0;
+            double  rotate            = Drive.getInstance().rotateExecute();
             boolean driveRobotCentric = false;
             double  translateExponent = 0;
 
@@ -99,7 +99,6 @@ public class CompositeCommands
             {
                 // x = Vision.getInstance(camera).getXDistanceCalculation();
                 // y = Vision.getInstance(camera).getYDistanceCalculation();
-                rotate            = Vision.getInstance(camera).getAngleCalculation();
                 driveRobotCentric = true;
                 translateExponent = 1;
             }
@@ -107,7 +106,6 @@ public class CompositeCommands
             {
                 x                 = xSupplier.getAsDouble();
                 y                 = ySupplier.getAsDouble();
-                rotate            = Drive.getInstance().rotateExecute();
                 driveRobotCentric = robotCentric.getAsBoolean();
                 translateExponent = 2;
             }
