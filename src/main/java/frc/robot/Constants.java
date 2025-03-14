@@ -271,12 +271,12 @@ public final class Constants
 
     public static class Vision
     {
-        public static final double VISION_STD_DEV_BASE_XY     = 0.5; // meters
-        public static final double VISION_STD_DEV_BASE_THETA  = Units.degreesToRadians(30);
+        public static final double VISION_STD_DEV_BASE_XY     = 2.0; // meters
+        public static final double VISION_STD_DEV_BASE_THETA  = Units.degreesToRadians(40);
         public static final double VISION_STD_DEV_MULTI_XY    = 0.1;
         public static final double VISION_STD_DEV_MULTI_THETA = Units.degreesToRadians(10);
-        public static final double VISION_DISTANCE_SCALE      = 0.2; // How much to increase uncertainty per meter
-        public static final double MAX_DETECTION_RANGE        = Units.inchesToMeters(300);
+        public static final double VISION_DISTANCE_SCALE      = 1.5; // How much to increase uncertainty per meter
+        public static final double MAX_DETECTION_RANGE        = Units.inchesToMeters(120);
         public static final double TURN_KP                    = 0.0;
         public static final double TURN_KD                    = 0.0;
         public static final double DRIVE_KP                   = 0.0;
