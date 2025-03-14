@@ -8,6 +8,7 @@ import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -52,14 +53,13 @@ public class Vision extends SubsystemBase
     }
 
     private final VisionIO                 _io;
-    private final VisionIOInputsAutoLogged _inputs             = new VisionIOInputsAutoLogged();
+    private final VisionIOInputsAutoLogged _inputs           = new VisionIOInputsAutoLogged();
     private final Camera                   _camera;
-    private final PIDController            _anglePIDController = new PIDController(Constants.Vision.TURN_KP, 0, Constants.Vision.TURN_KD);
-    private final PIDController            _xDriveController   = new PIDController(Constants.Vision.DRIVE_KP, 0, Constants.Vision.DRIVE_KD); // forward and back
-    private final PIDController            _yDriveController   = new PIDController(Constants.Vision.DRIVE_KP, 0, Constants.Vision.DRIVE_KD); // left to right
-    private Pose2d                         _reference          = new Pose2d();
-    private int                            _pidTagId           = 0;
-    private Pose2d                         _lastPose           = new Pose2d();
+    private final PIDController            _xDriveController = new PIDController(Constants.Vision.DRIVE_KP, 0, Constants.Vision.DRIVE_KD); // forward and back
+    private final PIDController            _yDriveController = new PIDController(Constants.Vision.DRIVE_KP, 0, Constants.Vision.DRIVE_KD); // left to right
+    private Translation2d                  _reference        = new Translation2d();
+    private int                            _pidTagId         = 0;
+    private Pose2d                         _lastPose         = new Pose2d();
 
     private Vision(VisionIO io, Camera camera)
     {
@@ -107,6 +107,14 @@ public class Vision extends SubsystemBase
             _lastPose = smoothedPose;
 
             Drive.getInstance().addVisionMeasurement(smoothedPose, _inputs.captureTimestamp, stdDevs);
+
+            if (_pidTagId != 0)
+            {
+                Logger.recordOutput("Vision/Theta", getAngleOffset());
+                Logger.recordOutput("Vision/Distance", getTargetDistance(_pidTagId));
+                Logger.recordOutput("Vision/Gx", getXOffset());
+                Logger.recordOutput("Vision/Gy", getYOffset());
+            }
         }
     }
 
@@ -144,73 +152,68 @@ public class Vision extends SubsystemBase
         }
         else
         {
-            return null;
+            return new Rotation2d();
         }
-    }
-
-    public void setAngleSetpoint(int id, double angleOffset)
-    {
-        _pidTagId = id;
-        _anglePIDController.setSetpoint(angleOffset);
     }
 
     public void setXDriveSetpoint(int id, double distanceOffset)
     {
         _pidTagId  = id;
-        _reference = new Pose2d(distanceOffset, _reference.getY(), _reference.getRotation());
+        _reference = new Translation2d(distanceOffset, _reference.getY());
         _xDriveController.setSetpoint(distanceOffset);
     }
 
     public void setYDriveSetpoint(int id, double distanceOffset)
     {
         _pidTagId  = id;
-        _reference = new Pose2d(_reference.getX(), distanceOffset, _reference.getRotation());
+        _reference = new Translation2d(_reference.getX(), distanceOffset);
         _yDriveController.setSetpoint(distanceOffset);
     }
 
-    public void setVisionReference(int id, Pose2d reference)
+    public void setVisionReference(int id, Translation2d reference)
     {
         _pidTagId  = id;
         _reference = reference;
 
-        _anglePIDController.setSetpoint(reference.getRotation().getDegrees());
         _xDriveController.setSetpoint(reference.getX());
         _yDriveController.setSetpoint(reference.getY());
     }
 
+    public Rotation2d getAngleToTag()
+    {
+        if (hasTarget(_pidTagId))
+        {
+            return Drive.getInstance().getRotation().minus(Constants.Field.getTagAngle(_pidTagId));
+        }
+        else
+        {
+            return new Rotation2d();
+        }
+    }
+
     private Rotation2d getAngleOffset()
     {
-        return getTargetYaw(_pidTagId).minus(Drive.getInstance().getRotation().minus(Constants.Field.getTagAngle(_pidTagId)));
+        Rotation2d yaw      = getTargetYaw(_pidTagId);
+        Rotation2d cToO     = _camera.robotToCamera.getRotation().toRotation2d();
+        Rotation2d rotation = Drive.getInstance().getRotation();
+        Rotation2d tagAngle = Constants.Field.getTagAngle(_pidTagId);
+
+        Logger.recordOutput("Vision/yaw", yaw);
+        Logger.recordOutput("Vision/cToO", cToO);
+        Logger.recordOutput("Vision/rotation", rotation);
+        Logger.recordOutput("Vision/tagAngle", tagAngle);
+
+        return (yaw.plus(cToO)).minus(rotation.minus(tagAngle));
     }
 
     private double getXOffset()
     {
-        return Math.cos(getAngleOffset().getDegrees()) * getTargetDistance(_pidTagId) + _reference.getX();
+        return getTargetDistance(_pidTagId) * Math.cos(getAngleOffset().getRadians()) + _reference.getX();
     }
 
     private double getYOffset()
     {
-        return Math.sin(getAngleOffset().getDegrees()) * getTargetDistance(_pidTagId) + _reference.getY();
-
-    }
-
-    public double getAngleCalculation()
-    {
-        if (!hasTarget(_pidTagId))
-        {
-            return 0;
-        }
-        else
-        {
-            double calc = _anglePIDController.calculate(getAngleOffset().getDegrees());
-            System.out.println(
-                    String.format(
-                            "setpoint : %6.2f, measurment : %6.2f, calculation : %6.2f, tagAngle : %6.2f gyroHeading : %6.2f", _anglePIDController.getSetpoint(), getAngleOffset().getDegrees(), calc,
-                            Constants.Field.getTagAngle(17).getDegrees(), Drive.getInstance().getRotation().getDegrees()
-                    )
-            );
-            return calc;
-        }
+        return getTargetDistance(_pidTagId) * Math.sin(getAngleOffset().getRadians()) + _reference.getY();
     }
 
     public double getXDistanceCalculation()
@@ -221,7 +224,7 @@ public class Vision extends SubsystemBase
         }
         else
         {
-            return _xDriveController.calculate(getXOffset());
+            return -_xDriveController.calculate(getXOffset());
         }
     }
 
@@ -233,7 +236,51 @@ public class Vision extends SubsystemBase
         }
         else
         {
-            return _yDriveController.calculate(getYOffset());
+            return -_yDriveController.calculate(getYOffset());
         }
+    }
+
+    public double getCommonDifference()
+    {
+        double x      = Math.abs(getXDistanceCalculation());
+        double y      = Math.abs(getYDistanceCalculation());
+        double excess = 0.0;
+
+        if (x > y)
+        {
+            excess = x - y;
+        }
+        else if (y > x)
+        {
+            excess = y - x;
+        }
+
+        return excess;
+    }
+
+    public double getXDMod()
+    {
+        double x = getXDistanceCalculation();
+        double y = getYDistanceCalculation();
+
+        if (Math.abs(x) > Math.abs(y))
+        {
+            x = Math.copySign(y, x);
+        }
+
+        return x;
+    }
+
+    public double getYMod()
+    {
+        double x = getXDistanceCalculation();
+        double y = getYDistanceCalculation();
+
+        if (Math.abs(y) > Math.abs(x))
+        {
+            y = Math.copySign(x, y);
+        }
+
+        return y;
     }
 }

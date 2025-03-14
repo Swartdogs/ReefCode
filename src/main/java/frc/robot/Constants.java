@@ -5,7 +5,6 @@ import java.util.Map;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -155,7 +154,7 @@ public final class Constants
         public static final double  L2_HEIGHT                    = MIN_EXTENSION + 18.0;
         public static final double  L3_HEIGHT                    = MIN_EXTENSION + 33.2;
         public static final double  L4_HEIGHT                    = MIN_EXTENSION + 59.5;
-        public static final double  HANG_HEIGHT                  = (L2_HEIGHT + L3_HEIGHT) / 2;
+        public static final double  HANG_HEIGHT                  = MIN_EXTENSION + 30;
         public static final double  MAX_ASCENT_SPEED             = 0.8;
         public static final double  MAX_DESCENT_SPEED            = 0.2;
         public static final double  EXTENSION_SCALE              = (MAX_EXTENSION - MIN_EXTENSION) / (RAW_SENSOR_MAX - RAW_SENSOR_MIN);
@@ -271,17 +270,15 @@ public final class Constants
 
     public static class Vision
     {
-        public static final double VISION_STD_DEV_BASE_XY     = 2.0; // meters
-        public static final double VISION_STD_DEV_BASE_THETA  = Units.degreesToRadians(40);
-        public static final double VISION_STD_DEV_MULTI_XY    = 0.1;
-        public static final double VISION_STD_DEV_MULTI_THETA = Units.degreesToRadians(10);
-        public static final double VISION_DISTANCE_SCALE      = 1.5; // How much to increase uncertainty per meter
-        public static final double MAX_DETECTION_RANGE        = Units.inchesToMeters(120);
-        public static final double TURN_KP                    = 0.5;
-        public static final double TURN_KD                    = 0.0;
-        public static final double DRIVE_KP                   = 1 / 60;
-        public static final double DRIVE_KD                   = 0.0;
-        public static final Pose2d LEFT_REFERENCE             = new Pose2d(Units.inchesToMeters(0), Units.inchesToMeters(0), Rotation2d.fromDegrees(180)); // set values
-        public static final Pose2d RIGHT_REFERENCE            = new Pose2d(Units.inchesToMeters(0), Units.inchesToMeters(0), Rotation2d.fromDegrees(180)); // set values
+        public static final double        VISION_STD_DEV_BASE_XY     = 2.0; // meters
+        public static final double        VISION_STD_DEV_BASE_THETA  = Units.degreesToRadians(40);
+        public static final double        VISION_STD_DEV_MULTI_XY    = 0.1;
+        public static final double        VISION_STD_DEV_MULTI_THETA = Units.degreesToRadians(10);
+        public static final double        VISION_DISTANCE_SCALE      = 1.5; // How much to increase uncertainty per meter
+        public static final double        MAX_DETECTION_RANGE        = Units.inchesToMeters(120);
+        public static final double        DRIVE_KP                   = 0.3;
+        public static final double        DRIVE_KD                   = 0.0;
+        public static final Translation2d LEFT_REFERENCE             = new Translation2d(Units.inchesToMeters(-24), Units.inchesToMeters(24)); // set values
+        public static final Translation2d RIGHT_REFERENCE            = new Translation2d(Units.inchesToMeters(0), Units.inchesToMeters(0)); // set values
     }
 }

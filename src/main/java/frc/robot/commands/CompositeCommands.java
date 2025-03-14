@@ -74,7 +74,7 @@ public class CompositeCommands
             (
                 camera, 
                 Utilities.isBlueAlliance() ? (1 - ((((int) branch) - 97) / 2)) % 6 + 17 : (((((int) branch) - 97) / 2) + 1) % 6 + 6, 
-                (int) branch % 2 == 0 ? new Pose2d() : new Pose2d(), // Pose2d's need updated
+                (int) branch % 2 == 0 ? Constants.Vision.LEFT_REFERENCE : Constants.Vision.RIGHT_REFERENCE,
                 xSupplier,
                 ySupplier,
                 robotCentric,
@@ -85,7 +85,7 @@ public class CompositeCommands
         // @formatter:on
     }
 
-    public static Command snapToBranch(Camera camera, int id, Pose2d reference, DoubleSupplier xSupplier, DoubleSupplier ySupplier, BooleanSupplier robotCentric, double maxSpeed)
+    public static Command snapToBranch(Camera camera, int id, Translation2d reference, DoubleSupplier xSupplier, DoubleSupplier ySupplier, BooleanSupplier robotCentric, double maxSpeed)
     {
         return Commands.sequence(Commands.runOnce(() -> Vision.getInstance(camera).setVisionReference(id, reference)), Commands.runOnce(() -> Drive.getInstance().rotateInit(Constants.Field.getTagAngle(id), maxSpeed)), Commands.run(() ->
         {
@@ -97,10 +97,20 @@ public class CompositeCommands
 
             if (Vision.getInstance(camera).hasTarget(id))
             {
-                // x = Vision.getInstance(camera).getXDistanceCalculation();
-                // y = Vision.getInstance(camera).getYDistanceCalculation();
-                driveRobotCentric = true;
-                translateExponent = 1;
+                if (Math.abs(x) > 0.1 && Math.abs(y) > 0.1)
+                {
+                    x                 = Vision.getInstance(camera).getXDMod();
+                    y                 = Vision.getInstance(camera).getYMod();
+                    driveRobotCentric = true;
+                    translateExponent = 1;
+                }
+                else
+                {
+                    x                 = Vision.getInstance(camera).getXDistanceCalculation();
+                    y                 = Vision.getInstance(camera).getYDistanceCalculation();
+                    driveRobotCentric = true;
+                    translateExponent = 1;
+                }
             }
             else
             {
@@ -114,6 +124,7 @@ public class CompositeCommands
             double     linearMagnitude = MathUtil.applyDeadband(Math.hypot(x, y), Constants.Controls.JOYSTICK_DEADBAND);
             Rotation2d linearDirection = new Rotation2d(x, y);
             double     omega           = MathUtil.applyDeadband(rotate, Constants.Controls.JOYSTICK_DEADBAND);
+            System.out.println(String.format("x : %6.2f y : %6.2f linearDirection : %6.2f", x, y, linearDirection.getDegrees()));
 
             // Square values
             linearMagnitude = Math.pow(linearMagnitude, translateExponent);
@@ -126,6 +137,9 @@ public class CompositeCommands
             if (driveRobotCentric)
             {
                 var chassisSpeeds = new ChassisSpeeds(linearVelocity.getX() * Constants.Drive.MAX_LINEAR_SPEED, linearVelocity.getY() * Constants.Drive.MAX_LINEAR_SPEED, omega * Constants.Drive.MAX_ANGULAR_SPEED);
+
+                // var fieldSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(chassisSpeeds,
+                // Vision.getInstance(camera).getAngleToTag().unaryMinus());
 
                 Drive.getInstance().runVelocity(chassisSpeeds);
             }
@@ -140,16 +154,16 @@ public class CompositeCommands
         }));
     }
 
-    public static Command autoAlign(Camera camera, int id, Pose2d reference)
-    {
-        // @formatter:off
-        return Commands.sequence
-        (
-            Commands.runOnce(() -> Vision.getInstance(camera).setVisionReference(id, reference)),
-            joystickDrive(() -> Vision.getInstance(camera).getXDistanceCalculation(), () -> Vision.getInstance(camera).getYDistanceCalculation(), () -> Vision.getInstance(camera).getAngleCalculation(), () -> true, 1, 1)
-        );
-        // @formatter:on
-    }
+    // public static Command autoAlign(Camera camera, int id, Pose2d reference)
+    // {
+    //     // @formatter:off
+    //     return Commands.sequence
+    //     (
+    //         Commands.runOnce(() -> Vision.getInstance(camera).setVisionReference(id, reference)),
+    //         joystickDrive(() -> Vision.getInstance(camera).getXDistanceCalculation(), () -> Vision.getInstance(camera).getYDistanceCalculation(), () -> Vision.getInstance(camera).getAngleCalculation(), () -> true, 1, 1)
+    //     );
+    //     // @formatter:on
+    // }
 
     public static Command intake()
     {
