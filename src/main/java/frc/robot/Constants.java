@@ -256,15 +256,17 @@ public final class Constants
 
     public static class Manipulator
     {
-        public static final DCMotor MANIPULATOR_MOTOR   = DCMotor.getNeo550(2);
-        public static final double  MOTOR_REDUCTION     = 5.0;
-        public static final double  INTAKE_SPEED        = 3.5 / Constants.General.MOTOR_VOLTAGE;
-        public static final double  SLOW_INTAKE_SPEED   = 1.5 / Constants.General.MOTOR_VOLTAGE;
-        public static final double  OUTPUT_SPEED        = 10.0 / Constants.General.MOTOR_VOLTAGE;
-        public static final double  L1_SPEED_MULTIPLIER = 1.0;
-        public static final double  DEBOUNCE_TIMER      = 0.2;
-        public static final double  INDEX_SPEED         = 1.0 / Constants.General.MOTOR_VOLTAGE;
-        public static final double  INDEX_TIME          = 0.35;
+        public static final DCMotor MANIPULATOR_MOTOR       = DCMotor.getNeo550(2);
+        public static final double  MOTOR_REDUCTION         = 5.0;
+        public static final double  CORAL_INTAKE_SPEED      = 3.5 / Constants.General.MOTOR_VOLTAGE;
+        public static final double  CORAL_SLOW_INTAKE_SPEED = 1.5 / Constants.General.MOTOR_VOLTAGE;
+        public static final double  CORAL_OUTPUT_SPEED      = 10.0 / Constants.General.MOTOR_VOLTAGE;
+        public static final double  ALGAE_INTAKE_SPEED      = -8.0 / Constants.General.MOTOR_VOLTAGE;
+        public static final double  ALGAE_OUTPUT_SPEED      = 10.0 / Constants.General.MOTOR_VOLTAGE;
+        public static final double  L1_SPEED_MULTIPLIER     = 1.0;
+        public static final double  DEBOUNCE_TIMER          = 0.2;
+        public static final double  INDEX_SPEED             = 1.0 / Constants.General.MOTOR_VOLTAGE;
+        public static final double  INDEX_TIME              = 0.35;
     }
 
     public static class Vision

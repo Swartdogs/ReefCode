@@ -27,9 +27,11 @@ public interface DashboardIO
         public double elevatorHangSpeed               = Constants.Elevator.HANG_SPEED;
 
         // Manipulator
-        public double manipulatorIntakePercentSpeed = Constants.Manipulator.INTAKE_SPEED;
-        public double manipulatorOutputPercentSpeed = Constants.Manipulator.OUTPUT_SPEED;
-        public double manipulatorL1SpeedMultiplier  = Constants.Manipulator.L1_SPEED_MULTIPLIER;
+        public double manipulatorCoralIntakePercentSpeed = Constants.Manipulator.CORAL_INTAKE_SPEED;
+        public double manipulatorCoralOutputPercentSpeed = Constants.Manipulator.CORAL_OUTPUT_SPEED;
+        public double manipulatorAlgaeIntakePercentSpeed = Constants.Manipulator.ALGAE_INTAKE_SPEED;
+        public double manipulatorAlgaeOutputPercentSpeed = Constants.Manipulator.ALGAE_OUTPUT_SPEED;
+        public double manipulatorL1SpeedMultiplier       = Constants.Manipulator.L1_SPEED_MULTIPLIER;
 
         // Funnel
         public double funnelRetractPercentSpeed = Constants.Funnel.RETRACT_SPEED;

@@ -11,16 +11,45 @@ public class ManipulatorCommands
     {
     }
 
-    public static Command intake()
+    public static Command coralIntake()
     {
         // @formatter:off
         return Commands.sequence
         (
-            Manipulator.getInstance().runOnce(() -> Manipulator.getInstance().intake()),
+            Manipulator.getInstance().runOnce(() -> Manipulator.getInstance().coralIntake()),
             Commands.waitUntil(() -> Manipulator.getInstance().detectedCoral())
         )
         .finallyDo(() -> Manipulator.getInstance().stop())
         .unless(() -> Manipulator.getInstance().detectedCoral());
+        // @formatter:on
+    }
+
+    public static Command coralOutput()
+    {
+        // @formatter:off
+        return Commands.sequence
+        (
+            Manipulator.getInstance().runOnce(() -> Manipulator.getInstance().coralOutput()),
+            Commands.waitUntil(() -> !Manipulator.getInstance().isEndSensorTripped())
+        )
+        .finallyDo(() -> Manipulator.getInstance().stop())
+        .unless(() -> !Manipulator.getInstance().isEndSensorTripped());
+        // @formatter:on
+    }
+
+    public static Command algaeIntake()
+    {
+        // @formatter:off
+        return Manipulator.getInstance().runOnce(() -> Manipulator.getInstance().algaeIntake())
+        .finallyDo(() -> Manipulator.getInstance().stop());
+        // @formatter:on
+    }
+
+    public static Command algaeOutput()
+    {
+        // @formatter:off
+        return Manipulator.getInstance().runOnce(() -> Manipulator.getInstance().algaeOutput())
+        .finallyDo(() -> Manipulator.getInstance().stop());
         // @formatter:on
     }
 
@@ -33,19 +62,6 @@ public class ManipulatorCommands
             Commands.waitSeconds(Constants.Manipulator.INDEX_TIME)
         )
         .finallyDo(() -> Manipulator.getInstance().stop());
-        // @formatter:on
-    }
-
-    public static Command output()
-    {
-        // @formatter:off
-        return Commands.sequence
-        (
-            Manipulator.getInstance().runOnce(() -> Manipulator.getInstance().output()),
-            Commands.waitUntil(() -> !Manipulator.getInstance().isEndSensorTripped())
-        )
-        .finallyDo(() -> Manipulator.getInstance().stop())
-        .unless(() -> !Manipulator.getInstance().isEndSensorTripped());
         // @formatter:on
     }
 

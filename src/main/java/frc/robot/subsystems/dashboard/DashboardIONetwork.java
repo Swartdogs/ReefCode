@@ -14,28 +14,30 @@ import frc.robot.subsystems.elevator.Elevator;
 public class DashboardIONetwork implements DashboardIO
 {
     // Dashboard Settings
-    private final String _elevatorMinHeightKey            = "Dashboard/Dashboard Settings/Elevator Min Height";
-    private final String _elevatorMaxHeightKey            = "Dashboard/Dashboard Settings/Elevator Max Height";
-    private final String _elevatorStowHeightKey           = "Dashboard/Dashboard Settings/Elevator Stow Height";
-    private final String _elevatorL1HeightKey             = "Dashboard/Dashboard Settings/Elevator L1 Height";
-    private final String _elevatorL2HeightKey             = "Dashboard/Dashboard Settings/Elevator L2 Height";
-    private final String _elevatorL3HeightKey             = "Dashboard/Dashboard Settings/Elevator L3 Height";
-    private final String _elevatorL4HeightKey             = "Dashboard/Dashboard Settings/Elevator L4 Height";
-    private final String _elevatorHangHeightKey           = "Dashboard/Dashboard Settings/Elevator Hang Height";
-    private final String _elevatorHangSpeedKey            = "Dashboard/Dashboard Settings/Elevator Hang Speed";
-    private final String _elevatorKPKey                   = "Dashboard/Dashboard Settings/Elevator kP";
-    private final String _elevatorKDKey                   = "Dashboard/Dashboard Settings/Elevator kD";
-    private final String _elevatorMaxDownPercentKey       = "Dashboard/Dashboard Settings/Elevator Max Down Speed";
-    private final String _elevatorMaxUpPercentKey         = "Dashboard/Dashboard Settings/Elevator Max Up Speed";
-    private final String _manipulatorIntakePercentKey     = "Dashboard/Dashboard Settings/Manipulator Intake Speed";
-    private final String _manipulatorOutputPercentKey     = "Dashboard/Dashboard Settings/Manipulator Output Speed";
-    private final String _manipulatorL1SpeedMultiplierKey = "Dashboard/Dashboard Settings/Manipulator L1 Speed Multiplier";
-    private final String _funnelRetractPercentKey         = "Dashboard/Dashboard Settings/Funnel Retract Speed";
-    private final String _funnelRetractTimeKey            = "Dashboard/Dashboard Settings/Funnel Retract Time";
-    private final String _driveFLOffsetKey                = "Dashboard/Dashboard Settings/Drive FL Offset";
-    private final String _driveFROffsetKey                = "Dashboard/Dashboard Settings/Drive FR Offset";
-    private final String _driveBLOffsetKey                = "Dashboard/Dashboard Settings/Drive BL Offset";
-    private final String _driveBROffsetKey                = "Dashboard/Dashboard Settings/Drive BR Offset";
+    private final String _elevatorMinHeightKey             = "Dashboard/Dashboard Settings/Elevator Min Height";
+    private final String _elevatorMaxHeightKey             = "Dashboard/Dashboard Settings/Elevator Max Height";
+    private final String _elevatorStowHeightKey            = "Dashboard/Dashboard Settings/Elevator Stow Height";
+    private final String _elevatorL1HeightKey              = "Dashboard/Dashboard Settings/Elevator L1 Height";
+    private final String _elevatorL2HeightKey              = "Dashboard/Dashboard Settings/Elevator L2 Height";
+    private final String _elevatorL3HeightKey              = "Dashboard/Dashboard Settings/Elevator L3 Height";
+    private final String _elevatorL4HeightKey              = "Dashboard/Dashboard Settings/Elevator L4 Height";
+    private final String _elevatorHangHeightKey            = "Dashboard/Dashboard Settings/Elevator Hang Height";
+    private final String _elevatorHangSpeedKey             = "Dashboard/Dashboard Settings/Elevator Hang Speed";
+    private final String _elevatorKPKey                    = "Dashboard/Dashboard Settings/Elevator kP";
+    private final String _elevatorKDKey                    = "Dashboard/Dashboard Settings/Elevator kD";
+    private final String _elevatorMaxDownPercentKey        = "Dashboard/Dashboard Settings/Elevator Max Down Speed";
+    private final String _elevatorMaxUpPercentKey          = "Dashboard/Dashboard Settings/Elevator Max Up Speed";
+    private final String _manipulatorCoralIntakePercentKey = "Dashboard/Dashboard Settings/Manipulator Coral Intake Speed";
+    private final String _manipulatorCoralOutputPercentKey = "Dashboard/Dashboard Settings/Manipulator Coral Output Speed";
+    private final String _manipulatorAlgaeIntakePercentKey = "Dashboard/Dashboard Settings/Manipulator Algae Intake Speed";
+    private final String _manipulatorAlgaeOutputPercentKey = "Dashboard/Dashboard Settings/Manipulator Algae Output Speed";
+    private final String _manipulatorL1SpeedMultiplierKey  = "Dashboard/Dashboard Settings/Manipulator L1 Speed Multiplier";
+    private final String _funnelRetractPercentKey          = "Dashboard/Dashboard Settings/Funnel Retract Speed";
+    private final String _funnelRetractTimeKey             = "Dashboard/Dashboard Settings/Funnel Retract Time";
+    private final String _driveFLOffsetKey                 = "Dashboard/Dashboard Settings/Drive FL Offset";
+    private final String _driveFROffsetKey                 = "Dashboard/Dashboard Settings/Drive FR Offset";
+    private final String _driveBLOffsetKey                 = "Dashboard/Dashboard Settings/Drive BL Offset";
+    private final String _driveBROffsetKey                 = "Dashboard/Dashboard Settings/Drive BR Offset";
 
     // Robot Values
     private final NetworkTableEntry _elevatorHeight;
@@ -94,8 +96,10 @@ public class DashboardIONetwork implements DashboardIO
         Preferences.initDouble(_elevatorKDKey, Constants.Elevator.EXTENSION_KD);
         Preferences.initDouble(_elevatorMaxDownPercentKey, Constants.Elevator.MAX_DESCENT_SPEED);
         Preferences.initDouble(_elevatorMaxUpPercentKey, Constants.Elevator.MAX_ASCENT_SPEED);
-        Preferences.initDouble(_manipulatorIntakePercentKey, Constants.Manipulator.INTAKE_SPEED);
-        Preferences.initDouble(_manipulatorOutputPercentKey, Constants.Manipulator.OUTPUT_SPEED);
+        Preferences.initDouble(_manipulatorCoralIntakePercentKey, Constants.Manipulator.CORAL_INTAKE_SPEED);
+        Preferences.initDouble(_manipulatorCoralOutputPercentKey, Constants.Manipulator.CORAL_OUTPUT_SPEED);
+        Preferences.initDouble(_manipulatorAlgaeIntakePercentKey, Constants.Manipulator.ALGAE_INTAKE_SPEED);
+        Preferences.initDouble(_manipulatorAlgaeOutputPercentKey, Constants.Manipulator.ALGAE_OUTPUT_SPEED);
         Preferences.initDouble(_manipulatorL1SpeedMultiplierKey, Constants.Manipulator.L1_SPEED_MULTIPLIER);
         Preferences.initDouble(_funnelRetractPercentKey, Constants.Funnel.RETRACT_SPEED);
         Preferences.initDouble(_funnelRetractTimeKey, Constants.Funnel.DROP_TIME_SECS);
@@ -223,9 +227,11 @@ public class DashboardIONetwork implements DashboardIO
         inputs.elevatorHangSpeed               = Preferences.getDouble(_elevatorHangSpeedKey, Constants.Elevator.HANG_SPEED);
 
         // Manipulator
-        inputs.manipulatorIntakePercentSpeed = Preferences.getDouble(_manipulatorIntakePercentKey, Constants.Manipulator.INTAKE_SPEED);
-        inputs.manipulatorOutputPercentSpeed = Preferences.getDouble(_manipulatorOutputPercentKey, Constants.Manipulator.OUTPUT_SPEED);
-        inputs.manipulatorL1SpeedMultiplier  = Preferences.getDouble(_manipulatorL1SpeedMultiplierKey, Constants.Manipulator.L1_SPEED_MULTIPLIER);
+        inputs.manipulatorCoralIntakePercentSpeed = Preferences.getDouble(_manipulatorCoralIntakePercentKey, Constants.Manipulator.CORAL_INTAKE_SPEED);
+        inputs.manipulatorCoralOutputPercentSpeed = Preferences.getDouble(_manipulatorCoralOutputPercentKey, Constants.Manipulator.CORAL_OUTPUT_SPEED);
+        inputs.manipulatorAlgaeIntakePercentSpeed = Preferences.getDouble(_manipulatorAlgaeIntakePercentKey, Constants.Manipulator.ALGAE_INTAKE_SPEED);
+        inputs.manipulatorAlgaeOutputPercentSpeed = Preferences.getDouble(_manipulatorAlgaeOutputPercentKey, Constants.Manipulator.ALGAE_OUTPUT_SPEED);
+        inputs.manipulatorL1SpeedMultiplier       = Preferences.getDouble(_manipulatorL1SpeedMultiplierKey, Constants.Manipulator.L1_SPEED_MULTIPLIER);
 
         // Funnel
         inputs.funnelRetractPercentSpeed = Preferences.getDouble(_funnelRetractPercentKey, Constants.Funnel.RETRACT_SPEED);

@@ -52,27 +52,37 @@ public class Manipulator extends SubsystemBase
         Logger.recordOutput("Has Coral", hasCoral());
     }
 
-    public void output()
+    public void coralIntake()
+    {
+        _io.setVolts(Dashboard.getInstance().getManipulatorCoralIntakePercentSpeed() * Constants.General.MOTOR_VOLTAGE);
+    }
+
+    public void slowCoralIntake()
+    {
+        _io.setVolts(Constants.Manipulator.CORAL_SLOW_INTAKE_SPEED * Constants.General.MOTOR_VOLTAGE);
+    }
+
+    public void coralOutput()
     {
         if (Elevator.getInstance().getExtension() < Dashboard.getInstance().getElevatorL2Height())
         {
-            _io.setLeftVolts(Dashboard.getInstance().getManipulatorOutputPercentSpeed() * Constants.General.MOTOR_VOLTAGE);
-            _io.setRightVolts(Dashboard.getInstance().getManipulatorOutputPercentSpeed() * Dashboard.getInstance().getManipulatorL1SpeedMultiplier() * Constants.General.MOTOR_VOLTAGE);
+            _io.setLeftVolts(Dashboard.getInstance().getManipulatorCoralOutputPercentSpeed() * Constants.General.MOTOR_VOLTAGE);
+            _io.setRightVolts(Dashboard.getInstance().getManipulatorCoralOutputPercentSpeed() * Dashboard.getInstance().getManipulatorL1SpeedMultiplier() * Constants.General.MOTOR_VOLTAGE);
         }
         else
         {
-            _io.setVolts(Dashboard.getInstance().getManipulatorOutputPercentSpeed() * Constants.General.MOTOR_VOLTAGE);
+            _io.setVolts(Dashboard.getInstance().getManipulatorCoralOutputPercentSpeed() * Constants.General.MOTOR_VOLTAGE);
         }
     }
 
-    public void slowIntake()
+    public void algaeIntake()
     {
-        _io.setVolts(Constants.Manipulator.SLOW_INTAKE_SPEED * Constants.General.MOTOR_VOLTAGE);
+        _io.setVolts(Dashboard.getInstance().getManipulatorCoralIntakePercentSpeed() * Constants.General.MOTOR_VOLTAGE);
     }
 
-    public void intake()
+    public void algaeOutput()
     {
-        _io.setVolts(Dashboard.getInstance().getManipulatorIntakePercentSpeed() * Constants.General.MOTOR_VOLTAGE);
+        _io.setVolts(Dashboard.getInstance().getManipulatorCoralOutputPercentSpeed() * Constants.General.MOTOR_VOLTAGE);
     }
 
     public void stop()

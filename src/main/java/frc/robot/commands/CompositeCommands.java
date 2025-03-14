@@ -160,7 +160,7 @@ public class CompositeCommands
         (
             Commands.repeatingSequence
             (
-                ManipulatorCommands.intake()
+                ManipulatorCommands.coralIntake()
             )
             .until(() -> Manipulator.getInstance().hasCoral()),
 
@@ -175,7 +175,7 @@ public class CompositeCommands
         // @formatter:off
         return Commands.sequence
         (
-            ManipulatorCommands.output(),
+            ManipulatorCommands.coralOutput(),
             Commands.waitSeconds(Constants.Elevator.WAIT_TIME),
             ElevatorCommands.setHeight(ElevatorHeight.Stow)
         );
