@@ -1,7 +1,6 @@
 package frc.robot;
 
 import java.util.Set;
-import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -110,8 +109,8 @@ public class RobotContainer
         _driverJoystick.button(11).onTrue(DriveCommands.resetGyro());
         _driverJoystick.button(12).whileTrue(CompositeCommands.snapToBranch(Camera.Front, 'c', () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE));
 
-        _driverJoystick.button(3).whileTrue(ManipulatorCommands.algaeIntake());
-        _driverJoystick.button(4).whileTrue(ManipulatorCommands.algaeOutput());
+        _driverJoystick.button(5).whileTrue(ManipulatorCommands.algaeIntake());
+        _driverJoystick.button(6).whileTrue(ManipulatorCommands.algaeOutput());
 
         _driverButtons.button(1).whileTrue(DriveCommands.driveAtOrientation(() -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric, Constants.Field.BLUE_REEF_ANGLE_ONE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE));
 
