@@ -59,6 +59,7 @@ public class Vision extends SubsystemBase
     private final PIDController            _yDriveController   = new PIDController(Constants.Vision.DRIVE_KP, 0, Constants.Vision.DRIVE_KD); // left to right
     private Pose2d                         _reference          = new Pose2d();
     private int                            _pidTagId           = 0;
+    private Pose2d                         _lastPose           = new Pose2d();
 
     private Vision(VisionIO io, Camera camera)
     {
@@ -94,9 +95,18 @@ public class Vision extends SubsystemBase
                 thetaStdDev = Constants.Vision.VISION_STD_DEV_BASE_THETA;
             }
 
-            var stdDevs = VecBuilder.fill(xyStdDev, xyStdDev, thetaStdDev);
+            var    stdDevs = VecBuilder.fill(xyStdDev, xyStdDev, thetaStdDev);
+            double alpha   = 0.85;
 
-            Drive.getInstance().addVisionMeasurement(_inputs.pose, _inputs.captureTimestamp, stdDevs);
+            double smoothedX     = alpha * _inputs.pose.getX() + (1 - alpha) * _lastPose.getX();
+            double smoothedY     = alpha * _inputs.pose.getY() + (1 - alpha) * _lastPose.getY();
+            double smoothedTheta = alpha * _inputs.pose.getRotation().getRadians() + (1 - alpha) * _lastPose.getRotation().getRadians();
+
+            Pose2d smoothedPose = new Pose2d(smoothedX, smoothedY, new Rotation2d(smoothedTheta));
+
+            _lastPose = smoothedPose;
+
+            Drive.getInstance().addVisionMeasurement(smoothedPose, _inputs.captureTimestamp, stdDevs);
         }
     }
 

@@ -49,7 +49,7 @@ public class RobotContainer
         Manipulator.getInstance();
         Funnel.getInstance();
         Vision.getInstance(Camera.Front);
-        Vision.getInstance(Camera.Back);
+        // Vision.getInstance(Camera.Back);
         Dashboard.getInstance();
 
         _characterizationChooser.addOption("Drive Wheel Radius Characterization", DriveCommands.wheelRadiusCharacterization());

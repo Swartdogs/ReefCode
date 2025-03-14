@@ -43,7 +43,7 @@ public class VisionIOPhotonLib implements VisionIO
         _camera         = new PhotonCamera(_cameraSettings.cameraName);
 
         _poseEstimator = new PhotonPoseEstimator(Constants.Field.APRIL_TAG_FIELD_LAYOUT, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, _cameraSettings.robotToCamera);
-        _poseEstimator.setMultiTagFallbackStrategy(PoseStrategy.CLOSEST_TO_LAST_POSE);
+        _poseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
 
         NetworkTableInstance.getDefault().addListener(NetworkTableInstance.getDefault().getEntry("/photonvision/" + _cameraSettings.cameraName + "/latencyMillis"), EnumSet.of(NetworkTableEvent.Kind.kValueRemote), event ->
         {
