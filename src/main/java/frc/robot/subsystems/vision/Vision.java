@@ -202,7 +202,14 @@ public class Vision extends SubsystemBase
         }
         else
         {
-            return _anglePIDController.calculate(getAngleOffset().getDegrees());
+            double calc = _anglePIDController.calculate(getAngleOffset().getDegrees());
+            System.out.println(
+                    String.format(
+                            "setpoint : %6.2f, measurment : %6.2f, calculation : %6.2f, tagAngle : %6.2f gyroHeading : %6.2f", _anglePIDController.getSetpoint(), getAngleOffset().getDegrees(), calc,
+                            Constants.Field.getTagAngle(17).getDegrees(), Drive.getInstance().getRotation().getDegrees()
+                    )
+            );
+            return calc;
         }
     }
 

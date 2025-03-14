@@ -87,21 +87,59 @@ public class CompositeCommands
 
     public static Command snapToBranch(Camera camera, int id, Pose2d reference, DoubleSupplier xSupplier, DoubleSupplier ySupplier, BooleanSupplier robotCentric, double maxSpeed)
     {
-        // @formatter:off
-        return Commands.either
-        (
-            autoAlign(camera, id, reference),
-            DriveCommands.driveAtOrientation
-            (
-                xSupplier,
-                ySupplier,
-                robotCentric,
-                Constants.Field.getTagAngle(id),
-                maxSpeed
-            ),
-            () -> Vision.getInstance(camera).hasTarget(id)
-        );
-        // @formatter:on
+        return Commands.sequence(Commands.runOnce(() -> Vision.getInstance(camera).setVisionReference(id, reference)), Commands.runOnce(() -> Drive.getInstance().rotateInit(Constants.Field.getTagAngle(id), maxSpeed)), Commands.run(() ->
+        {
+            double  x                 = 0;
+            double  y                 = 0;
+            double  rotate            = 0;
+            boolean driveRobotCentric = false;
+            double  translateExponent = 0;
+
+            if (Vision.getInstance(camera).hasTarget(id))
+            {
+                // x = Vision.getInstance(camera).getXDistanceCalculation();
+                // y = Vision.getInstance(camera).getYDistanceCalculation();
+                rotate            = Vision.getInstance(camera).getAngleCalculation();
+                driveRobotCentric = true;
+                translateExponent = 1;
+            }
+            else
+            {
+                x                 = xSupplier.getAsDouble();
+                y                 = ySupplier.getAsDouble();
+                rotate            = Drive.getInstance().rotateExecute();
+                driveRobotCentric = robotCentric.getAsBoolean();
+                translateExponent = 2;
+            }
+
+            // Aply deadband
+            double     linearMagnitude = MathUtil.applyDeadband(Math.hypot(x, y), Constants.Controls.JOYSTICK_DEADBAND);
+            Rotation2d linearDirection = new Rotation2d(x, y);
+            double     omega           = MathUtil.applyDeadband(rotate, Constants.Controls.JOYSTICK_DEADBAND);
+
+            // Square values
+            linearMagnitude = Math.pow(linearMagnitude, translateExponent);
+            omega           = Math.copySign(Math.pow(Math.abs(omega), 1), omega);
+
+            // Calculate new linear velocity
+            Translation2d linearVelocity = new Pose2d(new Translation2d(), linearDirection).transformBy(new Transform2d(linearMagnitude, 0.0, new Rotation2d())).getTranslation();
+
+            // Convert to field relative speeds & send command
+            if (driveRobotCentric)
+            {
+                var chassisSpeeds = new ChassisSpeeds(linearVelocity.getX() * Constants.Drive.MAX_LINEAR_SPEED, linearVelocity.getY() * Constants.Drive.MAX_LINEAR_SPEED, omega * Constants.Drive.MAX_ANGULAR_SPEED);
+
+                Drive.getInstance().runVelocity(chassisSpeeds);
+            }
+            else
+            {
+                Drive.getInstance().runVelocity(
+                        ChassisSpeeds.fromFieldRelativeSpeeds(
+                                linearVelocity.getX() * Constants.Drive.MAX_LINEAR_SPEED, linearVelocity.getY() * Constants.Drive.MAX_LINEAR_SPEED, omega * Constants.Drive.MAX_ANGULAR_SPEED, Drive.getInstance().getRotation()
+                        )
+                );
+            }
+        }));
     }
 
     public static Command autoAlign(Camera camera, int id, Pose2d reference)
