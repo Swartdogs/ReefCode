@@ -206,12 +206,12 @@ public class Vision extends SubsystemBase
         return (yaw.plus(cToO)).minus(rotation.minus(tagAngle));
     }
 
-    private double getXOffset()
+    public double getXOffset()
     {
         return getTargetDistance(_pidTagId) * Math.cos(getAngleOffset().getRadians()) + _reference.getX();
     }
 
-    private double getYOffset()
+    public double getYOffset()
     {
         return getTargetDistance(_pidTagId) * Math.sin(getAngleOffset().getRadians()) + _reference.getY();
     }

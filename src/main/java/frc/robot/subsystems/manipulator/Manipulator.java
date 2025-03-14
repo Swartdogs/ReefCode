@@ -77,7 +77,7 @@ public class Manipulator extends SubsystemBase
 
     public void algaeIntake()
     {
-        _io.setVolts(Dashboard.getInstance().getManipulatorCoralIntakePercentSpeed() * Constants.General.MOTOR_VOLTAGE);
+        _io.setVolts(-Dashboard.getInstance().getManipulatorCoralIntakePercentSpeed() * Constants.General.MOTOR_VOLTAGE);
     }
 
     public void algaeOutput()
