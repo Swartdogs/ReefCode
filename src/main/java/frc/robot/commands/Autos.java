@@ -24,16 +24,35 @@ public class Autos
     {
         return Commands.sequence(
                 Commands.defer(() -> Commands.waitSeconds(Dashboard.getInstance().getAutoDelay()), Set.of()), autoFactory.resetOdometry(path), CompositeCommands.setHeight(ElevatorHeight.Level3), autoFactory.trajectoryCmd(path),
-                CompositeCommands.setHeight(ElevatorHeight.Level4), CompositeCommands.output()
+                Commands.runOnce(() -> Drive.getInstance().stop()), CompositeCommands.setHeight(ElevatorHeight.Level4), CompositeCommands.output()
         );
     }
+
+    // public static Command twoCoralAuto(String pathToPegOne, String pathToCS,
+    // String pathToPegTwo)
+    // {
+    // return Commands.sequence(
+    // Commands.defer(() ->
+    // Commands.waitSeconds(Dashboard.getInstance().getAutoDelay()), Set.of()),
+    // autoFactory.resetOdometry(pathToPegOne),
+    // CompositeCommands.setHeight(ElevatorHeight.Level3),
+    // autoFactory.trajectoryCmd(pathToPegOne), Commands.runOnce(() ->
+    // Drive.getInstance().stop()),
+    // CompositeCommands.setHeight(ElevatorHeight.Level4),
+    // CompositeCommands.output(), autoFactory.trajectoryCmd(pathToCS),
+    // CompositeCommands.intake(),
+    // CompositeCommands.setHeight(ElevatorHeight.Level3),
+    // autoFactory.trajectoryCmd(pathToPegTwo),
+    // CompositeCommands.setHeight(ElevatorHeight.Level4),
+    // CompositeCommands.output()
+    // );
+    // }
 
     public static Command twoCoralAuto(String pathToPegOne, String pathToCS, String pathToPegTwo)
     {
         return Commands.sequence(
-                Commands.defer(() -> Commands.waitSeconds(Dashboard.getInstance().getAutoDelay()), Set.of()), autoFactory.resetOdometry(pathToPegOne), CompositeCommands.setHeight(ElevatorHeight.Level3),
-                autoFactory.trajectoryCmd(pathToPegOne), CompositeCommands.setHeight(ElevatorHeight.Level4), CompositeCommands.output(), autoFactory.trajectoryCmd(pathToCS), CompositeCommands.intake(),
-                CompositeCommands.setHeight(ElevatorHeight.Level3), autoFactory.trajectoryCmd(pathToPegTwo), CompositeCommands.setHeight(ElevatorHeight.Level4), CompositeCommands.output()
+                Commands.defer(() -> Commands.waitSeconds(Dashboard.getInstance().getAutoDelay()), Set.of()), autoFactory.resetOdometry(pathToPegOne), autoFactory.trajectoryCmd(pathToPegOne),
+                Commands.runOnce(() -> Drive.getInstance().stop()), autoFactory.trajectoryCmd(pathToCS), autoFactory.trajectoryCmd(pathToPegTwo)
         );
     }
 
