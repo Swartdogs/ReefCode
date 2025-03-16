@@ -11,6 +11,7 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.util.Color;
+import frc.robot.util.Utilities;
 
 public final class Constants
 {
@@ -85,59 +86,63 @@ public final class Constants
 
     public static class Drive
     {
-        public static final double          TRACK_WIDTH                   = Units.inchesToMeters(22);
-        public static final double          WHEEL_BASE                    = Units.inchesToMeters(26);
-        public static final double          DRIVE_BASE_RADIUS             = Math.hypot(TRACK_WIDTH / 2.0, WHEEL_BASE / 2.0);
-        public static final Translation2d[] MODULE_TRANSLATIONS           = new Translation2d[] { new Translation2d(TRACK_WIDTH / 2.0, WHEEL_BASE / 2.0), new Translation2d(TRACK_WIDTH / 2.0, -WHEEL_BASE / 2.0),
+        public static final double          TRACK_WIDTH                         = Units.inchesToMeters(22);
+        public static final double          WHEEL_BASE                          = Units.inchesToMeters(26);
+        public static final double          DRIVE_BASE_RADIUS                   = Math.hypot(TRACK_WIDTH / 2.0, WHEEL_BASE / 2.0);
+        public static final Translation2d[] MODULE_TRANSLATIONS                 = new Translation2d[] { new Translation2d(TRACK_WIDTH / 2.0, WHEEL_BASE / 2.0), new Translation2d(TRACK_WIDTH / 2.0, -WHEEL_BASE / 2.0),
                 new Translation2d(-TRACK_WIDTH / 2.0, WHEEL_BASE / 2.0), new Translation2d(-TRACK_WIDTH / 2.0, -WHEEL_BASE / 2.0) };
-        public static final Rotation2d      FL_ZERO_ROTATION              = Rotation2d.fromRadians(0.944 + Math.PI / 4); // Raw reading + 1/8 for the 45 degree offset
-        public static final Rotation2d      FR_ZERO_ROTATION              = Rotation2d.fromRadians(-2.942 + 3 * Math.PI / 4);
-        public static final Rotation2d      BL_ZERO_ROTATION              = Rotation2d.fromRadians(1.12 - Math.PI / 4);
-        public static final Rotation2d      BR_ZERO_ROTATION              = Rotation2d.fromRadians(-1.150 - 3 * Math.PI / 4);
-        public static final int             DRIVE_MOTOR_CURRENT_LIMIT     = 120;
-        public static final double          WHEEL_RADIUS                  = Units.inchesToMeters(2);
-        public static final double          DRIVE_MOTOR_REDUCTION         = 5.67;
-        public static final boolean         DRIVE_INVERTED                = false;
-        public static final DCMotor         DRIVE_GEARBOX                 = DCMotor.getKrakenX60(1);
-        public static final double          DRIVE_KP                      = 0.05;
-        public static final double          DRIVE_KD                      = 0.0;
-        public static final double          DRIVE_KS                      = 0.0;
-        public static final double          DRIVE_KV                      = 0.1;
-        public static final double          DRIVE_SIM_KP                  = 0.2;
-        public static final double          DRIVE_SIM_KD                  = 0.0;
-        public static final double          DRIVE_SIM_KS                  = 0.0;
-        public static final double          DRIVE_SIM_KV                  = 0.0789;
-        public static final boolean         TURN_INVERTED                 = true;
-        public static final int             TURN_MOTOR_CURRENT_LIMIT      = 80;
-        public static final double          TURN_MOTOR_REDUCTION          = 12.1;
-        public static final DCMotor         TURN_GEARBOX                  = DCMotor.getNEO(1);
-        public static final double          TURN_KP                       = 3.0;
-        public static final double          TURN_KD                       = 0.0;
-        public static final double          TURN_SIM_KP                   = 8.0;
-        public static final double          TURN_SIM_KD                   = 0.0;
-        public static final double          ODOMETRY_FREQUENCY            = 100.0; // ms
-        public static final double          ROTATE_KP                     = 2.1;
-        public static final double          ROTATE_KD                     = 0.1;
-        public static final double          MAX_SPEED_ELEVATOR_MULTIPLIER = 1;
-        public static final double          MIN_SPEED_ELEVATOR_MULTIPLIER = 0.3;
-        public static final double          MAX_SPEED_ELEVATOR_HEIGHT     = Constants.Elevator.L1_HEIGHT;
-        public static final double          MIN_SPEED_ELEVATOR_HEIGHT     = Constants.Elevator.L3_HEIGHT;
-        public static final double          SPEED_ELEVATOR_M              = (MAX_SPEED_ELEVATOR_MULTIPLIER - MIN_SPEED_ELEVATOR_MULTIPLIER) / (MAX_SPEED_ELEVATOR_HEIGHT - MIN_SPEED_ELEVATOR_HEIGHT);
-        public static final double          SPEED_ELEVATOR_B              = MAX_SPEED_ELEVATOR_MULTIPLIER - SPEED_ELEVATOR_M * MAX_SPEED_ELEVATOR_HEIGHT;
-        public static final double          MAX_LINEAR_SPEED              = 4.8; // m/s
-        public static final double          MAX_ANGULAR_SPEED             = MAX_LINEAR_SPEED / DRIVE_BASE_RADIUS;
-        public static final double          SPEED_MOTION_THRESHOLD        = 0.02 * MAX_LINEAR_SPEED;
-        public static final double          ROTATION_MOTION_THRESHOLD     = 0.01 * MAX_ANGULAR_SPEED;
-        public static final double          MAX_SNAP_SPEED_PERCENTAGE     = 0.7;
-        public static final double          DEADBAND                      = 0.1;
-        public static final double          ANGLE_KP                      = 5.0;
-        public static final double          ANGLE_KD                      = 0.4;
-        public static final double          ANGLE_MAX_VELOCITY            = 8.0;
-        public static final double          ANGLE_MAX_ACCELERATION        = 20.0;
-        public static final double          FF_START_DELAY                = 2.0; // Secs
-        public static final double          FF_RAMP_RATE                  = 0.1; // Volts/Sec
-        public static final double          WHEEL_RADIUS_MAX_VELOCITY     = 0.25; // Rad/Sec
-        public static final double          WHEEL_RADIUS_RAMP_RATE        = 0.05; // Rad/Sec^2
+        public static final Rotation2d      FL_ZERO_ROTATION                    = Rotation2d.fromRadians(0.944 + Math.PI / 4); // Raw reading + 1/8 for the 45 degree offset
+        public static final Rotation2d      FR_ZERO_ROTATION                    = Rotation2d.fromRadians(-2.942 + 3 * Math.PI / 4);
+        public static final Rotation2d      BL_ZERO_ROTATION                    = Rotation2d.fromRadians(1.12 - Math.PI / 4);
+        public static final Rotation2d      BR_ZERO_ROTATION                    = Rotation2d.fromRadians(-1.150 - 3 * Math.PI / 4);
+        public static final int             DRIVE_MOTOR_CURRENT_LIMIT           = 120;
+        public static final double          WHEEL_RADIUS                        = Units.inchesToMeters(2);
+        public static final double          DRIVE_MOTOR_REDUCTION               = 5.67;
+        public static final boolean         DRIVE_INVERTED                      = false;
+        public static final DCMotor         DRIVE_GEARBOX                       = DCMotor.getKrakenX60(1);
+        public static final double          DRIVE_KP                            = 0.05;
+        public static final double          DRIVE_KD                            = 0.0;
+        public static final double          DRIVE_KS                            = 0.0;
+        public static final double          DRIVE_KV                            = 0.1;
+        public static final double          DRIVE_SIM_KP                        = 0.2;
+        public static final double          DRIVE_SIM_KD                        = 0.0;
+        public static final double          DRIVE_SIM_KS                        = 0.0;
+        public static final double          DRIVE_SIM_KV                        = 0.0789;
+        public static final boolean         TURN_INVERTED                       = true;
+        public static final int             TURN_MOTOR_CURRENT_LIMIT            = 80;
+        public static final double          TURN_MOTOR_REDUCTION                = 12.1;
+        public static final DCMotor         TURN_GEARBOX                        = DCMotor.getNEO(1);
+        public static final double          TURN_KP                             = 3.0;
+        public static final double          TURN_KD                             = 0.0;
+        public static final double          TURN_SIM_KP                         = 8.0;
+        public static final double          TURN_SIM_KD                         = 0.0;
+        public static final double          ODOMETRY_FREQUENCY                  = 100.0; // ms
+        public static final double          ROTATE_KP                           = 2.1;
+        public static final double          ROTATE_KD                           = 0.1;
+        public static final double          MAX_SPEED_ELEVATOR_MULTIPLIER       = 1;
+        public static final double          MIN_SPEED_ELEVATOR_MULTIPLIER       = 0.3;
+        public static final double          MAX_SPEED_ELEVATOR_HEIGHT           = Constants.Elevator.L1_HEIGHT;
+        public static final double          MIN_SPEED_ELEVATOR_HEIGHT           = Constants.Elevator.L3_HEIGHT;
+        public static final double          SPEED_ELEVATOR_M                    = (MAX_SPEED_ELEVATOR_MULTIPLIER - MIN_SPEED_ELEVATOR_MULTIPLIER) / (MAX_SPEED_ELEVATOR_HEIGHT - MIN_SPEED_ELEVATOR_HEIGHT);
+        public static final double          SPEED_ELEVATOR_B                    = MAX_SPEED_ELEVATOR_MULTIPLIER - SPEED_ELEVATOR_M * MAX_SPEED_ELEVATOR_HEIGHT;
+        public static final double          MAX_LINEAR_SPEED                    = 4.8; // m/s
+        public static final double          MAX_ANGULAR_SPEED                   = MAX_LINEAR_SPEED / DRIVE_BASE_RADIUS;
+        public static final double          SPEED_MOTION_THRESHOLD              = 0.02 * MAX_LINEAR_SPEED;
+        public static final double          ROTATION_MOTION_THRESHOLD           = 0.01 * MAX_ANGULAR_SPEED;
+        public static final double          MAX_SNAP_SPEED_PERCENTAGE           = 0.7;
+        public static final double          MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE = 0.45;
+        public static final double          DEADBAND                            = 0.1;
+        public static final double          TRANSLATE_KP                        = 1.5;
+        public static final double          TRANSLATE_KI                        = 0.2;
+        public static final double          TRANSLATE_KD                        = 0.3;
+        public static final double          ANGLE_KP                            = 5.0;
+        public static final double          ANGLE_KD                            = 0.4;
+        public static final double          ANGLE_MAX_VELOCITY                  = 8.0;
+        public static final double          ANGLE_MAX_ACCELERATION              = 20.0;
+        public static final double          FF_START_DELAY                      = 2.0; // Secs
+        public static final double          FF_RAMP_RATE                        = 0.1; // Volts/Sec
+        public static final double          WHEEL_RADIUS_MAX_VELOCITY           = 0.25; // Rad/Sec
+        public static final double          WHEEL_RADIUS_RAMP_RATE              = 0.05; // Rad/Sec^2
     }
 
     public static class Elevator
@@ -217,6 +222,33 @@ public final class Constants
         public static final Rotation2d                BLUE_PROCESSOR_ANGLE     = getTagAngle(16);
         public static final Rotation2d                RED_PROCESSOR_ANGLE      = getTagAngle(3);
 
+        public static enum Branch
+        {
+            A(18, 7, Vision.LEFT_REFERENCE), B(18, 7, Vision.RIGHT_REFERENCE), C(17, 8, Vision.LEFT_REFERENCE), D(17, 8, Vision.RIGHT_REFERENCE), E(22, 9, Vision.LEFT_REFERENCE), F(22, 9, Vision.RIGHT_REFERENCE),
+            G(21, 10, Vision.LEFT_REFERENCE), H(21, 10, Vision.RIGHT_REFERENCE), I(20, 11, Vision.LEFT_REFERENCE), J(20, 11, Vision.RIGHT_REFERENCE), K(19, 6, Vision.LEFT_REFERENCE), L(19, 6, Vision.RIGHT_REFERENCE);
+
+            private int           blueID;
+            private int           redID;
+            private Translation2d reference;
+
+            private Branch(int blueID, int redID, Translation2d reference)
+            {
+                this.blueID    = blueID;
+                this.redID     = redID;
+                this.reference = reference;
+            }
+
+            public int getID()
+            {
+                return Utilities.isBlueAlliance() ? this.blueID : this.redID;
+            }
+
+            public Translation2d getReference()
+            {
+                return this.reference;
+            }
+        }
+
         private static Rotation2d getFieldTagAngle(int tagID)
         {
             return APRIL_TAG_FIELD_LAYOUT.getTagPose(tagID).get().getRotation().toRotation2d().rotateBy(new Rotation2d(Math.PI));
@@ -278,7 +310,7 @@ public final class Constants
         public static final double        MAX_DETECTION_RANGE        = Units.inchesToMeters(120);
         public static final double        DRIVE_KP                   = 0.3;
         public static final double        DRIVE_KD                   = 0.0;
-        public static final Translation2d LEFT_REFERENCE             = new Translation2d(Units.inchesToMeters(-24), Units.inchesToMeters(24)); // set values
-        public static final Translation2d RIGHT_REFERENCE            = new Translation2d(Units.inchesToMeters(0), Units.inchesToMeters(0)); // set values
+        public static final Translation2d LEFT_REFERENCE             = new Translation2d(Units.inchesToMeters(-18.5), Units.inchesToMeters(6.5)); // set values
+        public static final Translation2d RIGHT_REFERENCE            = new Translation2d(Units.inchesToMeters(-18.5), Units.inchesToMeters(-6.5)); // set values
     }
 }

@@ -6,7 +6,6 @@ import java.util.Map;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
@@ -53,13 +52,17 @@ public class Vision extends SubsystemBase
     }
 
     private final VisionIO                 _io;
-    private final VisionIOInputsAutoLogged _inputs           = new VisionIOInputsAutoLogged();
+    private final VisionIOInputsAutoLogged _inputs = new VisionIOInputsAutoLogged();
     private final Camera                   _camera;
-    private final PIDController            _xDriveController = new PIDController(Constants.Vision.DRIVE_KP, 0, Constants.Vision.DRIVE_KD); // forward and back
-    private final PIDController            _yDriveController = new PIDController(Constants.Vision.DRIVE_KP, 0, Constants.Vision.DRIVE_KD); // left to right
-    private Translation2d                  _reference        = new Translation2d();
-    private int                            _pidTagId         = 0;
-    private Pose2d                         _lastPose         = new Pose2d();
+    // private final PIDController _xDriveController = new
+    // PIDController(Constants.Vision.DRIVE_KP, 0, Constants.Vision.DRIVE_KD); //
+    // forward and back
+    // private final PIDController _yDriveController = new
+    // PIDController(Constants.Vision.DRIVE_KP, 0, Constants.Vision.DRIVE_KD); //
+    // left to right
+    private Translation2d _reference = new Translation2d();
+    private int           _pidTagId  = 0;
+    private Pose2d        _lastPose  = new Pose2d();
 
     private Vision(VisionIO io, Camera camera)
     {
@@ -156,27 +159,27 @@ public class Vision extends SubsystemBase
         }
     }
 
-    public void setXDriveSetpoint(int id, double distanceOffset)
-    {
-        _pidTagId  = id;
-        _reference = new Translation2d(distanceOffset, _reference.getY());
-        _xDriveController.setSetpoint(distanceOffset);
-    }
+    // public void setXDriveSetpoint(int id, double distanceOffset)
+    // {
+    // _pidTagId = id;
+    // _reference = new Translation2d(distanceOffset, _reference.getY());
+    // _xDriveController.setSetpoint(distanceOffset);
+    // }
 
-    public void setYDriveSetpoint(int id, double distanceOffset)
-    {
-        _pidTagId  = id;
-        _reference = new Translation2d(_reference.getX(), distanceOffset);
-        _yDriveController.setSetpoint(distanceOffset);
-    }
+    // public void setYDriveSetpoint(int id, double distanceOffset)
+    // {
+    // _pidTagId = id;
+    // _reference = new Translation2d(_reference.getX(), distanceOffset);
+    // _yDriveController.setSetpoint(distanceOffset);
+    // }
 
     public void setVisionReference(int id, Translation2d reference)
     {
         _pidTagId  = id;
         _reference = reference;
 
-        _xDriveController.setSetpoint(reference.getX());
-        _yDriveController.setSetpoint(reference.getY());
+        // _xDriveController.setSetpoint(reference.getX());
+        // _yDriveController.setSetpoint(reference.getY());
     }
 
     public Rotation2d getAngleToTag()
@@ -216,71 +219,71 @@ public class Vision extends SubsystemBase
         return getTargetDistance(_pidTagId) * Math.sin(getAngleOffset().getRadians()) + _reference.getY();
     }
 
-    public double getXDistanceCalculation()
-    {
-        if (!hasTarget(_pidTagId))
-        {
-            return 0;
-        }
-        else
-        {
-            return -_xDriveController.calculate(getXOffset());
-        }
-    }
+    // public double getXDistanceCalculation()
+    // {
+    // if (!hasTarget(_pidTagId))
+    // {
+    // return 0;
+    // }
+    // else
+    // {
+    // return -_xDriveController.calculate(getXOffset());
+    // }
+    // }
 
-    public double getYDistanceCalculation()
-    {
-        if (!hasTarget(_pidTagId))
-        {
-            return 0;
-        }
-        else
-        {
-            return -_yDriveController.calculate(getYOffset());
-        }
-    }
+    // public double getYDistanceCalculation()
+    // {
+    // if (!hasTarget(_pidTagId))
+    // {
+    // return 0;
+    // }
+    // else
+    // {
+    // return -_yDriveController.calculate(getYOffset());
+    // }
+    // }
 
-    public double getCommonDifference()
-    {
-        double x      = Math.abs(getXDistanceCalculation());
-        double y      = Math.abs(getYDistanceCalculation());
-        double excess = 0.0;
+    // public double getCommonDifference()
+    // {
+    // double x = Math.abs(getXDistanceCalculation());
+    // double y = Math.abs(getYDistanceCalculation());
+    // double excess = 0.0;
 
-        if (x > y)
-        {
-            excess = x - y;
-        }
-        else if (y > x)
-        {
-            excess = y - x;
-        }
+    // if (x > y)
+    // {
+    // excess = x - y;
+    // }
+    // else if (y > x)
+    // {
+    // excess = y - x;
+    // }
 
-        return excess;
-    }
+    // return excess;
+    // }
 
-    public double getXDMod()
-    {
-        double x = getXDistanceCalculation();
-        double y = getYDistanceCalculation();
+    // public double getXDMod()
+    // {
+    // double x = getXDistanceCalculation();
+    // double y = getYDistanceCalculation();
 
-        if (Math.abs(x) > Math.abs(y))
-        {
-            x = Math.copySign(y, x);
-        }
+    // if (Math.abs(x) > Math.abs(y))
+    // {
+    // x = Math.copySign(y, x);
+    // }
 
-        return x;
-    }
+    // return x;
+    // }
 
-    public double getYMod()
-    {
-        double x = getXDistanceCalculation();
-        double y = getYDistanceCalculation();
+    // public double getYMod()
+    // {
+    // double x = getXDistanceCalculation();
+    // double y = getYDistanceCalculation();
 
-        if (Math.abs(y) > Math.abs(x))
-        {
-            y = Math.copySign(x, y);
-        }
+    // if (Math.abs(y) > Math.abs(x))
+    // {
+    // y = Math.copySign(x, y);
+    // }
 
-        return y;
-    }
+    // return y;
+    // }
 }

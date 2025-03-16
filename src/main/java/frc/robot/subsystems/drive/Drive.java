@@ -18,6 +18,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -76,8 +77,12 @@ public class Drive extends SubsystemBase
     private final PIDController            _headingController = new PIDController(Constants.Choreo.TURN_KP, 0, Constants.Choreo.TURN_KD);
     private final PIDController            _xController       = new PIDController(Constants.Choreo.DRIVE_KP, 0, Constants.Choreo.DRIVE_KD);
     private final PIDController            _yController       = new PIDController(Constants.Choreo.DRIVE_KP, 0, Constants.Choreo.DRIVE_KD);
-    private PIDController                  _rotatePID;
-    private double                         _maxSpeed;
+    private final PIDController            _xDrivePID;
+    private final PIDController            _yDrivePID;
+    private final PIDController            _rotatePID;
+    private double                         _rotateMaxSpeed;
+    private double                         _xDriveMaxSpeed;
+    private double                         _yDriveMaxSpeed;
     private double                         _speedMultiplier;
     private SysIdRoutine                   _sysId;
 
@@ -92,7 +97,17 @@ public class Drive extends SubsystemBase
 
         _headingController.enableContinuousInput(-Math.PI, Math.PI);
 
+        _xDrivePID = new PIDController(Constants.Drive.TRANSLATE_KP, Constants.Drive.TRANSLATE_KI, Constants.Drive.TRANSLATE_KD);
+        _yDrivePID = new PIDController(Constants.Drive.TRANSLATE_KP, Constants.Drive.TRANSLATE_KI, Constants.Drive.TRANSLATE_KD);
+
+        SmartDashboard.putData("xDrive", _xDrivePID);
+        SmartDashboard.putData("yDrive", _yDrivePID);
+
         _rotatePID = new PIDController(Constants.Drive.ROTATE_KP, 0, Constants.Drive.ROTATE_KD);
+
+        _xDrivePID.setIZone(1);
+        _yDrivePID.setIZone(1);
+
         _rotatePID.enableContinuousInput(-Math.PI, Math.PI);
 
         _speedMultiplier = 1;
@@ -319,21 +334,65 @@ public class Drive extends SubsystemBase
         _modules[moduleIndex].setAbsoluteEncoderOffset(offset);
     }
 
+    public void xDriveInit(double setpoint, double maxSpeed)
+    {
+        _xDriveMaxSpeed = Math.abs(maxSpeed);
+
+        _xDrivePID.setSetpoint(setpoint);
+    }
+
+    public void yDriveInit(double setpoint, double maxSpeed)
+    {
+        _yDriveMaxSpeed = Math.abs(maxSpeed);
+
+        _yDrivePID.setSetpoint(setpoint);
+    }
+
     public void rotateInit(Rotation2d setpoint, double maxSpeed)
     {
-        _maxSpeed = Math.abs(maxSpeed);
+        _rotateMaxSpeed = Math.abs(maxSpeed);
 
         _rotatePID.setSetpoint(setpoint.getRadians());
     }
 
+    public double xDriveExecute()
+    {
+        return MathUtil.clamp(_xDrivePID.calculate(getPose().getX()), -_xDriveMaxSpeed, _xDriveMaxSpeed);
+    }
+
+    public double yDriveExecute()
+    {
+        return MathUtil.clamp(_yDrivePID.calculate(getPose().getY()), -_yDriveMaxSpeed, _yDriveMaxSpeed);
+    }
+
     public double rotateExecute()
     {
-        return MathUtil.clamp(_rotatePID.calculate(getRotation().getRadians()), -_maxSpeed, _maxSpeed);
+        return MathUtil.clamp(_rotatePID.calculate(getRotation().getRadians()), -_rotateMaxSpeed, _rotateMaxSpeed);
     }
 
     public double rotateExecute(Rotation2d setpoint)
     {
-        return MathUtil.clamp(_rotatePID.calculate(getRotation().getRadians(), setpoint.getRadians()), -_maxSpeed, _maxSpeed);
+        return MathUtil.clamp(_rotatePID.calculate(getRotation().getRadians(), setpoint.getRadians()), -_rotateMaxSpeed, _rotateMaxSpeed);
+    }
+
+    public double xDriveExecute(double setpoint)
+    {
+        return MathUtil.clamp(_xDrivePID.calculate(getPose().getX(), setpoint), -_xDriveMaxSpeed, _xDriveMaxSpeed);
+    }
+
+    public double yDriveExecute(double setpoint)
+    {
+        return MathUtil.clamp(_yDrivePID.calculate(getPose().getY(), setpoint), -_yDriveMaxSpeed, _yDriveMaxSpeed);
+    }
+
+    public boolean xDriveIsFinished()
+    {
+        return _xDrivePID.atSetpoint();
+    }
+
+    public boolean yDriveIsFinished()
+    {
+        return _yDrivePID.atSetpoint();
     }
 
     public boolean rotateIsFinished()

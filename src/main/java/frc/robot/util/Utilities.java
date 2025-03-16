@@ -9,8 +9,10 @@ import com.ctre.phoenix6.StatusCode;
 import com.revrobotics.REVLibError;
 import com.revrobotics.spark.SparkBase;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import frc.robot.Constants;
 
 public final class Utilities
 {
@@ -87,5 +89,19 @@ public final class Utilities
         var allianceOpt = DriverStation.getAlliance();
 
         return allianceOpt.isPresent() && allianceOpt.get() == Alliance.Blue;
+    }
+
+    public static Pose2d getTagPose(int id)
+    {
+        var tagPose = Constants.Field.APRIL_TAG_FIELD_LAYOUT.getTagPose(id);
+
+        if (tagPose.isPresent())
+        {
+            return tagPose.get().toPose2d();
+        }
+        else
+        {
+            return new Pose2d();
+        }
     }
 }

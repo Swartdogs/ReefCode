@@ -3,6 +3,9 @@ package frc.robot.commands;
 import java.util.Set;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
+
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -12,6 +15,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants;
+import frc.robot.Constants.Field.Branch;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.Elevator.ElevatorHeight;
@@ -65,7 +69,7 @@ public class CompositeCommands
         }, Drive.getInstance());
     }
 
-    public static Command snapToBranch(Camera camera, char branch, DoubleSupplier xSupplier, DoubleSupplier ySupplier, BooleanSupplier robotCentric, double maxSpeed)
+    public static Command snapToBranch(Camera camera, Branch branch, DoubleSupplier xSupplier, DoubleSupplier ySupplier, BooleanSupplier robotCentric, double translationMaxSpeed, double rotationMaxSpeed)
     {
         // @formatter:off
         return Commands.defer
@@ -73,89 +77,37 @@ public class CompositeCommands
             () -> snapToBranch
             (
                 camera, 
-                Utilities.isBlueAlliance() ? (1 - ((((int) branch) - 97) / 2)) % 6 + 17 : (((((int) branch) - 97) / 2) + 1) % 6 + 6, 
-                (int) branch % 2 == 0 ? Constants.Vision.LEFT_REFERENCE : Constants.Vision.RIGHT_REFERENCE,
+                branch.getID(), 
+                branch.getReference(),
                 xSupplier,
                 ySupplier,
                 robotCentric,
-                maxSpeed
+                translationMaxSpeed,
+                rotationMaxSpeed
             ),
             Set.of(Drive.getInstance())
         );
         // @formatter:on
     }
 
-    public static Command snapToBranch(Camera camera, int id, Translation2d reference, DoubleSupplier xSupplier, DoubleSupplier ySupplier, BooleanSupplier robotCentric, double maxSpeed)
+    public static Command snapToBranch(Camera camera, int id, Translation2d reference, DoubleSupplier xSupplier, DoubleSupplier ySupplier, BooleanSupplier robotCentric, double translationMaxSpeed, double rotationMaxSpeed)
     {
-        return Commands.sequence(Commands.runOnce(() -> Vision.getInstance(camera).setVisionReference(id, reference)), Commands.runOnce(() -> Drive.getInstance().rotateInit(Constants.Field.getTagAngle(id), maxSpeed)), Commands.run(() ->
-        {
-            double  x                 = 0;
-            double  y                 = 0;
-            double  rotate            = Drive.getInstance().rotateExecute();
-            boolean driveRobotCentric = false;
-            double  translateExponent = 0;
-
-            if (Vision.getInstance(camera).hasTarget(id))
+        // @formatter:off
+        return Commands.sequence
+        (
+            Commands.runOnce(() -> 
             {
-                if (Math.abs(x) > 0.1 && Math.abs(y) > 0.1)
-                {
-                    x                 = Vision.getInstance(camera).getXDMod();
-                    y                 = Vision.getInstance(camera).getYMod();
-                    driveRobotCentric = true;
-                    translateExponent = 1;
-                }
-                else
-                {
-                    x                 = Vision.getInstance(camera).getXDistanceCalculation();
-                    y                 = Vision.getInstance(camera).getYDistanceCalculation();
-                    driveRobotCentric = true;
-                    translateExponent = 1;
-                }
-            }
-            else
-            {
-                x                 = xSupplier.getAsDouble();
-                y                 = ySupplier.getAsDouble();
-                driveRobotCentric = robotCentric.getAsBoolean();
-                translateExponent = 2;
-            }
-
-            // Aply deadband
-            double     linearMagnitude = MathUtil.applyDeadband(Math.hypot(x, y), Constants.Controls.JOYSTICK_DEADBAND);
-            Rotation2d linearDirection = new Rotation2d(x, y);
-            double     omega           = MathUtil.applyDeadband(rotate, Constants.Controls.JOYSTICK_DEADBAND);
-            System.out.println(String.format("x : %6.2f y : %6.2f linearDirection : %6.2f", x, y, linearDirection.getDegrees()));
-
-            // Square values
-            linearMagnitude = Math.pow(linearMagnitude, translateExponent);
-            omega           = Math.copySign(Math.pow(Math.abs(omega), 1), omega);
-
-            // Calculate new linear velocity
-            Translation2d linearVelocity = new Pose2d(new Translation2d(), linearDirection).transformBy(new Transform2d(linearMagnitude, 0.0, new Rotation2d())).getTranslation();
-
-            // Convert to field relative speeds & send command
-            if (driveRobotCentric)
-            {
-                var chassisSpeeds = new ChassisSpeeds(linearVelocity.getX() * Constants.Drive.MAX_LINEAR_SPEED, linearVelocity.getY() * Constants.Drive.MAX_LINEAR_SPEED, omega * Constants.Drive.MAX_ANGULAR_SPEED);
-
-                // var fieldSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(chassisSpeeds,
-                // Vision.getInstance(camera).getAngleToTag().unaryMinus());
-
-                Drive.getInstance().runVelocity(chassisSpeeds);
-            }
-            else
-            {
-                Drive.getInstance().runVelocity(
-                        ChassisSpeeds.fromFieldRelativeSpeeds(
-                                linearVelocity.getX() * Constants.Drive.MAX_LINEAR_SPEED, linearVelocity.getY() * Constants.Drive.MAX_LINEAR_SPEED, omega * Constants.Drive.MAX_ANGULAR_SPEED, Drive.getInstance().getRotation()
-                        )
-                );
-            }
-        }));
+                Vision.getInstance(camera).setVisionReference(id, reference);
+                Logger.recordOutput("AutoAlign/Target", Utilities.getTagPose(id).rotateAround(Utilities.getTagPose(id).getTranslation(), Rotation2d.fromDegrees(180)).transformBy(new Transform2d(reference, new Rotation2d())));
+            }), 
+            DriveCommands.driveAtOrientation(xSupplier, ySupplier, robotCentric, Constants.Field.getTagAngle(id), rotationMaxSpeed).until(() -> Vision.getInstance(camera).hasTarget(id)),
+            DriveCommands.driveToPose(Utilities.getTagPose(id).rotateAround(Utilities.getTagPose(id).getTranslation(), Rotation2d.fromDegrees(180)).transformBy(new Transform2d(reference, new Rotation2d())), translationMaxSpeed, rotationMaxSpeed)
+        );
+        // @formatter:on
     }
 
     // public static Command autoAlign(Camera camera, int id, Pose2d reference)
-    // {
+    // {1
     //     // @formatter:off
     //     return Commands.sequence
     //     (

@@ -85,6 +85,22 @@ public final class DriveCommands
         // @formatter:on
     }
 
+    public static Command driveToPose(Pose2d target, double translationMaxSpeed, double rotationMaxSpeed)
+    {
+        // @formatter:off
+        return Commands.sequence
+        (
+            Commands.runOnce(() -> 
+            {
+                Drive.getInstance().xDriveInit(target.getX(), translationMaxSpeed);
+                Drive.getInstance().yDriveInit(target.getY(), translationMaxSpeed);
+                Drive.getInstance().rotateInit(target.getRotation(), rotationMaxSpeed);
+            }),
+            joystickDrive(() -> Drive.getInstance().xDriveExecute(), () -> Drive.getInstance().yDriveExecute(), () -> Drive.getInstance().rotateExecute(), () -> false, 1, 1)
+        );
+        // @formatter:on
+    }
+
     public static Command resetGyro()
     {
         // @formatter:off
