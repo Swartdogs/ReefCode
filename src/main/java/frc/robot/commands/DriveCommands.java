@@ -96,7 +96,8 @@ public final class DriveCommands
                 Drive.getInstance().yDriveInit(target.getY(), translationMaxSpeed);
                 Drive.getInstance().rotateInit(target.getRotation(), rotationMaxSpeed);
             }),
-            joystickDrive(() -> Drive.getInstance().xDriveExecute(), () -> Drive.getInstance().yDriveExecute(), () -> Drive.getInstance().rotateExecute(), () -> false, 1, 1)
+            joystickDrive(() -> Drive.getInstance().xDriveExecute(), () -> Drive.getInstance().yDriveExecute(), () -> Drive.getInstance().rotateExecute(), () -> false, 1, 1).
+            finallyDo(() -> Drive.getInstance().stop())
         );
         // @formatter:on
     }

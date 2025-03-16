@@ -168,7 +168,7 @@ public final class Constants
         public static final double  EXTENSION_OFFSET             = MIN_EXTENSION - EXTENSION_SCALE * RAW_SENSOR_MIN;
         public static final double  ELEVATOR_MASS                = 15.875;
         public static final double  ELEVATOR_DRUM_RADIUS         = 0.0223139;
-        public static final double  ELEVATOR_FEED_FORWARD        = 0.0;
+        public static final double  ELEVATOR_FEED_FORWARD        = 0.992;
         public static final double  ELEVATOR_MODIFICATION_HEIGHT = 0.5;
         public static final double  HANG_SPEED                   = 1.0;
         public static final double  WAIT_TIME                    = 1.0;

@@ -5,9 +5,12 @@ import java.util.Set;
 import choreo.auto.AutoFactory;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.Constants;
 import frc.robot.subsystems.dashboard.Dashboard;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.elevator.Elevator.ElevatorHeight;
+import frc.robot.subsystems.vision.Vision.Camera;
+import frc.robot.util.Utilities;
 
 public class Autos
 {
@@ -29,7 +32,12 @@ public class Autos
             autoFactory.resetOdometry(path),
             CompositeCommands.setHeight(ElevatorHeight.Level3),
             autoFactory.trajectoryCmd(path),
-            CompositeCommands.setHeight(ElevatorHeight.Level4),
+            Commands.parallel
+            (
+                CompositeCommands.snapToBranchAuto(Camera.Front, Utilities.parseAutoString(path), Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE),
+                CompositeCommands.setHeight(ElevatorHeight.Level4)
+            ),
+            Commands.waitSeconds(0.5),
             CompositeCommands.output()
         );
         // @formatter:on

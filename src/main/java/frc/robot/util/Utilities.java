@@ -13,6 +13,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Constants;
+import frc.robot.Constants.Field.Branch;
 
 public final class Utilities
 {
@@ -103,5 +104,27 @@ public final class Utilities
         {
             return new Pose2d();
         }
+    }
+
+    public static Branch parseAutoString(String auto)
+    {
+        String lastChar = auto.substring(auto.length() - 1);
+
+        return switch (lastChar)
+        {
+            case "A" -> Branch.A;
+            case "B" -> Branch.B;
+            case "C" -> Branch.C;
+            case "D" -> Branch.D;
+            case "E" -> Branch.E;
+            case "F" -> Branch.F;
+            case "G" -> Branch.G;
+            case "H" -> Branch.H;
+            case "I" -> Branch.I;
+            case "J" -> Branch.J;
+            case "K" -> Branch.K;
+            case "L" -> Branch.L;
+            default -> null;
+        };
     }
 }

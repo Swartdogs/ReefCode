@@ -84,6 +84,7 @@ public class Elevator extends SubsystemBase
         }
 
         Logger.recordOutput("Has Extension Setpoint", _extensionSetpoint != null);
+        Logger.recordOutput("ExtensionSetpoint", _extensionSetpoint != null ? _extensionSetpoint : 0);
     }
 
     public void setExtension(ElevatorHeight elevatorHeight) // height is measured in inches

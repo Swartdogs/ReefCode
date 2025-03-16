@@ -17,6 +17,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -107,6 +108,10 @@ public class Drive extends SubsystemBase
 
         _xDrivePID.setIZone(1);
         _yDrivePID.setIZone(1);
+
+        _xDrivePID.setTolerance(Units.inchesToMeters(2));
+        _yDrivePID.setTolerance(Units.inchesToMeters(2)); // tbd
+        _rotatePID.setTolerance(Units.degreesToRadians(3));
 
         _rotatePID.enableContinuousInput(-Math.PI, Math.PI);
 
