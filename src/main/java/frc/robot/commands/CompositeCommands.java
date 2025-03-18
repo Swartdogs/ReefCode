@@ -72,17 +72,21 @@ public class CompositeCommands
     public static Command snapToBranch(Camera camera, Branch branch, DoubleSupplier xSupplier, DoubleSupplier ySupplier, BooleanSupplier robotCentric, double translationMaxSpeed, double rotationMaxSpeed)
     {
         // @formatter:off
-        return Commands.defer(() ->
-        Commands.sequence
+        return Commands.defer
         (
-            Commands.runOnce(() -> 
-            {
-                Vision.getInstance(camera).setVisionReference(branch.getID(), branch.getReference());
-                Logger.recordOutput("AutoAlign/Target", Utilities.getTagPose(branch.getID()).rotateAround(Utilities.getTagPose(branch.getID()).getTranslation(), Rotation2d.fromDegrees(180)).transformBy(new Transform2d(branch.getReference(), new Rotation2d())));
-            }), 
-            DriveCommands.driveAtOrientation(xSupplier, ySupplier, robotCentric, Constants.Field.getTagAngle(branch.getID()), rotationMaxSpeed).until(() -> Vision.getInstance(camera).hasTarget(branch.getID())),
-            DriveCommands.driveToPose(Utilities.getTagPose(branch.getID()).rotateAround(Utilities.getTagPose(branch.getID()).getTranslation(), Rotation2d.fromDegrees(180)).transformBy(new Transform2d(branch.getReference(), new Rotation2d())), translationMaxSpeed, rotationMaxSpeed)
-        ), Set.of(Drive.getInstance()));
+            () -> Commands.sequence
+            (
+                Commands.runOnce(() -> 
+                {
+                    Vision.getInstance(camera).setVisionReference(branch.getID());
+                    Logger.recordOutput("AutoAlign/Target", Utilities.getTagPose(branch.getID()).rotateAround(Utilities.getTagPose(branch.getID()).getTranslation(), Rotation2d.fromDegrees(180)).transformBy(new Transform2d(branch.getReference(), new Rotation2d())));
+                }), 
+                DriveCommands.driveAtOrientation(xSupplier, ySupplier, robotCentric, Constants.Field.getTagAngle(branch.getID()), rotationMaxSpeed).until(() -> Vision.getInstance(camera).hasTarget(branch.getID())),
+                DriveCommands.driveToPose(Utilities.getTagPose(branch.getID()).rotateAround(Utilities.getTagPose(branch.getID()).getTranslation(), Rotation2d.fromDegrees(180)).transformBy(new Transform2d(branch.getReference(), new Rotation2d())), translationMaxSpeed, rotationMaxSpeed)
+            )
+            .finallyDo(() -> Vision.getInstance(Camera.Front).setVisionReference(0)),
+            Set.of(Drive.getInstance())
+        );
         // @formatter:on
     }
 
@@ -100,17 +104,6 @@ public class CompositeCommands
         );
         // @formatter:on
     }
-
-    // public static Command autoAlign(Camera camera, int id, Pose2d reference)
-    // {1
-    //     // @formatter:off
-    //     return Commands.sequence
-    //     (
-    //         Commands.runOnce(() -> Vision.getInstance(camera).setVisionReference(id, reference)),
-    //         joystickDrive(() -> Vision.getInstance(camera).getXDistanceCalculation(), () -> Vision.getInstance(camera).getYDistanceCalculation(), () -> Vision.getInstance(camera).getAngleCalculation(), () -> true, 1, 1)
-    //     );
-    //     // @formatter:on
-    // }
 
     public static Command intake()
     {

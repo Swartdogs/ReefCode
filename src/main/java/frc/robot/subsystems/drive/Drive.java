@@ -25,6 +25,8 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
+import frc.robot.subsystems.vision.Vision;
+import frc.robot.subsystems.vision.Vision.Camera;
 
 public class Drive extends SubsystemBase
 {
@@ -362,32 +364,74 @@ public class Drive extends SubsystemBase
 
     public double xDriveExecute()
     {
-        return MathUtil.clamp(_xDrivePID.calculate(getPose().getX()), -_xDriveMaxSpeed, _xDriveMaxSpeed);
+        Pose2d pose = getPose();
+
+        if (Vision.getInstance(Camera.Front).hasTarget())
+        {
+            pose = Vision.getInstance(Camera.Front).getEstimatedPose();
+        }
+
+        return MathUtil.clamp(_xDrivePID.calculate(pose.getX()), -_xDriveMaxSpeed, _xDriveMaxSpeed);
     }
 
     public double yDriveExecute()
     {
-        return MathUtil.clamp(_yDrivePID.calculate(getPose().getY()), -_yDriveMaxSpeed, _yDriveMaxSpeed);
+        Pose2d pose = getPose();
+
+        if (Vision.getInstance(Camera.Front).hasTarget())
+        {
+            pose = Vision.getInstance(Camera.Front).getEstimatedPose();
+        }
+
+        return MathUtil.clamp(_yDrivePID.calculate(pose.getY()), -_yDriveMaxSpeed, _yDriveMaxSpeed);
     }
 
     public double rotateExecute()
     {
-        return MathUtil.clamp(_rotatePID.calculate(getRotation().getRadians()), -_rotateMaxSpeed, _rotateMaxSpeed);
+        Rotation2d rotation = getRotation();
+
+        if (Vision.getInstance(Camera.Front).hasTarget())
+        {
+            rotation = Vision.getInstance(Camera.Front).getEstimatedPose().getRotation();
+        }
+
+        return MathUtil.clamp(_rotatePID.calculate(rotation.getRadians()), -_rotateMaxSpeed, _rotateMaxSpeed);
     }
 
     public double rotateExecute(Rotation2d setpoint)
     {
-        return MathUtil.clamp(_rotatePID.calculate(getRotation().getRadians(), setpoint.getRadians()), -_rotateMaxSpeed, _rotateMaxSpeed);
+        Rotation2d rotation = getRotation();
+
+        if (Vision.getInstance(Camera.Front).hasTarget())
+        {
+            rotation = Vision.getInstance(Camera.Front).getEstimatedPose().getRotation();
+        }
+
+        return MathUtil.clamp(_rotatePID.calculate(rotation.getRadians(), setpoint.getRadians()), -_rotateMaxSpeed, _rotateMaxSpeed);
     }
 
     public double xDriveExecute(double setpoint)
     {
-        return MathUtil.clamp(_xDrivePID.calculate(getPose().getX(), setpoint), -_xDriveMaxSpeed, _xDriveMaxSpeed);
+        Pose2d pose = getPose();
+
+        if (Vision.getInstance(Camera.Front).hasTarget())
+        {
+            pose = Vision.getInstance(Camera.Front).getEstimatedPose();
+        }
+
+        return MathUtil.clamp(_xDrivePID.calculate(pose.getX(), setpoint), -_xDriveMaxSpeed, _xDriveMaxSpeed);
     }
 
     public double yDriveExecute(double setpoint)
     {
-        return MathUtil.clamp(_yDrivePID.calculate(getPose().getY(), setpoint), -_yDriveMaxSpeed, _yDriveMaxSpeed);
+        Pose2d pose = getPose();
+
+        if (Vision.getInstance(Camera.Front).hasTarget())
+        {
+            pose = Vision.getInstance(Camera.Front).getEstimatedPose();
+        }
+
+        return MathUtil.clamp(_yDrivePID.calculate(pose.getY(), setpoint), -_yDriveMaxSpeed, _yDriveMaxSpeed);
     }
 
     public boolean xDriveIsFinished()
