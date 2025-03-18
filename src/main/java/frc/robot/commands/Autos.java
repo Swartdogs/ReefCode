@@ -30,14 +30,14 @@ public class Autos
         (
             Commands.defer(() -> Commands.waitSeconds(Dashboard.getInstance().getAutoDelay()), Set.of()),
             autoFactory.resetOdometry(path),
-            CompositeCommands.setHeight(ElevatorHeight.Level3),
+            CompositeCommands.setHeight(ElevatorHeight.Level1),
             autoFactory.trajectoryCmd(path),
             Commands.parallel
             (
                 CompositeCommands.snapToBranchAuto(Camera.Front, Utilities.parseAutoString(path), Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE),
                 CompositeCommands.setHeight(ElevatorHeight.Level4)
             ),
-            Commands.waitSeconds(0.5),
+            Commands.waitSeconds(1.0),
             CompositeCommands.output()
         );
         // @formatter:on

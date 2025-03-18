@@ -109,8 +109,8 @@ public class Drive extends SubsystemBase
         _xDrivePID.setIZone(1);
         _yDrivePID.setIZone(1);
 
-        _xDrivePID.setTolerance(Units.inchesToMeters(2));
-        _yDrivePID.setTolerance(Units.inchesToMeters(2)); // tbd
+        _xDrivePID.setTolerance(Units.inchesToMeters(1.5));
+        _yDrivePID.setTolerance(Units.inchesToMeters(1.5)); // tbd
         _rotatePID.setTolerance(Units.degreesToRadians(3));
 
         _rotatePID.enableContinuousInput(-Math.PI, Math.PI);
