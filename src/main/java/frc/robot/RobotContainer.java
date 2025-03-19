@@ -1,6 +1,5 @@
 package frc.robot;
 
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
@@ -27,10 +26,10 @@ import frc.robot.subsystems.vision.Vision.Camera;
 public class RobotContainer
 {
     // Controller
-    private final CommandJoystick          _driverJoystick          = new CommandJoystick(0);
-    private final CommandJoystick          _driverButtons           = new CommandJoystick(1);
-    private final CommandJoystick          _operatorButtons         = new CommandJoystick(2);
-    private final CommandXboxController    _controller              = new CommandXboxController(3);
+    private final CommandJoystick       _driverJoystick  = new CommandJoystick(0);
+    private final CommandJoystick       _driverButtons   = new CommandJoystick(1);
+    private final CommandJoystick       _operatorButtons = new CommandJoystick(2);
+    private final CommandXboxController _controller      = new CommandXboxController(3);
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -96,75 +95,75 @@ public class RobotContainer
         // Auto-Align Buttons
 
         _driverButtons.button(1).whileTrue(
-            CompositeCommands.snapToBranch(
-                Vision.Camera.Front, Branch.A, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric, Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
-            )
+                CompositeCommands.snapToBranch(
+                        Vision.Camera.Front, Branch.A, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric, Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
+                )
         );
 
         _driverButtons.button(2).whileTrue(
-            CompositeCommands.snapToBranch(
-                Vision.Camera.Front, Branch.B, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric, Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
-            )
+                CompositeCommands.snapToBranch(
+                        Vision.Camera.Front, Branch.B, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric, Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
+                )
         );
 
         _driverButtons.button(3).whileTrue(
-            CompositeCommands.snapToBranch(
-                Vision.Camera.Front, Branch.C, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric, Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
-            )
+                CompositeCommands.snapToBranch(
+                        Vision.Camera.Front, Branch.C, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric, Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
+                )
         );
 
         _driverButtons.button(4).whileTrue(
-            CompositeCommands.snapToBranch(
-                Vision.Camera.Front, Branch.D, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric, Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
-            )
+                CompositeCommands.snapToBranch(
+                        Vision.Camera.Front, Branch.D, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric, Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
+                )
         );
 
         _driverButtons.button(5).whileTrue(
-            CompositeCommands.snapToBranch(
-                Vision.Camera.Front, Branch.E, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric, Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
-            )
+                CompositeCommands.snapToBranch(
+                        Vision.Camera.Front, Branch.E, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric, Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
+                )
         );
 
         _driverButtons.button(6).whileTrue(
-            CompositeCommands.snapToBranch(
-                Vision.Camera.Front, Branch.F, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric, Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
-            )
+                CompositeCommands.snapToBranch(
+                        Vision.Camera.Front, Branch.F, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric, Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
+                )
         );
 
         _driverButtons.button(7).whileTrue(
-            CompositeCommands.snapToBranch(
-                Vision.Camera.Front, Branch.G, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric, Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
-            )
+                CompositeCommands.snapToBranch(
+                        Vision.Camera.Front, Branch.G, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric, Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
+                )
         );
 
         _driverButtons.button(8).whileTrue(
-            CompositeCommands.snapToBranch(
-                Vision.Camera.Front, Branch.H, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric, Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
-            )
+                CompositeCommands.snapToBranch(
+                        Vision.Camera.Front, Branch.H, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric, Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
+                )
         );
 
         _driverButtons.button(9).whileTrue(
-            CompositeCommands.snapToBranch(
-                Vision.Camera.Front, Branch.I, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric, Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
-            )
+                CompositeCommands.snapToBranch(
+                        Vision.Camera.Front, Branch.I, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric, Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
+                )
         );
 
         _driverButtons.button(10).whileTrue(
-            CompositeCommands.snapToBranch(
-                Vision.Camera.Front, Branch.J, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric, Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
-            )
+                CompositeCommands.snapToBranch(
+                        Vision.Camera.Front, Branch.J, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric, Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
+                )
         );
 
         _driverButtons.button(11).whileTrue(
-            CompositeCommands.snapToBranch(
-                Vision.Camera.Front, Branch.K, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric, Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
-            )
+                CompositeCommands.snapToBranch(
+                        Vision.Camera.Front, Branch.K, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric, Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
+                )
         );
 
         _driverButtons.button(12).whileTrue(
-            CompositeCommands.snapToBranch(
-                Vision.Camera.Front, Branch.L, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric, Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
-            )
+                CompositeCommands.snapToBranch(
+                        Vision.Camera.Front, Branch.L, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric, Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
+                )
         );
 
         _driverButton13.whileTrue(DriveCommands.driveAtOrientation(() -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric, Constants.Field.BLUE_RIGHT_STATION_ANGLE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE));

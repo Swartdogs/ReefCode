@@ -50,15 +50,25 @@ public class Autos
         (
             Commands.defer(() -> Commands.waitSeconds(Dashboard.getInstance().getAutoDelay()), Set.of()),
             autoFactory.resetOdometry(pathToPegOne),
-            CompositeCommands.setHeight(ElevatorHeight.Level3),
+            CompositeCommands.setHeight(ElevatorHeight.Level1),
             autoFactory.trajectoryCmd(pathToPegOne),
-            CompositeCommands.setHeight(ElevatorHeight.Level4),
+            Commands.parallel
+            (
+                CompositeCommands.snapToBranchAuto(Camera.Front, Utilities.parseAutoString(pathToPegOne), Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE),
+                CompositeCommands.setHeight(ElevatorHeight.Level4)
+            ),
+            Commands.waitSeconds(1),
             CompositeCommands.output(),
             autoFactory.trajectoryCmd(pathToCS),
             CompositeCommands.intake(),
-            CompositeCommands.setHeight(ElevatorHeight.Level3),
+            CompositeCommands.setHeight(ElevatorHeight.Level1),
             autoFactory.trajectoryCmd(pathToPegTwo),
-            CompositeCommands.setHeight(ElevatorHeight.Level4),
+            Commands.parallel
+            (
+                CompositeCommands.snapToBranchAuto(Camera.Front, Utilities.parseAutoString(pathToPegTwo), Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE),
+                CompositeCommands.setHeight(ElevatorHeight.Level4)
+            ),
+            Commands.waitSeconds(1),
             CompositeCommands.output()
         );
         // @formatter:on

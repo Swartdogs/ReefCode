@@ -61,7 +61,7 @@ public final class Constants
 
     public static class Choreo
     {
-        public static final double DRIVE_KP = 6.0;
+        public static final double DRIVE_KP = 5.0;
         public static final double DRIVE_KD = 0.1;
         public static final double TURN_KP  = 6.5;
         public static final double TURN_KD  = 0.0;
