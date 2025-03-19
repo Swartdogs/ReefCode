@@ -63,9 +63,9 @@ public final class DriveCommands
             else
             {
                 Drive.getInstance().runVelocity(
-                        ChassisSpeeds.fromFieldRelativeSpeeds(
-                                linearVelocity.getX() * Constants.Drive.MAX_LINEAR_SPEED, linearVelocity.getY() * Constants.Drive.MAX_LINEAR_SPEED, omega * Constants.Drive.MAX_ANGULAR_SPEED, Drive.getInstance().getRotation()
-                        )
+                    ChassisSpeeds.fromFieldRelativeSpeeds(
+                        linearVelocity.getX() * Constants.Drive.MAX_LINEAR_SPEED, linearVelocity.getY() * Constants.Drive.MAX_LINEAR_SPEED, omega * Constants.Drive.MAX_ANGULAR_SPEED, Drive.getInstance().getRotation()
+                    )
                 );
             }
         }, Drive.getInstance());

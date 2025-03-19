@@ -145,7 +145,7 @@ public class Dashboard extends SubsystemBase
         // Match Time
         _io.setMatchTime(DriverStation.getMatchTime());
 
-        // TODO: Autonomous
+        // Autonomous
         if (_inputs.autoStartPosition != null)
         {
             _selectedAuto = switch (_inputs.autoStartPosition)

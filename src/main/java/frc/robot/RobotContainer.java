@@ -1,19 +1,14 @@
 package frc.robot;
 
-import java.util.Set;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.Field.Branch;
 import frc.robot.commands.CompositeCommands;
 import frc.robot.commands.DriveCommands;
@@ -35,8 +30,7 @@ public class RobotContainer
     private final CommandJoystick          _driverJoystick          = new CommandJoystick(0);
     private final CommandJoystick          _driverButtons           = new CommandJoystick(1);
     private final CommandJoystick          _operatorButtons         = new CommandJoystick(2);
-    private final CommandXboxController    _controller              = new CommandXboxController(3); // This is just for testing
-    private final SendableChooser<Command> _characterizationChooser = new SendableChooser<>();
+    private final CommandXboxController    _controller              = new CommandXboxController(3);
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -52,18 +46,6 @@ public class RobotContainer
         Vision.getInstance(Camera.Front);
         // Vision.getInstance(Camera.Back);
         Dashboard.getInstance();
-
-        _characterizationChooser.addOption("Drive Wheel Radius Characterization", DriveCommands.wheelRadiusCharacterization());
-        _characterizationChooser.addOption("Drive Simple FF Characterization", DriveCommands.feedforwardCharacterization());
-        _characterizationChooser.addOption("Drive SysId (Quasistatic Forward)", Drive.getInstance().sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-        _characterizationChooser.addOption("Drive SysId (Quasistatic Reverse)", Drive.getInstance().sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-        _characterizationChooser.addOption("Drive SysId (Dynamic Forward)", Drive.getInstance().sysIdDynamic(SysIdRoutine.Direction.kForward));
-        _characterizationChooser.addOption("Drive SysId (Dynamic Reverse)", Drive.getInstance().sysIdDynamic(SysIdRoutine.Direction.kReverse));
-        _characterizationChooser.addOption("Elevator SysId (Quasistatic Forward)", Elevator.getInstance().sysIdQuasistaticForward());
-        _characterizationChooser.addOption("Elevator SysId (Quasistatic Reverse)", Elevator.getInstance().sysIdQuasistaticReverse());
-        _characterizationChooser.addOption("Elevator SysId (Dynamic Forward)", Elevator.getInstance().sysIdDynamicForward());
-        _characterizationChooser.addOption("Elevator SysId (Dynamic Reverse)", Elevator.getInstance().sysIdDynamicReverse());
-        SmartDashboard.putData("Characterization", _characterizationChooser);
 
         // Configure the button bindings
         configureButtonBindings();
@@ -85,8 +67,6 @@ public class RobotContainer
         _controller.leftStick().onTrue(ManipulatorCommands.coralIntake());
         _controller.start().onTrue(CompositeCommands.output());
         _controller.rightStick().onTrue(ManipulatorCommands.stop());
-
-        _controller.rightTrigger().whileTrue(Commands.defer(() -> _characterizationChooser.getSelected(), Set.of(Drive.getInstance(), Elevator.getInstance())));
     }
 
     @SuppressWarnings("unused")
@@ -113,161 +93,90 @@ public class RobotContainer
                         .snapToBranch(Camera.Front, Branch.C, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric, Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE)
         );
 
-        // _driverButtons.button(1).whileTrue(DriveCommands.driveAtOrientation(() ->
-        // -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric,
-        // Constants.Field.BLUE_REEF_ANGLE_ONE,
-        // Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE));
-
-        // _driverButtons.button(2).whileTrue(DriveCommands.driveAtOrientation(() ->
-        // -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric,
-        // Constants.Field.BLUE_REEF_ANGLE_TWO,
-        // Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE));
-
-        // _driverButtons.button(2).whileTrue(DriveCommands.driveAtOrientation(() ->
-        // -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric,
-        // Constants.Field.BLUE_REEF_ANGLE_TWO,
-        // Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE));
-
-        // _driverButtons.button(3)
-        // .whileTrue(DriveCommands.driveAtOrientation(() -> -_driverJoystick.getY(), ()
-        // -> -_driverJoystick.getX(), this::robotCentric,
-        // Constants.Field.BLUE_REEF_ANGLE_THREE,
-        // Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE));
-
-        // _driverButtons.button(4).whileTrue(DriveCommands.driveAtOrientation(() ->
-        // -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric,
-        // Constants.Field.BLUE_REEF_ANGLE_FOUR,
-        // Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE));
-
-        // _driverButtons.button(5).whileTrue(DriveCommands.driveAtOrientation(() ->
-        // -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric,
-        // Constants.Field.BLUE_REEF_ANGLE_FIVE,
-        // Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE));
-
-        // _driverButtons.button(6).whileTrue(DriveCommands.driveAtOrientation(() ->
-        // -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric,
-        // Constants.Field.BLUE_REEF_ANGLE_SIX,
-        // Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE));
-
-        // _driverButtons.button(7)
-        // .whileTrue(DriveCommands.driveAtOrientation(() -> -_driverJoystick.getY(), ()
-        // -> -_driverJoystick.getX(), this::robotCentric,
-        // Constants.Field.BLUE_RIGHT_STATION_ANGLE,
-        // Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE));
-
-        // _driverButtons.button(8)
-        // .whileTrue(DriveCommands.driveAtOrientation(() -> -_driverJoystick.getY(), ()
-        // -> -_driverJoystick.getX(), this::robotCentric,
-        // Constants.Field.BLUE_LEFT_STATION_ANGLE,
-        // Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE));
-
-        // _driverButtons.button(9).whileTrue(DriveCommands.driveAtOrientation(() ->
-        // -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric,
-        // Constants.Field.BLUE_PROCESSOR_ANGLE,
-        // Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE));
-
         // Auto-Align Buttons
 
         _driverButtons.button(1).whileTrue(
-                CompositeCommands.snapToBranch(
-                        Vision.Camera.Front, Branch.A, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric, Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
-                )
+            CompositeCommands.snapToBranch(
+                Vision.Camera.Front, Branch.A, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric, Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
+            )
         );
 
         _driverButtons.button(2).whileTrue(
-                CompositeCommands.snapToBranch(
-                        Vision.Camera.Front, Branch.B, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric, Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
-                )
+            CompositeCommands.snapToBranch(
+                Vision.Camera.Front, Branch.B, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric, Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
+            )
         );
 
         _driverButtons.button(3).whileTrue(
-                CompositeCommands.snapToBranch(
-                        Vision.Camera.Front, Branch.C, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric, Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
-                )
+            CompositeCommands.snapToBranch(
+                Vision.Camera.Front, Branch.C, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric, Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
+            )
         );
 
         _driverButtons.button(4).whileTrue(
-                CompositeCommands.snapToBranch(
-                        Vision.Camera.Front, Branch.D, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric, Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
-                )
+            CompositeCommands.snapToBranch(
+                Vision.Camera.Front, Branch.D, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric, Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
+            )
         );
 
         _driverButtons.button(5).whileTrue(
-                CompositeCommands.snapToBranch(
-                        Vision.Camera.Front, Branch.E, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric, Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
-                )
+            CompositeCommands.snapToBranch(
+                Vision.Camera.Front, Branch.E, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric, Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
+            )
         );
 
         _driverButtons.button(6).whileTrue(
-                CompositeCommands.snapToBranch(
-                        Vision.Camera.Front, Branch.F, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric, Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
-                )
+            CompositeCommands.snapToBranch(
+                Vision.Camera.Front, Branch.F, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric, Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
+            )
         );
 
         _driverButtons.button(7).whileTrue(
-                CompositeCommands.snapToBranch(
-                        Vision.Camera.Front, Branch.G, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric, Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
-                )
+            CompositeCommands.snapToBranch(
+                Vision.Camera.Front, Branch.G, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric, Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
+            )
         );
 
         _driverButtons.button(8).whileTrue(
-                CompositeCommands.snapToBranch(
-                        Vision.Camera.Front, Branch.H, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric, Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
-                )
+            CompositeCommands.snapToBranch(
+                Vision.Camera.Front, Branch.H, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric, Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
+            )
         );
 
         _driverButtons.button(9).whileTrue(
-                CompositeCommands.snapToBranch(
-                        Vision.Camera.Front, Branch.I, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric, Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
-                )
+            CompositeCommands.snapToBranch(
+                Vision.Camera.Front, Branch.I, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric, Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
+            )
         );
 
         _driverButtons.button(10).whileTrue(
-                CompositeCommands.snapToBranch(
-                        Vision.Camera.Front, Branch.J, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric, Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
-                )
+            CompositeCommands.snapToBranch(
+                Vision.Camera.Front, Branch.J, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric, Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
+            )
         );
 
         _driverButtons.button(11).whileTrue(
-                CompositeCommands.snapToBranch(
-                        Vision.Camera.Front, Branch.K, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric, Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
-                )
+            CompositeCommands.snapToBranch(
+                Vision.Camera.Front, Branch.K, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric, Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
+            )
         );
 
         _driverButtons.button(12).whileTrue(
-                CompositeCommands.snapToBranch(
-                        Vision.Camera.Front, Branch.L, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric, Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
-                )
+            CompositeCommands.snapToBranch(
+                Vision.Camera.Front, Branch.L, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric, Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
+            )
         );
 
         _driverButton13.whileTrue(DriveCommands.driveAtOrientation(() -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric, Constants.Field.BLUE_RIGHT_STATION_ANGLE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE));
-
         _driverButton14.whileTrue(DriveCommands.driveAtOrientation(() -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric, Constants.Field.BLUE_LEFT_STATION_ANGLE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE));
-
         _driverButton15.whileTrue(DriveCommands.driveAtOrientation(() -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric, Constants.Field.BLUE_PROCESSOR_ANGLE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE));
 
         // Operator Controls
         _operatorButtons.button(1).onTrue(ElevatorCommands.setHeight(ElevatorHeight.Level4));
-        // .alongWith(new DeferredCommand(() -> LEDCommands.setDefaultColor(_led,
-        // (_hasCoral.getAsBoolean() ? Constants.LED.PURPLE : Constants.LED.RED)),
-        // Set.of())));
         _operatorButtons.button(2).onTrue(ElevatorCommands.setHeight(ElevatorHeight.Level3));
-        // .alongWith(new DeferredCommand(() -> LEDCommands.setDefaultColor(_led,
-        // (_hasCoral.getAsBoolean() ? Constants.LED.PINK : Constants.LED.RED)),
-        // Set.of())));
         _operatorButtons.button(3).onTrue(ElevatorCommands.setHeight(ElevatorHeight.Level2));
-        // .alongWith(new DeferredCommand(() -> LEDCommands.setDefaultColor(_led,
-        // (_hasCoral.getAsBoolean() ? Constants.LED.BLUE : Constants.LED.RED)),
-        // Set.of())));
         _operatorButtons.button(4).onTrue(ElevatorCommands.setHeight(ElevatorHeight.Level1));
-        // .alongWith(new DeferredCommand(() -> LEDCommands.setDefaultColor(_led,
-        // (_hasCoral.getAsBoolean() ? Constants.LED.ORANGE : Constants.LED.RED)),
-        // Set.of())));
         _operatorButtons.button(5).onTrue(ElevatorCommands.setHeight(ElevatorHeight.Stow));
-        // .alongWith(new DeferredCommand(() -> LEDCommands.setDefaultColor(_led,
-        // (_hasCoral.getAsBoolean() ? Constants.LED.GREEN : Constants.LED.RED)),
-        // Set.of())));
-
         _operatorButtons.button(6).onTrue(CompositeCommands.intake());
         _operatorButtons.button(7).onTrue(ManipulatorCommands.stop());
         _operatorButtons.button(8).onTrue(CompositeCommands.output());
@@ -277,9 +186,6 @@ public class RobotContainer
         _operatorButtons.button(12).whileTrue(ManipulatorCommands.algaeOutput());// replace with algaei output
         _operatorButton13.onTrue(ManipulatorCommands.stop()); // replace with algae stop
         (_operatorButton14.or(_operatorButtons.povUp())).whileTrue(ElevatorCommands.hangExecute());
-        // .alongWith(LEDCommands.flashColor(Constants.LED.RED));
-        // .andThen(LEDCommands.setDefaultColor(Constants.LED.YELLOW))
-        // );
         (_operatorButton15.or(_operatorButtons.povDown())).and(_driverJoystick.button(4)).onTrue(FunnelCommands.drop().alongWith(ElevatorCommands.setHeight(ElevatorHeight.Hang)));
 
         // _hasCoral.onTrue(LEDCommands.setDefaultColor(Constants.LED.GREEN));
@@ -295,6 +201,5 @@ public class RobotContainer
     private boolean robotCentric()
     {
         return false;
-        // return _driverJoystick.button(1).getAsBoolean();
     }
 }

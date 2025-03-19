@@ -65,9 +65,6 @@ public class ElevatorIOSim implements ElevatorIO
     @Override
     public void updateInputs(ElevatorIOInputs inputs)
     {
-        // _leaderMotorSim.update(Constants.General.LOOP_PERIOD_SECS);
-        // _followerMotorSim.update(Constants.General.LOOP_PERIOD_SECS);
-
         inputs.leaderVolts   = _leaderAppliedVolts;
         inputs.followerVolts = _followerAppliedVolts;
 

@@ -20,11 +20,11 @@ public class FunnelCommands
         return Commands.defer
         (
             () -> Commands.startEnd
-                (
-                    () -> Funnel.getInstance().setVolts(Dashboard.getInstance().getFunnelRetractPercentSpeed() * Constants.General.MOTOR_VOLTAGE),
-                    () -> Funnel.getInstance().setVolts(0), Funnel.getInstance()
-                )
-                .withTimeout(Dashboard.getInstance().getFunnelRetractTime()),
+            (
+                () -> Funnel.getInstance().setVolts(Dashboard.getInstance().getFunnelRetractPercentSpeed() * Constants.General.MOTOR_VOLTAGE),
+                () -> Funnel.getInstance().setVolts(0), Funnel.getInstance()
+            )
+            .withTimeout(Dashboard.getInstance().getFunnelRetractTime()),
             Set.of(Funnel.getInstance())
         );
         // @formatter:on
