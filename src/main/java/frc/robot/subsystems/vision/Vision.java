@@ -51,10 +51,10 @@ public class Vision extends SubsystemBase
     }
 
     private final VisionIO                 _io;
-    private final VisionIOInputsAutoLogged _inputs = new VisionIOInputsAutoLogged();
+    private final VisionIOInputsAutoLogged _inputs   = new VisionIOInputsAutoLogged();
     private final Camera                   _camera;
-    private int           _pidTagId  = 0;
-    private Pose2d        _lastPose  = new Pose2d();
+    private int                            _pidTagId = 0;
+    private Pose2d                         _lastPose = new Pose2d();
 
     private Vision(VisionIO io, Camera camera)
     {
@@ -155,6 +155,6 @@ public class Vision extends SubsystemBase
 
     public void setVisionReference(int id)
     {
-        _pidTagId  = id;
+        _pidTagId = id;
     }
 }
