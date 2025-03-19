@@ -112,8 +112,8 @@ public class Drive extends SubsystemBase
         _yDrivePID.setIZone(1);
 
         _xDrivePID.setTolerance(Units.inchesToMeters(1.5));
-        _yDrivePID.setTolerance(Units.inchesToMeters(1.5)); // tbd
-        _rotatePID.setTolerance(Units.degreesToRadians(3));
+        _yDrivePID.setTolerance(Units.inchesToMeters(1.5));
+        _rotatePID.setTolerance(Units.degreesToRadians(2.0));
 
         _rotatePID.enableContinuousInput(-Math.PI, Math.PI);
 
@@ -447,6 +447,11 @@ public class Drive extends SubsystemBase
     public boolean rotateIsFinished()
     {
         return _rotatePID.atSetpoint();
+    }
+
+    public boolean isAligned()
+    {
+        return xDriveIsFinished() && yDriveIsFinished() && rotateIsFinished();
     }
 
     public void setSpeedMultiplier(double speedMultiplier)

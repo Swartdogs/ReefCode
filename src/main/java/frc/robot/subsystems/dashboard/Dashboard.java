@@ -72,6 +72,7 @@ public class Dashboard extends SubsystemBase
         _io.setManipulatorEndSensorTripped(Manipulator.getInstance().isEndSensorTripped());
 
         _io.setFunnelIsDropped(Funnel.getInstance().isDropped());
+        _io.setAutoAligned(Drive.getInstance().isAligned());
 
         _io.setElevatorHeight(Elevator.getInstance().getExtension());
         _io.setElevatorSetpoint(Elevator.getInstance().getSetpoint());

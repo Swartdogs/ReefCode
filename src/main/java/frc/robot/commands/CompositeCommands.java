@@ -99,7 +99,8 @@ public class CompositeCommands
             (
                 Commands.runOnce(() -> Logger.recordOutput("AutoAlign/Target", Utilities.getTagPose(branch.getID()).rotateAround(Utilities.getTagPose(branch.getID()).getTranslation(), Rotation2d.fromDegrees(180)).transformBy(new Transform2d(branch.getReference(), new Rotation2d())))),
                 DriveCommands.driveToPose(Utilities.getTagPose(branch.getID()).rotateAround(Utilities.getTagPose(branch.getID()).getTranslation(), Rotation2d.fromDegrees(180)).transformBy(new Transform2d(branch.getReference(), new Rotation2d())), translationMaxSpeed, rotationMaxSpeed)
-                .until(() -> Drive.getInstance().xDriveIsFinished()  && Drive.getInstance().yDriveIsFinished() && Drive.getInstance().rotateIsFinished())), 
+                .until(() -> Drive.getInstance().isAligned()))
+                .finallyDo(() -> Vision.getInstance(Camera.Front).setVisionReference(0)),
                 Set.of(Drive.getInstance()
             )
         );

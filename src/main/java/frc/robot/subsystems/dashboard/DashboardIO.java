@@ -101,6 +101,10 @@ public interface DashboardIO
     {
     }
 
+    public default void setAutoAligned(boolean dropped)
+    {
+    }
+
     public default void setDriveFLAngle(Rotation2d angle)
     {
     }

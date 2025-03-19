@@ -47,6 +47,7 @@ public class DashboardIONetwork implements DashboardIO
     private final NetworkTableEntry _manipulatorStartSensorTripped;
     private final NetworkTableEntry _manipulatorEndSensorTripped;
     private final NetworkTableEntry _funnelIsDropped;
+    private final NetworkTableEntry _autoAligned;
     private final NetworkTableEntry _matchTime;
     private Rotation2d              _driveFLAngle    = Constants.Drive.FL_ZERO_ROTATION;
     private Rotation2d              _driveFRAngle    = Constants.Drive.FR_ZERO_ROTATION;
@@ -116,6 +117,7 @@ public class DashboardIONetwork implements DashboardIO
         _manipulatorStartSensorTripped = NetworkTableInstance.getDefault().getEntry("Dashboard/Robot Values/Manipulator Start Sensor Tripped");
         _manipulatorEndSensorTripped   = NetworkTableInstance.getDefault().getEntry("Dashboard/Robot Values/Manipulator End Sensor Tripped");
         _funnelIsDropped               = NetworkTableInstance.getDefault().getEntry("Dashboard/Robot Values/Funnel Is Dropped");
+        _autoAligned                   = NetworkTableInstance.getDefault().getEntry("Dashboard/Robot Values/Auto Aligned");
         _matchTime                     = NetworkTableInstance.getDefault().getEntry("Dashboard/Robot Values/Match Time");
 
         _elevatorHeight.setDouble(Constants.Elevator.MIN_EXTENSION);
@@ -128,6 +130,7 @@ public class DashboardIONetwork implements DashboardIO
         _matchTime.setDouble(0);
 
         _funnelIsDropped.setBoolean(false);
+        _autoAligned.setBoolean(false);
 
         SmartDashboard.putData("Swerve", builder ->
         {
@@ -313,6 +316,12 @@ public class DashboardIONetwork implements DashboardIO
     public void setFunnelIsDropped(boolean dropped)
     {
         _funnelIsDropped.setBoolean(dropped);
+    }
+
+    @Override 
+    public void setAutoAligned(boolean aligned)
+    {
+        _autoAligned.setBoolean(aligned);
     }
 
     @Override
