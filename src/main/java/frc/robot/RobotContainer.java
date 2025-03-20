@@ -1,7 +1,5 @@
 package frc.robot;
 
-import java.util.Set;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
@@ -54,15 +52,17 @@ public class RobotContainer
         Dashboard.getInstance();
 
         // Configure the button bindings
-        configureButtonBindings();
-        // configureTestBindings();
+        // configureButtonBindings();
+        configureTestBindings();
     }
 
     @SuppressWarnings("unused")
     private void configureTestBindings()
     {
         Drive.getInstance().setDefaultCommand(DriveCommands.joystickDrive(() -> -_controller.getLeftY(), () -> -_controller.getLeftX(), () -> -_controller.getRightX(), () -> false));
-        _controller.a().onTrue(DriveCommands.setOdometer(new Pose2d(Units.inchesToMeters(297.5), Units.inchesToMeters(158.5), Rotation2d.fromDegrees(0))));
+        // _controller.a().onTrue(DriveCommands.setOdometer(new
+        // Pose2d(Units.inchesToMeters(297.5), Units.inchesToMeters(158.5),
+        // Rotation2d.fromDegrees(0))));
 
         _controller.back().onTrue(ElevatorCommands.setHeight(ElevatorHeight.Stow));
         _controller.povUp().onTrue(ElevatorCommands.setHeight(ElevatorHeight.Level1));
@@ -70,9 +70,11 @@ public class RobotContainer
         _controller.povDown().onTrue(ElevatorCommands.setHeight(ElevatorHeight.Level3));
         _controller.povLeft().onTrue(ElevatorCommands.setHeight(ElevatorHeight.Level4));
 
-        _controller.leftStick().onTrue(ManipulatorCommands.coralIntake());
-        _controller.start().onTrue(CompositeCommands.output());
-        _controller.rightStick().onTrue(ManipulatorCommands.stop());
+        _controller.start().whileTrue(
+                CompositeCommands.snapToBranch(
+                        Vision.Camera.Front, Branch.C, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric, Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE
+                )
+        );
     }
 
     @SuppressWarnings("unused")
