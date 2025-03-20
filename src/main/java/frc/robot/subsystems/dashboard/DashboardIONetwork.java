@@ -318,7 +318,7 @@ public class DashboardIONetwork implements DashboardIO
         _funnelIsDropped.setBoolean(dropped);
     }
 
-    @Override 
+    @Override
     public void setAutoAligned(boolean aligned)
     {
         _autoAligned.setBoolean(aligned);

@@ -2,6 +2,7 @@ package frc.robot;
 
 import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.wpilibj.Alert;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj.Alert.AlertType;
@@ -57,7 +58,9 @@ public class Robot extends LoggedRobot
         {
             case REAL:
                 // Running on a real robot, log to a USB stick ("/U/logs")
-                Logger.addDataReceiver(new WPILOGWriter());
+                String path = Filesystem.getOperatingDirectory().getAbsolutePath();
+                System.out.println(path);
+                Logger.addDataReceiver(new WPILOGWriter(path));
                 Logger.addDataReceiver(new NT4Publisher());
                 break;
 

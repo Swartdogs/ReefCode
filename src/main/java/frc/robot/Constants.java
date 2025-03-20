@@ -100,10 +100,11 @@ public final class Constants
         public static final double          DRIVE_MOTOR_REDUCTION               = 5.67;
         public static final boolean         DRIVE_INVERTED                      = false;
         public static final DCMotor         DRIVE_GEARBOX                       = DCMotor.getKrakenX60(1);
-        public static final double          DRIVE_KP                            = 0.05; // Swerve Module Driving
+        public static final double          DRIVE_KP                            = 0.079014; // Swerve Module Driving
         public static final double          DRIVE_KD                            = 0.0;
-        public static final double          DRIVE_KS                            = 0.0;
-        public static final double          DRIVE_KV                            = 0.1;
+        public static final double          DRIVE_KS                            = 0.21614;
+        public static final double          DRIVE_KV                            = 0.10404;
+        public static final double          DRIVE_KA                            = 0.0039067;
         public static final double          DRIVE_SIM_KP                        = 0.2;
         public static final double          DRIVE_SIM_KD                        = 0.0;
         public static final double          DRIVE_SIM_KS                        = 0.0;
@@ -130,7 +131,7 @@ public final class Constants
         public static final double          SPEED_MOTION_THRESHOLD              = 0.02 * MAX_LINEAR_SPEED;
         public static final double          ROTATION_MOTION_THRESHOLD           = 0.01 * MAX_ANGULAR_SPEED;
         public static final double          MAX_SNAP_SPEED_PERCENTAGE           = 0.7;
-        public static final double          MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE = 0.45;
+        public static final double          MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE = 0.3;
         public static final double          DEADBAND                            = 0.1;
         public static final double          TRANSLATE_KP                        = 1.5; // Auto-Align
         public static final double          TRANSLATE_KI                        = 0.2;

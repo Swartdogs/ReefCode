@@ -60,6 +60,7 @@ public class Autos
             Commands.waitSeconds(1),
             CompositeCommands.output(),
             autoFactory.trajectoryCmd(pathToCS),
+            Drive.getInstance().runOnce(() -> Drive.getInstance().stop()),
             CompositeCommands.intake(),
             CompositeCommands.setHeight(ElevatorHeight.Level1),
             autoFactory.trajectoryCmd(pathToPegTwo),

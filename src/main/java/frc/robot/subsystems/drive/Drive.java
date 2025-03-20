@@ -113,7 +113,7 @@ public class Drive extends SubsystemBase
 
         _xDrivePID.setTolerance(Units.inchesToMeters(1.5));
         _yDrivePID.setTolerance(Units.inchesToMeters(1.5));
-        _rotatePID.setTolerance(Units.degreesToRadians(2.0));
+        _rotatePID.setTolerance(Units.degreesToRadians(3.0));
 
         _rotatePID.enableContinuousInput(-Math.PI, Math.PI);
 
@@ -461,12 +461,12 @@ public class Drive extends SubsystemBase
 
     public Command sysIdQuasistatic(SysIdRoutine.Direction direction)
     {
-        return Commands.sequence(runOnce(() -> setPose(new Pose2d())), run(() -> runCharacterizationVolts(0.0)).withTimeout(1.0), _sysId.quasistatic(direction));
+        return Commands.sequence(runOnce(() -> setPose(new Pose2d())), run(() -> runCharacterizationVolts(0.0)).withTimeout(1.0), _sysId.quasistatic(direction)).finallyDo(() -> stop());
     }
 
     public Command sysIdDynamic(SysIdRoutine.Direction direction)
     {
-        return Commands.sequence(runOnce(() -> setPose(new Pose2d())), run(() -> runCharacterizationVolts(0.0)).withTimeout(1.0), _sysId.dynamic(direction));
+        return Commands.sequence(runOnce(() -> setPose(new Pose2d())), run(() -> runCharacterizationVolts(0.0)).withTimeout(1.0), _sysId.dynamic(direction)).finallyDo(() -> stop());
     }
 
     public void addVisionMeasurement(Pose2d pose, double timestamp, Matrix<N3, N1> stdDevs)

@@ -1,0 +1,11 @@
+{
+  "download": {
+    "deleteAfter": false,
+    "localDir": "C:\\RobotCode\\ReefCode",
+    "remoteDir": "/home/lvuser",
+    "serverTeam": "10.5.25.2"
+  },
+  "output": {
+    "outputFolder": "C:\\RobotCode\\ReefCode"
+  }
+}
