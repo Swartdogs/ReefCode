@@ -52,8 +52,8 @@ public class RobotContainer
         Dashboard.getInstance();
 
         // Configure the button bindings
-        // configureButtonBindings();
-        configureTestBindings();
+        configureButtonBindings();
+        // configureTestBindings();
     }
 
     @SuppressWarnings("unused")
