@@ -2,6 +2,7 @@ package frc.robot.subsystems.drive;
 
 import static edu.wpi.first.units.Units.Volts;
 
+import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 import choreo.trajectory.SwerveSample;
@@ -83,9 +84,9 @@ public class Drive extends SubsystemBase
     private final PIDController            _xDrivePID;
     private final PIDController            _yDrivePID;
     private final PIDController            _rotatePID;
-    private double                         _rotateMaxSpeed;
     private double                         _xDriveMaxSpeed;
     private double                         _yDriveMaxSpeed;
+    private double                         _rotateMaxSpeed;
     private double                         _speedMultiplier;
     private SysIdRoutine                   _sysId;
 
@@ -155,6 +156,9 @@ public class Drive extends SubsystemBase
 
         Logger.recordOutput("Odometry/Robot", _poseEstimator.getEstimatedPosition());
         Logger.recordOutput("SwerveStates/Measured", getModuleStates());
+        Logger.recordOutput("AutoAlign/xAtSetpoint", xDriveIsFinished());
+        Logger.recordOutput("AutoAlign/yAtSetpoint", yDriveIsFinished());
+        Logger.recordOutput("AutoAlign/rotateAtSetpoint", rotateIsFinished());
     }
 
     /**
@@ -449,6 +453,7 @@ public class Drive extends SubsystemBase
         return _rotatePID.atSetpoint();
     }
 
+    @AutoLogOutput
     public boolean isAligned()
     {
         return xDriveIsFinished() && yDriveIsFinished() && rotateIsFinished();

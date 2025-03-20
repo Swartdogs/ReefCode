@@ -60,6 +60,7 @@ public class Elevator extends SubsystemBase
     private final PIDController              _extensionPID;
     private final SysIdRoutine               _sysId;
     private Double                           _extensionSetpoint = null;
+    private boolean                          _differential      = false;
 
     private Elevator(ElevatorIO io)
     {
@@ -89,6 +90,7 @@ public class Elevator extends SubsystemBase
 
     public void setExtension(ElevatorHeight elevatorHeight) // height is measured in inches
     {
+        _differential      = elevatorHeight == ElevatorHeight.Level1;
         _extensionSetpoint = elevatorHeight.getHeight();
     }
 
@@ -121,6 +123,11 @@ public class Elevator extends SubsystemBase
     public Double getSetpoint()
     {
         return _extensionSetpoint;
+    }
+
+    public boolean isDifferential()
+    {
+        return _differential;
     }
 
     public void stop()

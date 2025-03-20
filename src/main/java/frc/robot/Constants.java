@@ -131,9 +131,9 @@ public final class Constants
         public static final double          SPEED_MOTION_THRESHOLD              = 0.02 * MAX_LINEAR_SPEED;
         public static final double          ROTATION_MOTION_THRESHOLD           = 0.01 * MAX_ANGULAR_SPEED;
         public static final double          MAX_SNAP_SPEED_PERCENTAGE           = 0.7;
-        public static final double          MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE = 0.3;
+        public static final double          MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE = 0.15;
         public static final double          DEADBAND                            = 0.1;
-        public static final double          TRANSLATE_KP                        = 1.5; // Auto-Align
+        public static final double          TRANSLATE_KP                        = 10.0; // Auto-Align
         public static final double          TRANSLATE_KI                        = 0.2;
         public static final double          TRANSLATE_KD                        = 0.3;
         public static final double          ANGLE_KP                            = 5.0;

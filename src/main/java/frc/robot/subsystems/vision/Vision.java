@@ -3,6 +3,8 @@ package frc.robot.subsystems.vision;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.VecBuilder;
@@ -103,6 +105,8 @@ public class Vision extends SubsystemBase
 
             Drive.getInstance().addVisionMeasurement(smoothedPose, _inputs.captureTimestamp, stdDevs);
         }
+
+        Logger.recordOutput("AutoAlign/HasTarget", hasTarget());
     }
 
     private int getTagIndex(int id)

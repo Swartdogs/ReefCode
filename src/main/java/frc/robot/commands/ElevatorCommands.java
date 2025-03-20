@@ -39,7 +39,8 @@ public class ElevatorCommands
             Elevator.getInstance().runOnce(() -> Elevator.getInstance().setExtension(ElevatorHeight.Stow)),
             Commands.waitUntil(() -> Elevator.getInstance().atSetpoint()),
             Elevator.getInstance().runOnce(() -> Elevator.getInstance().stop())
-        );
+        )
+        .finallyDo(() -> Elevator.getInstance().stop());
         // @formatter:on
     }
 

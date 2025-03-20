@@ -64,7 +64,7 @@ public class Manipulator extends SubsystemBase
 
     public void coralOutput()
     {
-        if (Elevator.getInstance().getExtension() < Dashboard.getInstance().getElevatorL2Height())
+        if (Elevator.getInstance().isDifferential())
         {
             _io.setLeftVolts(Dashboard.getInstance().getManipulatorCoralOutputPercentSpeed() * Constants.General.MOTOR_VOLTAGE);
             _io.setRightVolts(Dashboard.getInstance().getManipulatorCoralOutputPercentSpeed() * Dashboard.getInstance().getManipulatorL1SpeedMultiplier() * Constants.General.MOTOR_VOLTAGE);
