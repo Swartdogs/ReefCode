@@ -80,21 +80,24 @@ public class RobotContainer
     @SuppressWarnings("unused")
     private void configureButtonBindings()
     {
-        Trigger _driverButton13 = _driverButtons.axisLessThan(0, -0.5);
-        Trigger _driverButton14 = _driverButtons.axisGreaterThan(0, 0.5);
-        Trigger _driverButton15 = _driverButtons.axisLessThan(1, -0.5);
+        Trigger funnelDropped = new Trigger(() -> Funnel.getInstance().isDropped());
+
+        Trigger driverButton13 = _driverButtons.axisLessThan(0, -0.5);
+        Trigger driverButton14 = _driverButtons.axisGreaterThan(0, 0.5);
+        Trigger driverButton15 = _driverButtons.axisLessThan(1, -0.5);
 
         // Trigger _hasCoral = new Trigger(() -> _manipulator.hasCoral());
         // Trigger _manipulatorRunning = new Trigger(() -> _manipulator.isRunning());
-        Trigger _operatorButton13 = _operatorButtons.axisGreaterThan(0, 0.5);
-        Trigger _operatorButton14 = _operatorButtons.axisLessThan(1, -0.5);
-        Trigger _operatorButton15 = _operatorButtons.axisGreaterThan(1, 0.5);
+        Trigger operatorButton13 = _operatorButtons.axisGreaterThan(0, 0.5);
+        Trigger operatorButton14 = _operatorButtons.axisGreaterThan(1, 0.5);
+        Trigger operatorButton15 = _operatorButtons.axisLessThan(1, -0.5);
 
         // Default command, normal field-relative drive
         Drive.getInstance().setDefaultCommand(CompositeCommands.joystickDrive(() -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> -_driverJoystick.getZ(), () -> robotCentric(), 2, 5));
 
         // Driver Controls
         _driverJoystick.button(2).whileTrue(DriveCommands.reduceSpeed());
+        (_driverJoystick.button(7).and(funnelDropped)).whileTrue(ElevatorCommands.hangExecute());
         _driverJoystick.button(11).onTrue(DriveCommands.resetGyro());
         _driverJoystick.button(12).whileTrue(
                 CompositeCommands
@@ -175,9 +178,9 @@ public class RobotContainer
                 )
         );
 
-        _driverButton13.whileTrue(DriveCommands.driveAtOrientation(() -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric, Constants.Field.BLUE_RIGHT_STATION_ANGLE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE));
-        _driverButton14.whileTrue(DriveCommands.driveAtOrientation(() -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric, Constants.Field.BLUE_LEFT_STATION_ANGLE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE));
-        _driverButton15.whileTrue(DriveCommands.driveAtOrientation(() -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric, Constants.Field.BLUE_PROCESSOR_ANGLE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE));
+        driverButton13.whileTrue(DriveCommands.driveAtOrientation(() -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric, Constants.Field.BLUE_RIGHT_STATION_ANGLE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE));
+        driverButton14.whileTrue(DriveCommands.driveAtOrientation(() -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric, Constants.Field.BLUE_LEFT_STATION_ANGLE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE));
+        driverButton15.whileTrue(DriveCommands.driveAtOrientation(() -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric, Constants.Field.BLUE_PROCESSOR_ANGLE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE));
 
         // Operator Controls
         _operatorButtons.button(1).onTrue(ElevatorCommands.setHeight(ElevatorHeight.Level4));
@@ -196,8 +199,8 @@ public class RobotContainer
         // _characterizationChooser.getSelected(), Set.of(Drive.getInstance())));
         // _operatorButton13.onTrue(ManipulatorCommands.stop()); // replace with algae
         // stop
-        (_operatorButton14.or(_operatorButtons.povUp())).whileTrue(ElevatorCommands.hangExecute());
-        (_operatorButton15.or(_operatorButtons.povDown())).and(_driverJoystick.button(4)).onTrue(FunnelCommands.drop().alongWith(ElevatorCommands.setHeight(ElevatorHeight.Hang)));
+        (operatorButton14.or(_operatorButtons.povDown())).and(_driverJoystick.button(4)).onTrue(FunnelCommands.drop().alongWith(ElevatorCommands.setHeight(ElevatorHeight.Hang)));
+        ((operatorButton15.or(_operatorButtons.povUp())).and(funnelDropped)).whileTrue(ElevatorCommands.hangExecute());
 
         // _hasCoral.onTrue(LEDCommands.setDefaultColor(Constants.LED.GREEN));
         // _hasCoral.onFalse(LEDCommands.setDefaultColor(Constants.LED.RED));
