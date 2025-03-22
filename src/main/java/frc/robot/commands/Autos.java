@@ -14,13 +14,13 @@ import frc.robot.util.Utilities;
 public class Autos
 {
     public static final AutoFactory autoFactory       = new AutoFactory(Drive.getInstance()::getPose, Drive.getInstance()::setPose, Drive.getInstance()::followTrajectory, false, Drive.getInstance());
-    public static final Command     ONE_PIECE_RIGHT   = oneCoralAuto("RightToE");
-    public static final Command     ONE_PIECE_MIDDLE  = oneCoralAuto("MiddleToG");
     public static final Command     ONE_PIECE_LEFT    = oneCoralAuto("LeftToJ");
-    public static final Command     TWO_PIECE_RIGHT   = twoCoralAuto("RightToD", "DToRightCS", "RightCSToC");
+    public static final Command     ONE_PIECE_MIDDLE  = oneCoralAuto("MiddleToG");
+    public static final Command     ONE_PIECE_RIGHT   = oneCoralAuto("RightToE");
     public static final Command     TWO_PIECE_LEFT    = twoCoralAuto("LeftToK", "KToLeftCS", "LeftCSToL");
-    public static final Command     THREE_PIECE_RIGHT = threeCoralAuto("RightToE", "EToRightCS", "RightCSToD", "DToRightCS", "RightCSToC");
+    public static final Command     TWO_PIECE_RIGHT   = twoCoralAuto("RightToD", "DToRightCS", "RightCSToC");
     public static final Command     THREE_PIECE_LEFT  = threeCoralAuto("LeftToJ", "JToLeftCS", "LeftCSToK", "KToLeftCS", "LeftCSToL");
+    public static final Command     THREE_PIECE_RIGHT = threeCoralAuto("RightToE", "EToRightCS", "RightCSToD", "DToRightCS", "RightCSToC");
 
     public static Command oneCoralAuto(String path)
     {
@@ -132,5 +132,40 @@ public class Autos
             CompositeCommands.output()
         );
         // @formatter:on
+    }
+
+    public static Command splitAuto(String path, int numCoral)
+    {
+        // @formatter:off
+        Command auto = Commands.defer(() -> Commands.waitSeconds(Dashboard.getInstance().getAutoDelay()), Set.of());
+        for (int i = 0; i < numCoral; i++)
+        {
+            auto.andThen(
+                Commands.parallel
+                (
+                    CompositeCommands.setHeight(ElevatorHeight.Level1),
+                    autoFactory.trajectoryCmd(path, i)
+                ),
+                Commands.parallel
+                (
+                    CompositeCommands.snapToBranchAuto(Camera.Front, Utilities.parseAutoString(String.valueOf(path.charAt(path.length() + i - numCoral))), Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE),
+                    CompositeCommands.setHeight(ElevatorHeight.Level4)
+                ),
+                Commands.waitSeconds(0.5),
+                CompositeCommands.output(),
+                Commands.parallel
+                (
+                    autoFactory.trajectoryCmd(path, i + 1),
+                    Commands.sequence
+                    (
+                        Commands.waitSeconds(0.5),
+                        CompositeCommands.intake()
+                    )
+                )
+            );
+        }
+
+        return auto;
+        // @formatter:off
     }
 }
