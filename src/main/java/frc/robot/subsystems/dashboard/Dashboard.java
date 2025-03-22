@@ -268,6 +268,16 @@ public class Dashboard extends SubsystemBase
         return _inputs.elevatorHangHeight;
     }
 
+    public double getElevatorLowAlgaeHeight()
+    {
+        return _inputs.elevatorLowAlgaeHeight;
+    }
+
+    public double getElevatorHighAlgaeHeight()
+    {
+        return _inputs.elevatorHighAlgaeHeight;
+    }
+
     public double getElevatorHangSpeed()
     {
         return _inputs.elevatorHangSpeed;

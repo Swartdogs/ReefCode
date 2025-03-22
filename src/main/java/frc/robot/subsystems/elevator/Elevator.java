@@ -21,7 +21,8 @@ public class Elevator extends SubsystemBase
     public enum ElevatorHeight
     {
         Stow(() -> Dashboard.getInstance().getElevatorStowHeight()), Level1(() -> Dashboard.getInstance().getElevatorL1Height()), Level2(() -> Dashboard.getInstance().getElevatorL2Height()),
-        Level3(() -> Dashboard.getInstance().getElevatorL3Height()), Level4(() -> Dashboard.getInstance().getElevatorL4Height()), Hang(() -> Dashboard.getInstance().getElevatorHangHeight());
+        Level3(() -> Dashboard.getInstance().getElevatorL3Height()), Level4(() -> Dashboard.getInstance().getElevatorL4Height()), Hang(() -> Dashboard.getInstance().getElevatorHangHeight()),
+        LowAlgae(() -> Dashboard.getInstance().getElevatorLowAlgaeHeight()), HighAlgae(() -> Dashboard.getInstance().getElevatorHighAlgaeHeight());
 
         private DoubleSupplier _heightSupplier;
 
