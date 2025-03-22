@@ -140,7 +140,7 @@ public class Autos
         Command auto = Commands.defer(() -> Commands.waitSeconds(Dashboard.getInstance().getAutoDelay()), Set.of());
         for (int i = 0; i < numCoral; i++)
         {
-            auto.andThen(
+            auto = auto.andThen(
                 Commands.parallel
                 (
                     CompositeCommands.setHeight(ElevatorHeight.Level1),

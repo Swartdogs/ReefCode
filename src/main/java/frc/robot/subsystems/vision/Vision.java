@@ -12,6 +12,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -55,19 +56,20 @@ public class Vision extends SubsystemBase
     }
 
     private final VisionIO                 _io;
-    private final VisionIOInputsAutoLogged _inputs   = new VisionIOInputsAutoLogged();
+    private final VisionIOInputsAutoLogged _inputs      = new VisionIOInputsAutoLogged();
     private final Camera                   _camera;
-    private final PIDController _yController = new PIDController(Constants.Vision.DRIVE_KP, 0, Constants.Vision.DRIVE_KD);
-    private Pose2d                         _lastPose = new Pose2d();
-    private Branch _branch;
-    private double _maxSpeed;
+    private final PIDController            _yController = new PIDController(Constants.Vision.AUTO_ALIGN_KP, 0, Constants.Vision.AUTO_ALIGN_KD);
+    private Pose2d                         _lastPose    = new Pose2d();
+    private Branch                         _branch;
+    private double                         _maxSpeed;
 
     private Vision(VisionIO io, Camera camera)
     {
         _io     = io;
         _camera = camera;
 
-        _yController.setTolerance(1.5);
+        _yController.setTolerance(1);
+        SmartDashboard.putData("VisionYDrive/" + _camera.toString(), _yController);
     }
 
     @Override
@@ -166,17 +168,30 @@ public class Vision extends SubsystemBase
     public void setVisionReference(Branch branch, double maxSpeed)
     {
         _maxSpeed = Math.abs(maxSpeed);
-        _branch = branch;
+        _branch   = branch;
     }
 
     public double alignExecute()
     {
-        double setpoint = Math.asin(_branch.getReference().getY() / getTargetDistance(_branch.getID()));
-        return MathUtil.clamp( _yController.calculate(getTargetYaw(_branch.getID()).getRadians(), setpoint), -_maxSpeed , _maxSpeed);
+        double setpoint = Units.radiansToDegrees(Math.asin(_branch.getReference().getY() / getTargetDistance(_branch.getID())));
+        double calc     = MathUtil.clamp(_yController.calculate(getTargetYaw(_branch.getID()).getDegrees(), setpoint), -_maxSpeed, _maxSpeed);
+        Logger.recordOutput("Vision/YawSetpoint", setpoint);
+        Logger.recordOutput("Vision/YDrive", calc);
+        return calc;
     }
 
     public boolean alignIsFinished()
     {
         return hasTarget() && _yController.atSetpoint();
+    }
+
+    public double getHorizontalTranslation()
+    {
+        if (hasTarget())
+        {
+            
+        }
+
+        return 0;
     }
 }

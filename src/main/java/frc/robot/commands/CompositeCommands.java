@@ -72,108 +72,128 @@ public class CompositeCommands
         return Commands.defer(() ->
             Commands.sequence
             (
-                Commands.runOnce(() -> 
-                {
+                Commands.runOnce(() -> {
                     Drive.getInstance().rotateInit(Constants.Field.getTagAngle(branch.getID()), rotateMaxSpeed);
                     Vision.getInstance(Camera.FrontCenter).setVisionReference(branch, translateMaxSpeed);
                 }),
 
-                Commands.run(() ->
-                {
-                    double x;
-                    double y;
-                    boolean isRobotCentric;
-                    double translateExponent;
-
-                    if (Vision.getInstance(Camera.FrontCenter).hasTarget())
-                    {
-                        x = 0;
-                        y = Vision.getInstance(Camera.FrontCenter).alignExecute();
-                        isRobotCentric = true;
-                        translateExponent = 1;
-                    }
-                    else
-                    {
-                        x = xSupplier.getAsDouble();
-                        y = ySupplier.getAsDouble();
-                        isRobotCentric = robotCentric.getAsBoolean();
-                        translateExponent = 2;
-                    }
-
-                    // Apply deadband
-                    double     linearMagnitude = MathUtil.applyDeadband(Math.hypot(x, y), Constants.Controls.JOYSTICK_DEADBAND);
-                    Rotation2d linearDirection = new Rotation2d(x, y);
-                    double     omega           = MathUtil.applyDeadband(Drive.getInstance().rotateExecute(), Constants.Controls.JOYSTICK_DEADBAND);
-                    double     speedModifier   = MathUtil
-                            .clamp((Constants.Drive.SPEED_ELEVATOR_M * Elevator.getInstance().getExtension() + Constants.Drive.SPEED_ELEVATOR_B), Constants.Drive.MIN_SPEED_ELEVATOR_MULTIPLIER, Constants.Drive.MAX_SPEED_ELEVATOR_MULTIPLIER);
-
-                    // Square values
-                    linearMagnitude = Math.pow(linearMagnitude, translateExponent);
-                    omega           = Math.copySign(Math.pow(Math.abs(omega), 1), omega);
-
-                    // Calculate new linear velocity
-                    Translation2d linearVelocity = new Pose2d(new Translation2d(), linearDirection).transformBy(new Transform2d(linearMagnitude, 0.0, new Rotation2d())).getTranslation();
-
-                    // Convert to field relative speeds & send command
-                    if (isRobotCentric)
-                    {
-                        var chassisSpeeds = new ChassisSpeeds(
-                                linearVelocity.getX() * Constants.Drive.MAX_LINEAR_SPEED * speedModifier, linearVelocity.getY() * Constants.Drive.MAX_LINEAR_SPEED * speedModifier, omega * Constants.Drive.MAX_ANGULAR_SPEED * speedModifier
-                        );
-
-                        Drive.getInstance().runVelocity(chassisSpeeds);
-                    }
-                    else
-                    {
-                        var chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
-                                linearVelocity.getX() * Constants.Drive.MAX_LINEAR_SPEED * speedModifier, linearVelocity.getY() * Constants.Drive.MAX_LINEAR_SPEED * speedModifier, omega * Constants.Drive.MAX_ANGULAR_SPEED * speedModifier,
-                                Drive.getInstance().getRotation()
-                        );
-
-                        Drive.getInstance().runVelocity(chassisSpeeds);
-                    }
-                })
-                .until(() -> Vision.getInstance(Camera.FrontCenter).alignIsFinished()),
-
-                joystickDrive(() -> translateMaxSpeed, () -> 0, () -> Drive.getInstance().rotateExecute(), () -> true, 1, 1)
-                .until(() -> Drive.getInstance().collisionDetected()),
-
-                DriveCommands.stop(),
-
-                Commands.idle(Drive.getInstance())
+                DriveCommands.driveToPose(Drive.getInstance().getPose().plus(Vision.getInstance(Camera.FrontCenter).getHorizontalTranslation()), translateMaxSpeed, rotateMaxSpeed)
             ),
-            Set.of(Drive.getInstance(), Vision.getInstance(Camera.FrontCenter))
+            Set.of(Drive.getInstance())
         );
-        // @formatter:on
-    }
-
-    public static Command autoAlign(Branch branch, double translateMaxSpeed, double rotateMaxSpeed)
-    {
         // @formatter:off
-        return Commands.defer(() ->
-            Commands.sequence
-            (
-                Commands.runOnce(() -> 
-                {
-                    Drive.getInstance().rotateInit(Constants.Field.getTagAngle(branch.getID()), rotateMaxSpeed);
-                    Vision.getInstance(Camera.FrontCenter).setVisionReference(branch, translateMaxSpeed);
-                }),
-
-                joystickDrive(() -> 0, () -> Vision.getInstance(Camera.FrontCenter).alignExecute(), () -> Drive.getInstance().rotateExecute(), () -> true, 1, 1)
-                .until(() -> Vision.getInstance(Camera.FrontCenter).alignIsFinished() || !Vision.getInstance(Camera.FrontCenter).hasTarget()),
-
-                joystickDrive(() -> translateMaxSpeed, () -> 0, () -> Drive.getInstance().rotateExecute(), () -> true, 1, 1)
-                .until(() -> Drive.getInstance().collisionDetected()),
-
-                DriveCommands.stop()
-            ),
-
-            Set.of(Drive.getInstance(), Vision.getInstance(Camera.FrontCenter))
-        );
-        // @formatter:on
     }
 
-    // public static Command snapToBranch(Camera camera, Branch branch, DoubleSupplier xSupplier, DoubleSupplier ySupplier, BooleanSupplier robotCentric, double translationMaxSpeed, double rotationMaxSpeed)
+    // public static Command autoAlign(Branch branch, DoubleSupplier xSupplier, DoubleSupplier ySupplier, BooleanSupplier robotCentric, double translateMaxSpeed, double rotateMaxSpeed)
+    // {
+    //     // @formatter:off
+    //     return Commands.defer(() ->
+    //         Commands.sequence
+    //         (
+    //             Commands.runOnce(() -> 
+    //             {
+    //                 Drive.getInstance().rotateInit(Constants.Field.getTagAngle(branch.getID()), rotateMaxSpeed);
+    //                 Vision.getInstance(Camera.FrontCenter).setVisionReference(branch, translateMaxSpeed);
+    //             }),
+
+    //             Commands.run(() ->
+    //             {
+    //                 double x;
+    //                 double y;
+    //                 boolean isRobotCentric;
+    //                 double translateExponent;
+
+    //                 if (Vision.getInstance(Camera.FrontCenter).hasTarget())
+    //                 {
+    //                     x = 0;
+    //                     y = Vision.getInstance(Camera.FrontCenter).alignExecute();
+    //                     isRobotCentric = true;
+    //                     translateExponent = 1;
+    //                 }
+    //                 else
+    //                 {
+    //                     x = xSupplier.getAsDouble();
+    //                     y = ySupplier.getAsDouble();
+    //                     isRobotCentric = robotCentric.getAsBoolean();
+    //                     translateExponent = 2;
+    //                 }
+
+    //                 // Apply deadband
+    //                 double     linearMagnitude = MathUtil.applyDeadband(Math.hypot(x, y), 0);
+    //                 Rotation2d linearDirection = new Rotation2d(x, y);
+    //                 double     omega           = MathUtil.applyDeadband(Drive.getInstance().rotateExecute(), Constants.Controls.JOYSTICK_DEADBAND);
+    //                 double     speedModifier   = MathUtil
+    //                         .clamp((Constants.Drive.SPEED_ELEVATOR_M * Elevator.getInstance().getExtension() + Constants.Drive.SPEED_ELEVATOR_B), Constants.Drive.MIN_SPEED_ELEVATOR_MULTIPLIER, Constants.Drive.MAX_SPEED_ELEVATOR_MULTIPLIER);
+
+    //                 // Square values
+    //                 linearMagnitude = Math.pow(linearMagnitude, translateExponent);
+    //                 omega           = Math.copySign(Math.pow(Math.abs(omega), 1), omega);
+
+    //                 // Calculate new linear velocity
+    //                 Translation2d linearVelocity = new Pose2d(new Translation2d(), linearDirection).transformBy(new Transform2d(linearMagnitude, 0.0, new Rotation2d())).getTranslation();
+
+    //                 // Convert to field relative speeds & send command
+    //                 if (isRobotCentric)
+    //                 {
+    //                     var chassisSpeeds = new ChassisSpeeds(
+    //                             linearVelocity.getX() * Constants.Drive.MAX_LINEAR_SPEED * speedModifier, linearVelocity.getY() * Constants.Drive.MAX_LINEAR_SPEED * speedModifier, omega * Constants.Drive.MAX_ANGULAR_SPEED * speedModifier
+    //                     );
+
+    //                     Drive.getInstance().runVelocity(chassisSpeeds);
+    //                 }
+    //                 else
+    //                 {
+    //                     var chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
+    //                             linearVelocity.getX() * Constants.Drive.MAX_LINEAR_SPEED * speedModifier, linearVelocity.getY() * Constants.Drive.MAX_LINEAR_SPEED * speedModifier, omega * Constants.Drive.MAX_ANGULAR_SPEED * speedModifier,
+    //                             Drive.getInstance().getRotation()
+    //                     );
+
+    //                     Drive.getInstance().runVelocity(chassisSpeeds);
+    //                 }
+    //             })
+    //             .until(() -> Vision.getInstance(Camera.FrontCenter).alignIsFinished()),
+
+    //             joystickDrive(() -> translateMaxSpeed, () -> 0, () -> Drive.getInstance().rotateExecute(), () -> true, 1, 1)
+    //             .until(() -> Drive.getInstance().collisionDetected()),
+
+    //             DriveCommands.stop(),
+
+    //             Commands.idle(Drive.getInstance())
+    //         ),
+    //         Set.of(Drive.getInstance(), Vision.getInstance(Camera.FrontCenter))
+    //     );
+    //     // @formatter:on
+    // }
+
+    // public static Command autoAlign(Branch branch, double translateMaxSpeed, double rotateMaxSpeed)
+    // {
+    //     // @formatter:off
+    //     return Commands.defer(() ->
+    //         Commands.sequence
+    //         (
+    //             Commands.runOnce(() -> 
+    //             {
+    //                 Drive.getInstance().rotateInit(Constants.Field.getTagAngle(branch.getID()), rotateMaxSpeed);
+    //                 Vision.getInstance(Camera.FrontCenter).setVisionReference(branch, translateMaxSpeed);
+    //             }),
+
+    //             joystickDrive(() -> 0, () -> Vision.getInstance(Camera.FrontCenter).alignExecute(), () -> Drive.getInstance().rotateExecute(), () -> true, 1, 1)
+    //             .until(() -> Vision.getInstance(Camera.FrontCenter).alignIsFinished() || !Vision.getInstance(Camera.FrontCenter).hasTarget()),
+
+    //             joystickDrive(() -> translateMaxSpeed, () -> 0, () -> Drive.getInstance().rotateExecute(), () -> true, 1, 1)
+    //             .until(() -> Drive.getInstance().collisionDetected()),
+
+    //             DriveCommands.stop()
+    //         ),
+
+    //         Set.of(Drive.getInstance(), Vision.getInstance(Camera.FrontCenter))
+    //     );
+    //     // @formatter:on
+    // }
+
+    // public static Command snapToBranch(Camera camera, Branch branch,
+    // DoubleSupplier xSupplier, DoubleSupplier ySupplier, BooleanSupplier
+    // robotCentric, double translationMaxSpeed, double rotationMaxSpeed)
     // {
     //     // @formatter:off
     //     return Commands.defer
@@ -194,7 +214,8 @@ public class CompositeCommands
     //     // @formatter:on
     // }
 
-    // public static Command snapToBranchAuto(Camera camera, Branch branch, double translationMaxSpeed, double rotationMaxSpeed)
+    // public static Command snapToBranchAuto(Camera camera, Branch branch, double
+    // translationMaxSpeed, double rotationMaxSpeed)
     // {
     //     // @formatter:off
     //     return Commands.defer

@@ -153,20 +153,16 @@ public class Dashboard extends SubsystemBase
             {
                 case "Left" -> switch (_inputs.autoNumCoral)
                     {
-                        case 1 -> Autos.ONE_PIECE_LEFT;
-                        case 2 -> Autos.TWO_PIECE_LEFT;
-                        case 3 -> Autos.THREE_PIECE_LEFT;
+                        case 1 -> Autos.splitAuto("LeftToJ", _inputs.autoNumCoral);
                         default -> null;
                     };
-                case "Middle" -> Autos.ONE_PIECE_MIDDLE;
+                case "Middle" -> Autos.splitAuto("MiddleToG", _inputs.autoNumCoral);
                 case "Right" -> switch (_inputs.autoNumCoral)
                     {
-                        case 1 -> Autos.ONE_PIECE_RIGHT;
-                        case 2 -> Autos.TWO_PIECE_RIGHT;
-                        case 3 -> Autos.THREE_PIECE_RIGHT;
+                        case 1 -> Autos.splitAuto("RightToE", _inputs.autoNumCoral);
+                        case 2 -> Autos.splitAuto("RightDC", _inputs.autoNumCoral);
                         default -> null;
                     };
-                case "Split" -> Autos.splitAuto("RightDC", _inputs.autoNumCoral);
                 default -> null;
             };
         }

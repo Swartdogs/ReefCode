@@ -86,7 +86,7 @@ public class Drive extends SubsystemBase
     private final PIDController            _xDrivePID;
     private final PIDController            _yDrivePID;
     private final PIDController            _rotatePID;
-    private final MedianFilter             _collisionFilter = new MedianFilter(15);
+    private final MedianFilter             _collisionFilter   = new MedianFilter(15);
     private double                         _xDriveMaxSpeed;
     private double                         _yDriveMaxSpeed;
     private double                         _rotateMaxSpeed;
@@ -123,7 +123,7 @@ public class Drive extends SubsystemBase
 
         _speedMultiplier = 1;
 
-        _poseEstimator = new SwerveDrivePoseEstimator(_kinematics, new Rotation2d(), getModulePositions(), new Pose2d());
+        _poseEstimator      = new SwerveDrivePoseEstimator(_kinematics, new Rotation2d(), getModulePositions(), new Pose2d());
         _localPoseEstimator = new SwerveDrivePoseEstimator(_kinematics, new Rotation2d(), getModulePositions(), new Pose2d());
 
         _sysId = new SysIdRoutine(
@@ -205,7 +205,7 @@ public class Drive extends SubsystemBase
 
     public Pose2d updateLocalPose(int tag)
     {
-        double angle = 180 - Constants.Field.getTagAngle(tag).getDegrees();
+        double angle    = 180 - Constants.Field.getTagAngle(tag).getDegrees();
         double angleTwo = angle + _gyroInputs.yawPosition.getDegrees();
 
         return _localPoseEstimator.update(Rotation2d.fromDegrees(angleTwo), getModulePositions());
