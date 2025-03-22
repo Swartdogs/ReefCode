@@ -77,6 +77,7 @@ public class Drive extends SubsystemBase
     private final GyroIOInputsAutoLogged   _gyroInputs        = new GyroIOInputsAutoLogged();
     private final Module[]                 _modules           = new Module[4]; // FL, FR, BL, BR
     private final SwerveDrivePoseEstimator _poseEstimator;
+    private final SwerveDrivePoseEstimator _localPoseEstimator;
     private final SwerveDriveKinematics    _kinematics        = new SwerveDriveKinematics(Constants.Drive.MODULE_TRANSLATIONS);
     private final PIDController            _headingController = new PIDController(Constants.Choreo.TURN_KP, 0, Constants.Choreo.TURN_KD);
     private final PIDController            _xController       = new PIDController(Constants.Choreo.DRIVE_KP, 0, Constants.Choreo.DRIVE_KD);
@@ -121,6 +122,7 @@ public class Drive extends SubsystemBase
         _speedMultiplier = 1;
 
         _poseEstimator = new SwerveDrivePoseEstimator(_kinematics, new Rotation2d(), getModulePositions(), new Pose2d());
+        _localPoseEstimator = new SwerveDrivePoseEstimator(_kinematics, new Rotation2d(), getModulePositions(), new Pose2d());
 
         _sysId = new SysIdRoutine(
                 new SysIdRoutine.Config(null, null, null, (state) -> Logger.recordOutput("Drive/SysIdState", state.toString())), new SysIdRoutine.Mechanism((voltage) -> runCharacterizationVolts(voltage.in(Volts)), null, this)
@@ -197,6 +199,14 @@ public class Drive extends SubsystemBase
 
         // Log optimized setpoint states
         Logger.recordOutput("SwerveStates/SetpointsOptimized", optimizedSetpointStates);
+    }
+
+    public Pose2d updateLocalPose(int tag)
+    {
+        double angle = 180 - Constants.Field.getTagAngle(tag).getDegrees();
+        double angleTwo = angle + _gyroInputs.yawPosition.getDegrees();
+
+        return _localPoseEstimator.update(Rotation2d.fromDegrees(angleTwo), getModulePositions());
     }
 
     public void followTrajectory(SwerveSample sample)
