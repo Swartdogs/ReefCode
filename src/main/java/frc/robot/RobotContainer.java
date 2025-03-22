@@ -96,8 +96,8 @@ public class RobotContainer
         Drive.getInstance().setDefaultCommand(CompositeCommands.joystickDrive(() -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> -_driverJoystick.getZ(), () -> robotCentric(), 2, 5));
 
         // Driver Controls
+        (_driverJoystick.button(1).and(funnelDropped)).whileTrue(ElevatorCommands.hangExecute());
         _driverJoystick.button(2).whileTrue(DriveCommands.reduceSpeed());
-        (_driverJoystick.button(7).and(funnelDropped)).whileTrue(ElevatorCommands.hangExecute());
         _driverJoystick.button(11).onTrue(DriveCommands.resetGyro());
         _driverJoystick.button(12).whileTrue(
                 CompositeCommands

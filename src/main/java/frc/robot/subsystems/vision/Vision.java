@@ -9,7 +9,9 @@ import java.util.Map;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
@@ -18,6 +20,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.Field.Branch;
 import frc.robot.subsystems.drive.Drive;
 
 public class Vision extends SubsystemBase
@@ -62,6 +65,9 @@ public class Vision extends SubsystemBase
     private final Camera                   _camera;
     private int                            _pidTagId = 0;
     private Pose2d                         _lastPose = new Pose2d();
+    public double _maxSpeed;
+    public Branch _branch;
+    private final PIDController _yController = new PIDController(Constants.Vision.DRIVE_KP, 0, Constants.Vision.DRIVE_KD);
 
     private Vision(VisionIO io, Camera camera)
     {
@@ -162,8 +168,25 @@ public class Vision extends SubsystemBase
         }
     }
 
-    public void setVisionReference(int id)
+    public void setVisionReference(Branch branch, double maxSpeed)
     {
-        _pidTagId = id;
+        _maxSpeed = maxSpeed;
+        _branch = branch;
+        // save branch to member variable
+        // save maxSpeed to member variable
+    }
+
+    public double alignExecute()
+    {
+        // setpoint = Math.asin(_branch.offset / getTargetDistance(_branch.getId()))
+        // return _pid.calculate(getTargetYaw(_branch.getId()), setpoint) // Clamp this return value in the range of [-maxspeed, maxspeed]
+        double setpoint = Math.asin(_branch.getReference().getY() / getTargetDistance(_branch.getID()));
+        return MathUtil.clamp( _yController.calculate(getTargetYaw(_branch.getID()).getRadians(), setpoint), -_maxSpeed , _maxSpeed);
+    }
+
+    public boolean alignIsFinished()
+    {
+        // return _pid.atSetpoint();
+        return _yController.atSetpoint();
     }
 }
