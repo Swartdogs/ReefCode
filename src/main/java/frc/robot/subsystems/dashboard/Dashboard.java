@@ -166,6 +166,7 @@ public class Dashboard extends SubsystemBase
                         case 3 -> Autos.THREE_PIECE_RIGHT;
                         default -> null;
                     };
+                case "Split" -> Autos.splitAuto("RightDC", _inputs.autoNumCoral);
                 default -> null;
             };
         }

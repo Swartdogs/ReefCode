@@ -195,6 +195,7 @@ public class DashboardIONetwork implements DashboardIO
         _autoStartPositionChooser.addOption("Right", "Right");
         _autoStartPositionChooser.addOption("Middle", "Middle");
         _autoStartPositionChooser.addOption("Left", "Left");
+        _autoStartPositionChooser.addOption("Split", "Split");
 
         _autoCoralCountChooser.setDefaultOption("0", 0);
         _autoCoralCountChooser.addOption("1", 1);

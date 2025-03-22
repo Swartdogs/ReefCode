@@ -172,7 +172,7 @@ public final class Constants
         public static final double  ELEVATOR_FEED_FORWARD        = 0.992;
         public static final double  ELEVATOR_MODIFICATION_HEIGHT = 0.5;
         public static final double  HANG_SPEED                   = 1.0;
-        public static final double  WAIT_TIME                    = 1.0;
+        public static final double  WAIT_TIME                    = 0.5;
     }
 
     public static class Field
