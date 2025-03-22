@@ -206,4 +206,9 @@ public class Module
         _speedSetpoint = null;
         _io.setDriveVolts(volts);
     }
+
+    public double getDriveCurrent()
+    {
+        return _inputs.driveCurrentAmps;
+    }
 }

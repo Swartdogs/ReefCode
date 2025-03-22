@@ -1,12 +1,9 @@
 package frc.robot.subsystems.vision;
 
-import static edu.wpi.first.units.Units.Rotation;
-
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.MathUtil;
@@ -28,9 +25,6 @@ public class Vision extends SubsystemBase
     public enum Camera
     {
         Front("front", new Transform3d(new Translation3d(Units.inchesToMeters(9), Units.inchesToMeters(12), Units.inchesToMeters(11.75)), new Rotation3d(Rotation2d.fromDegrees(-45)))),
-        // Back("back", new Transform3d(new Translation3d(Units.inchesToMeters(1.25),
-        // Units.inchesToMeters(5.5), Units.inchesToMeters(35)), new
-        // Rotation3d(Rotation2d.fromDegrees(180)))),
         FrontCenter("front-center", new Transform3d(new Translation3d(Units.inchesToMeters(9.5), 0.0, Units.inchesToMeters(11.75)), new Rotation3d(Rotation2d.fromDegrees(0))));
 
         public final String      cameraName;
@@ -63,16 +57,17 @@ public class Vision extends SubsystemBase
     private final VisionIO                 _io;
     private final VisionIOInputsAutoLogged _inputs   = new VisionIOInputsAutoLogged();
     private final Camera                   _camera;
-    private int                            _pidTagId = 0;
-    private Pose2d                         _lastPose = new Pose2d();
-    public double _maxSpeed;
-    public Branch _branch;
     private final PIDController _yController = new PIDController(Constants.Vision.DRIVE_KP, 0, Constants.Vision.DRIVE_KD);
+    private Pose2d                         _lastPose = new Pose2d();
+    private Branch _branch;
+    private double _maxSpeed;
 
     private Vision(VisionIO io, Camera camera)
     {
         _io     = io;
         _camera = camera;
+
+        _yController.setTolerance(1.5);
     }
 
     @Override
@@ -127,7 +122,7 @@ public class Vision extends SubsystemBase
 
     public boolean hasTarget()
     {
-        return _pidTagId != 0 ? hasTarget(_pidTagId) : false;
+        return _branch != null ? hasTarget(_branch.getID()) : false;
     }
 
     public boolean hasTarget(int id)
@@ -170,23 +165,18 @@ public class Vision extends SubsystemBase
 
     public void setVisionReference(Branch branch, double maxSpeed)
     {
-        _maxSpeed = maxSpeed;
+        _maxSpeed = Math.abs(maxSpeed);
         _branch = branch;
-        // save branch to member variable
-        // save maxSpeed to member variable
     }
 
     public double alignExecute()
     {
-        // setpoint = Math.asin(_branch.offset / getTargetDistance(_branch.getId()))
-        // return _pid.calculate(getTargetYaw(_branch.getId()), setpoint) // Clamp this return value in the range of [-maxspeed, maxspeed]
         double setpoint = Math.asin(_branch.getReference().getY() / getTargetDistance(_branch.getID()));
         return MathUtil.clamp( _yController.calculate(getTargetYaw(_branch.getID()).getRadians(), setpoint), -_maxSpeed , _maxSpeed);
     }
 
     public boolean alignIsFinished()
     {
-        // return _pid.atSetpoint();
-        return _yController.atSetpoint();
+        return hasTarget() && _yController.atSetpoint();
     }
 }

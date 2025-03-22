@@ -9,7 +9,6 @@ import frc.robot.Constants;
 import frc.robot.subsystems.dashboard.Dashboard;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.elevator.Elevator.ElevatorHeight;
-import frc.robot.subsystems.vision.Vision.Camera;
 import frc.robot.util.Utilities;
 
 public class Autos
@@ -34,7 +33,7 @@ public class Autos
             autoFactory.trajectoryCmd(path),
             Commands.parallel
             (
-                CompositeCommands.snapToBranchAuto(Camera.Front, Utilities.parseAutoString(path), Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE),
+                CompositeCommands.autoAlign(Utilities.parseAutoString(path), Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE),
                 CompositeCommands.setHeight(ElevatorHeight.Level4)
             ),
             Commands.waitSeconds(1.0),
@@ -54,7 +53,7 @@ public class Autos
             autoFactory.trajectoryCmd(pathToPegOne),
             Commands.parallel
             (
-                CompositeCommands.snapToBranchAuto(Camera.Front, Utilities.parseAutoString(pathToPegOne), Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE),
+                CompositeCommands.autoAlign(Utilities.parseAutoString(pathToPegOne), Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE),
                 CompositeCommands.setHeight(ElevatorHeight.Level4)
             ),
             Commands.waitSeconds(1),
@@ -66,7 +65,7 @@ public class Autos
             autoFactory.trajectoryCmd(pathToPegTwo),
             Commands.parallel
             (
-                CompositeCommands.snapToBranchAuto(Camera.Front, Utilities.parseAutoString(pathToPegTwo), Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE),
+                CompositeCommands.autoAlign(Utilities.parseAutoString(pathToPegTwo), Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE),
                 CompositeCommands.setHeight(ElevatorHeight.Level4)
             ),
             Commands.waitSeconds(1),
