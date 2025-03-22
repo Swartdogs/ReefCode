@@ -157,10 +157,12 @@ public final class Constants
         public static final double  EXTENSION_KD                 = 0.02;
         public static final double  EXTENSION_TOLERANCE          = 1.0;
         public static final double  STOW_HEIGHT                  = MIN_EXTENSION + 2.0;
-        public static final double  L1_HEIGHT                    = MIN_EXTENSION + 11.0;
-        public static final double  L2_HEIGHT                    = MIN_EXTENSION + 22.387;
-        public static final double  L3_HEIGHT                    = MIN_EXTENSION + 50.452;
+        public static final double  L1_HEIGHT                    = MIN_EXTENSION + 17.453;
+        public static final double  L2_HEIGHT                    = MIN_EXTENSION + 19.665;
+        public static final double  L3_HEIGHT                    = MIN_EXTENSION + 34.452;
         public static final double  L4_HEIGHT                    = MIN_EXTENSION + 59.883;
+        public static final double  LOW_ALGAE_HEIGHT             = MIN_EXTENSION + 9.557;
+        public static final double  HIGH_ALGAE_HEIGHT            = MIN_EXTENSION + 24.344;
         public static final double  HANG_HEIGHT                  = MIN_EXTENSION + 23.549;
         public static final double  MAX_ASCENT_SPEED             = 0.8;
         public static final double  MAX_DESCENT_SPEED            = 0.2;

@@ -161,16 +161,13 @@ public class RobotContainer
         _operatorButtons.button(6).onTrue(CompositeCommands.intake());
         _operatorButtons.button(7).onTrue(ManipulatorCommands.stop());
         _operatorButtons.button(8).onTrue(CompositeCommands.output());
-        _operatorButtons.button(9).onTrue(ElevatorCommands.modifyHeight(Constants.Elevator.ELEVATOR_MODIFICATION_HEIGHT));
-        _operatorButtons.button(10).onTrue(ElevatorCommands.modifyHeight(-Constants.Elevator.ELEVATOR_MODIFICATION_HEIGHT));
-        _operatorButtons.button(11).whileTrue(ManipulatorCommands.algaeIntake());// replace with algae intake
-        _operatorButtons.button(12).whileTrue(ManipulatorCommands.algaeOutput());// replace with algaei output
-        // _operatorButton13.whileTrue(Commands.defer(() ->
-        // _characterizationChooser.getSelected(), Set.of(Drive.getInstance())));
-        // _operatorButton13.onTrue(ManipulatorCommands.stop()); // replace with algae
-        // stop
-        (operatorButton14.or(_operatorButtons.povDown())).and(_driverJoystick.button(4)).onTrue(FunnelCommands.drop().alongWith(ElevatorCommands.setHeight(ElevatorHeight.Hang)));
-        ((operatorButton15.or(_operatorButtons.povUp())).and(funnelDropped)).whileTrue(ElevatorCommands.hangExecute());
+        _operatorButtons.button(9).whileTrue(ManipulatorCommands.algaeIntake());
+        _operatorButtons.button(10).whileTrue(ManipulatorCommands.algaeOutput());
+        _operatorButtons.button(11).onTrue(ElevatorCommands.setHeight(ElevatorHeight.HighAlgae));
+        _operatorButtons.button(11).onTrue(ElevatorCommands.setHeight(ElevatorHeight.LowAlgae));
+        operatorButton13.onTrue(ElevatorCommands.modifyHeight(Constants.Elevator.ELEVATOR_MODIFICATION_HEIGHT));
+        operatorButton14.onTrue(ElevatorCommands.modifyHeight(-Constants.Elevator.ELEVATOR_MODIFICATION_HEIGHT));
+        (operatorButton15.or(_operatorButtons.povDown())).and(_driverJoystick.button(4)).onTrue(FunnelCommands.drop().alongWith(ElevatorCommands.setHeight(ElevatorHeight.Hang)));
 
         // _hasCoral.onTrue(LEDCommands.setDefaultColor(Constants.LED.GREEN));
         // _hasCoral.onFalse(LEDCommands.setDefaultColor(Constants.LED.RED));

@@ -22,6 +22,8 @@ public class DashboardIONetwork implements DashboardIO
     private final String _elevatorL3HeightKey              = "Dashboard/Dashboard Settings/Elevator L3 Height";
     private final String _elevatorL4HeightKey              = "Dashboard/Dashboard Settings/Elevator L4 Height";
     private final String _elevatorHangHeightKey            = "Dashboard/Dashboard Settings/Elevator Hang Height";
+    private final String _elevatorLowAlgaeHeightKey              = "Dashboard/Dashboard Settings/Elevator Low Algae Height";
+    private final String _elevatorHighAlgaeHeightKey            = "Dashboard/Dashboard Settings/Elevator High Algae Height";
     private final String _elevatorHangSpeedKey             = "Dashboard/Dashboard Settings/Elevator Hang Speed";
     private final String _elevatorKPKey                    = "Dashboard/Dashboard Settings/Elevator kP";
     private final String _elevatorKDKey                    = "Dashboard/Dashboard Settings/Elevator kD";
@@ -68,6 +70,8 @@ public class DashboardIONetwork implements DashboardIO
     private final NetworkTableEntry _elevatorZeroL3HeightButton;
     private final NetworkTableEntry _elevatorZeroL4HeightButton;
     private final NetworkTableEntry _elevatorZeroHangHeightButton;
+    private final NetworkTableEntry _elevatorZeroLowAlgaeHeightButton;
+    private final NetworkTableEntry _elevatorZeroHighAlgaeHeightButton;
     private final NetworkTableEntry _driveZeroFLOffsetButton;
     private final NetworkTableEntry _driveZeroFROffsetButton;
     private final NetworkTableEntry _driveZeroBLOffsetButton;
@@ -92,6 +96,8 @@ public class DashboardIONetwork implements DashboardIO
         Preferences.initDouble(_elevatorL3HeightKey, Constants.Elevator.L3_HEIGHT);
         Preferences.initDouble(_elevatorL4HeightKey, Constants.Elevator.L4_HEIGHT);
         Preferences.initDouble(_elevatorHangHeightKey, Constants.Elevator.HANG_HEIGHT);
+        Preferences.initDouble(_elevatorLowAlgaeHeightKey, Constants.Elevator.LOW_ALGAE_HEIGHT);
+        Preferences.initDouble(_elevatorHighAlgaeHeightKey, Constants.Elevator.HIGH_ALGAE_HEIGHT);
         Preferences.initDouble(_elevatorHangSpeedKey, Constants.Elevator.HANG_SPEED);
         Preferences.initDouble(_elevatorKPKey, Constants.Elevator.EXTENSION_KP);
         Preferences.initDouble(_elevatorKDKey, Constants.Elevator.EXTENSION_KD);
@@ -160,6 +166,8 @@ public class DashboardIONetwork implements DashboardIO
         _elevatorZeroL3HeightButton   = NetworkTableInstance.getDefault().getEntry("Dashboard/Buttons/Elevator Zero L3 Height");
         _elevatorZeroL4HeightButton   = NetworkTableInstance.getDefault().getEntry("Dashboard/Buttons/Elevator Zero L4 Height");
         _elevatorZeroHangHeightButton = NetworkTableInstance.getDefault().getEntry("Dashboard/Buttons/Elevator Zero Hang Height");
+        _elevatorZeroLowAlgaeHeightButton   = NetworkTableInstance.getDefault().getEntry("Dashboard/Buttons/Elevator Zero Low Algae Height");
+        _elevatorZeroHighAlgaeHeightButton = NetworkTableInstance.getDefault().getEntry("Dashboard/Buttons/Elevator Zero High Algae Height");
         _driveZeroFLOffsetButton      = NetworkTableInstance.getDefault().getEntry("Dashboard/Buttons/Drive Zero FL Offset");
         _driveZeroFROffsetButton      = NetworkTableInstance.getDefault().getEntry("Dashboard/Buttons/Drive Zero FR Offset");
         _driveZeroBLOffsetButton      = NetworkTableInstance.getDefault().getEntry("Dashboard/Buttons/Drive Zero BL Offset");
@@ -174,6 +182,8 @@ public class DashboardIONetwork implements DashboardIO
         _elevatorZeroL3HeightButton.setBoolean(false);
         _elevatorZeroL4HeightButton.setBoolean(false);
         _elevatorZeroHangHeightButton.setBoolean(false);
+        _elevatorZeroLowAlgaeHeightButton.setBoolean(false);
+        _elevatorZeroHighAlgaeHeightButton.setBoolean(false);
         _driveZeroFLOffsetButton.setBoolean(false);
         _driveZeroFROffsetButton.setBoolean(false);
         _driveZeroBLOffsetButton.setBoolean(false);
@@ -224,6 +234,8 @@ public class DashboardIONetwork implements DashboardIO
         inputs.elevatorL3Height                = Preferences.getDouble(_elevatorL3HeightKey, Constants.Elevator.L3_HEIGHT);
         inputs.elevatorL4Height                = Preferences.getDouble(_elevatorL4HeightKey, Constants.Elevator.L4_HEIGHT);
         inputs.elevatorHangHeight              = Preferences.getDouble(_elevatorHangHeightKey, Constants.Elevator.HANG_HEIGHT);
+        inputs.elevatorLowAlgaeHeight                = Preferences.getDouble(_elevatorLowAlgaeHeightKey, Constants.Elevator.LOW_ALGAE_HEIGHT);
+        inputs.elevatorHighAlgaeHeight              = Preferences.getDouble(_elevatorHighAlgaeHeightKey, Constants.Elevator.HIGH_ALGAE_HEIGHT);
         inputs.elevatorKP                      = Preferences.getDouble(_elevatorKPKey, Constants.Elevator.EXTENSION_KP);
         inputs.elevatorKD                      = Preferences.getDouble(_elevatorKDKey, Constants.Elevator.EXTENSION_KD);
         inputs.elevatorMaxDownwardPercentSpeed = Preferences.getDouble(_elevatorMaxDownPercentKey, Constants.Elevator.MAX_DESCENT_SPEED);
@@ -256,6 +268,8 @@ public class DashboardIONetwork implements DashboardIO
         inputs.elevatorZeroL3HeightPressed   = _elevatorZeroL3HeightButton.getBoolean(false);
         inputs.elevatorZeroL4HeightPressed   = _elevatorZeroL4HeightButton.getBoolean(false);
         inputs.elevatorZeroHangHeightPressed = _elevatorZeroHangHeightButton.getBoolean(false);
+        inputs.elevatorZeroLowAlgaeHeightPressed   = _elevatorZeroL4HeightButton.getBoolean(false);
+        inputs.elevatorZeroHighAlgaeHeightPressed = _elevatorZeroHangHeightButton.getBoolean(false);
         inputs.driveZeroFLModulePressed      = _driveZeroFLOffsetButton.getBoolean(false);
         inputs.driveZeroFRModulePressed      = _driveZeroFROffsetButton.getBoolean(false);
         inputs.driveZeroBLModulePressed      = _driveZeroBLOffsetButton.getBoolean(false);
@@ -437,6 +451,20 @@ public class DashboardIONetwork implements DashboardIO
     {
         Preferences.setDouble(_elevatorHangHeightKey, Elevator.getInstance().getExtension());
         _elevatorZeroHangHeightButton.setBoolean(false);
+    }
+
+    @Override
+    public void releaseElevatorLowAlgaeHeightZeroButton()
+    {
+        Preferences.setDouble(_elevatorLowAlgaeHeightKey, Elevator.getInstance().getExtension());
+        _elevatorZeroLowAlgaeHeightButton.setBoolean(false);
+    }
+
+    @Override
+    public void releaseElevatorHighAlgaeHeightZeroButton()
+    {
+        Preferences.setDouble(_elevatorHighAlgaeHeightKey, Elevator.getInstance().getExtension());
+        _elevatorZeroHighAlgaeHeightButton.setBoolean(false);
     }
 
     @Override
