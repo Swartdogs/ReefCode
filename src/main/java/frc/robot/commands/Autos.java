@@ -144,18 +144,18 @@ public class Autos
                 Commands.parallel
                 (
                     CompositeCommands.setHeight(ElevatorHeight.Level1),
-                    autoFactory.trajectoryCmd(path, i)
+                    autoFactory.trajectoryCmd(path, 2 * i)
                 ),
                 Commands.parallel
                 (
-                    CompositeCommands.snapToBranchAuto(Camera.Front, Utilities.parseAutoString(String.valueOf(path.charAt(path.length() + i - numCoral))), Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE),
+                    CompositeCommands.autoAlign(Utilities.parseAutoString(String.valueOf(path.charAt(path.length() + i - numCoral))), Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE),
                     CompositeCommands.setHeight(ElevatorHeight.Level4)
                 ),
                 Commands.waitSeconds(0.5),
                 CompositeCommands.output(),
                 Commands.parallel
                 (
-                    autoFactory.trajectoryCmd(path, i + 1),
+                    autoFactory.trajectoryCmd(path, 2 * i + 1),
                     Commands.sequence
                     (
                         Commands.waitSeconds(0.5),
