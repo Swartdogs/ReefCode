@@ -1,5 +1,7 @@
 package frc.robot.subsystems.dashboard;
 
+import java.util.List;
+
 import org.littletonrobotics.junction.AutoLog;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -74,6 +76,10 @@ public interface DashboardIO
     }
 
     public default void setRobotPose(Pose2d pose)
+    {
+    }
+
+    public default void setTrajectory(List<Pose2d> poses)
     {
     }
 

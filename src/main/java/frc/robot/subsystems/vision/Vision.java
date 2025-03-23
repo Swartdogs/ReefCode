@@ -167,7 +167,7 @@ public class Vision extends SubsystemBase
 
     public void setVisionReference(Branch branch)
     {
-        _branch   = branch;
+        _branch = branch;
     }
 
     public Transform2d getHorizontalTranslation()
@@ -176,9 +176,17 @@ public class Vision extends SubsystemBase
         {
             var localPose = _inputs.pose.minus(Utilities.getTagPose(_branch.getID()));
 
+            Logger.recordOutput("LocalPose", localPose);
+
             var distToDrive = _branch.getReference().getY() - localPose.getY();
 
-            return new Transform2d(0, distToDrive, new Rotation2d());
+            Logger.recordOutput("DistanceToDrive", distToDrive);
+
+            var transform = new Transform2d(0, -distToDrive, new Rotation2d());
+
+            Logger.recordOutput("Transform", transform);
+
+            return transform;
         }
 
         return new Transform2d();

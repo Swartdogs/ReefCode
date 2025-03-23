@@ -1,8 +1,15 @@
 package frc.robot.subsystems.dashboard;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout.OriginPosition;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Alert.AlertType;
@@ -10,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.commands.Autos;
+import frc.robot.commands.Autos.AutonomousMode;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.funnel.Funnel;
@@ -147,24 +155,26 @@ public class Dashboard extends SubsystemBase
         _io.setMatchTime(DriverStation.getMatchTime());
 
         // Autonomous
-        if (_inputs.autoStartPosition != null)
+        AutonomousMode mode = null;
+
+        if (_inputs.autoStartPosition != null && _inputs.autoNumCoral > 0)
         {
-            _selectedAuto = switch (_inputs.autoStartPosition)
+            mode = switch (_inputs.autoStartPosition)
             {
-                case "Left" -> switch (_inputs.autoNumCoral)
-                    {
-                        case 1 -> Autos.splitAuto("LeftToJ", _inputs.autoNumCoral);
-                        default -> null;
-                    };
+                case "Left" -> Autos.splitAuto("LeftToJ", _inputs.autoNumCoral);
                 case "Middle" -> Autos.splitAuto("MiddleToG", _inputs.autoNumCoral);
                 case "Right" -> switch (_inputs.autoNumCoral)
                     {
-                        case 1 -> Autos.splitAuto("RightToE", _inputs.autoNumCoral);
                         case 2 -> Autos.splitAuto("RightDC", _inputs.autoNumCoral);
-                        default -> null;
+                        default -> Autos.splitAuto("RightToE", _inputs.autoNumCoral);
                     };
                 default -> null;
             };
+
+            if (mode != null && mode.routine != null)
+            {
+                _selectedAuto = mode.routine.cmd();
+            }
         }
         else
         {
@@ -175,6 +185,29 @@ public class Dashboard extends SubsystemBase
         Constants.Field.APRIL_TAG_FIELD_LAYOUT.setOrigin(Utilities.isBlueAlliance() ? OriginPosition.kBlueAllianceWallRightSide : OriginPosition.kRedAllianceWallRightSide);
 
         _nullAuto.set(_selectedAuto == null);
+
+        if (mode != null && mode.trajectories.size() > 0)
+        {
+            var initialPose = mode.trajectories.get(0).getInitialPose().orElse(new Pose2d());
+            var trajectory  = mode.trajectories.stream().flatMap(t -> Arrays.asList(t.getRawTrajectory().getPoses()).stream()).collect(Collectors.toList());
+
+            if (!Utilities.isBlueAlliance())
+            {
+                var fieldCenter = new Translation2d(Constants.Field.APRIL_TAG_FIELD_LAYOUT.getFieldLength() / 2, Constants.Field.APRIL_TAG_FIELD_LAYOUT.getFieldWidth() / 2);
+                var invertAngle = Rotation2d.fromDegrees(180);
+
+                initialPose = initialPose.rotateAround(fieldCenter, invertAngle);
+                trajectory = trajectory.stream().map(p -> p.rotateAround(fieldCenter, invertAngle)).toList();
+            }
+
+            _io.setRobotPose(initialPose);
+            _io.setTrajectory(trajectory);
+        }
+        else
+        {
+            _io.setRobotPose(new Pose2d());
+            _io.setTrajectory(List.of());
+        }
     }
 
     public double getAutoDelay()

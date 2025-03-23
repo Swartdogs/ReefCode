@@ -60,7 +60,7 @@ public class Robot extends LoggedRobot
                 // Running on a real robot, log to a USB stick ("/U/logs")
                 String path = Filesystem.getOperatingDirectory().getAbsolutePath();
                 System.out.println(path);
-                Logger.addDataReceiver(new WPILOGWriter(path));
+                // Logger.addDataReceiver(new WPILOGWriter(path));
                 Logger.addDataReceiver(new NT4Publisher());
                 break;
 

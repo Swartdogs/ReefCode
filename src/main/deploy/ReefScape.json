@@ -23,7 +23,7 @@
               "show_other_objects": true,
               "show_trajectories": true,
               "field_rotation": 0.0,
-              "robot_color": 4294198070,
+              "robot_color": 4294929920,
               "trajectory_color": 4294967295
             }
           },
@@ -85,10 +85,10 @@
         "containers": [
           {
             "title": "Alerts",
-            "x": 1344.0,
-            "y": 0.0,
-            "width": 576.0,
-            "height": 736.0,
+            "x": 704.0,
+            "y": 384.0,
+            "width": 1216.0,
+            "height": 352.0,
             "type": "Alerts",
             "properties": {
               "topic": "/SmartDashboard/Alerts",
@@ -97,10 +97,10 @@
           },
           {
             "title": "Match Time",
-            "x": 0.0,
+            "x": 704.0,
             "y": 0.0,
-            "width": 1344.0,
-            "height": 736.0,
+            "width": 1216.0,
+            "height": 384.0,
             "type": "Match Time",
             "properties": {
               "topic": "Dashboard/Robot Values/Match Time",
@@ -109,6 +109,23 @@
               "time_display_mode": "Minutes and Seconds",
               "red_start_time": 15,
               "yellow_start_time": 30
+            }
+          },
+          {
+            "title": "Front Center Camera",
+            "x": 0.0,
+            "y": 0.0,
+            "width": 704.0,
+            "height": 736.0,
+            "type": "Camera Stream",
+            "properties": {
+              "topic": "/CameraPublisher/photonvision_Port_1181_Input_MJPEG_Server",
+              "period": 0.02,
+              "rotation_turns": 0,
+              "resolution": [
+                480.0,
+                480.0
+              ]
             }
           }
         ]
@@ -120,8 +137,8 @@
         "layouts": [
           {
             "title": "Settings",
-            "x": 1184.0,
-            "y": 0.0,
+            "x": 1312.0,
+            "y": 32.0,
             "width": 224.0,
             "height": 384.0,
             "type": "List Layout",
@@ -245,8 +262,8 @@
           },
           {
             "title": "Zero",
-            "x": 1408.0,
-            "y": 0.0,
+            "x": 1536.0,
+            "y": 32.0,
             "width": 224.0,
             "height": 384.0,
             "type": "List Layout",
@@ -309,7 +326,7 @@
               {
                 "title": "Zero",
                 "x": 736.0,
-                "y": 352.0,
+                "y": 384.0,
                 "width": 128.0,
                 "height": 128.0,
                 "type": "Toggle Switch",
@@ -322,7 +339,7 @@
               {
                 "title": "Zero",
                 "x": 736.0,
-                "y": 384.0,
+                "y": 352.0,
                 "width": 128.0,
                 "height": 128.0,
                 "type": "Toggle Switch",
@@ -347,8 +364,8 @@
               },
               {
                 "title": "Zero",
-                "x": 704.0,
-                "y": 448.0,
+                "x": 1632.0,
+                "y": 224.0,
                 "width": 128.0,
                 "height": 128.0,
                 "type": "Toggle Switch",
@@ -362,8 +379,8 @@
           },
           {
             "title": "Offsets",
-            "x": 0.0,
-            "y": 384.0,
+            "x": 32.0,
+            "y": 416.0,
             "width": 256.0,
             "height": 224.0,
             "type": "List Layout",
@@ -431,8 +448,8 @@
           },
           {
             "title": "Zero",
-            "x": 256.0,
-            "y": 384.0,
+            "x": 288.0,
+            "y": 416.0,
             "width": 128.0,
             "height": 224.0,
             "type": "List Layout",
@@ -498,8 +515,8 @@
         "containers": [
           {
             "title": "Height",
-            "x": 1056.0,
-            "y": 0.0,
+            "x": 1184.0,
+            "y": 32.0,
             "width": 128.0,
             "height": 384.0,
             "type": "Number Bar",
@@ -516,8 +533,8 @@
           },
           {
             "title": "Setpoint",
-            "x": 928.0,
-            "y": 0.0,
+            "x": 1056.0,
+            "y": 32.0,
             "width": 128.0,
             "height": 384.0,
             "type": "Number Bar",
@@ -534,8 +551,8 @@
           },
           {
             "title": "Swerve",
-            "x": 0.0,
-            "y": 0.0,
+            "x": 32.0,
+            "y": 32.0,
             "width": 384.0,
             "height": 384.0,
             "type": "SwerveDrive",
@@ -548,8 +565,8 @@
           },
           {
             "title": "Zero Drive Modules",
-            "x": 0.0,
-            "y": 608.0,
+            "x": 32.0,
+            "y": 640.0,
             "width": 384.0,
             "height": 96.0,
             "type": "Toggle Button",
@@ -561,8 +578,8 @@
           },
           {
             "title": "Hang Speed",
-            "x": 928.0,
-            "y": 384.0,
+            "x": 1056.0,
+            "y": 416.0,
             "width": 352.0,
             "height": 128.0,
             "type": "Number Slider",
@@ -578,8 +595,8 @@
           },
           {
             "title": "Max Downward Speed",
-            "x": 928.0,
-            "y": 512.0,
+            "x": 1056.0,
+            "y": 544.0,
             "width": 352.0,
             "height": 128.0,
             "type": "Number Slider",
@@ -595,8 +612,8 @@
           },
           {
             "title": "Max Upward Speed",
-            "x": 1280.0,
-            "y": 512.0,
+            "x": 1408.0,
+            "y": 544.0,
             "width": 352.0,
             "height": 128.0,
             "type": "Number Slider",
@@ -612,8 +629,8 @@
           },
           {
             "title": "Elevator kD",
-            "x": 1472.0,
-            "y": 384.0,
+            "x": 1600.0,
+            "y": 416.0,
             "width": 160.0,
             "height": 128.0,
             "type": "Text Display",
@@ -626,8 +643,8 @@
           },
           {
             "title": "Elevator kP",
-            "x": 1280.0,
-            "y": 384.0,
+            "x": 1408.0,
+            "y": 416.0,
             "width": 192.0,
             "height": 128.0,
             "type": "Text Display",
@@ -640,10 +657,10 @@
           },
           {
             "title": "Dropped",
-            "x": 512.0,
-            "y": 768.0,
+            "x": 480.0,
+            "y": 608.0,
             "width": 256.0,
-            "height": 96.0,
+            "height": 128.0,
             "type": "Boolean Box",
             "properties": {
               "topic": "Dashboard/Robot Values/Funnel Is Dropped",
@@ -657,8 +674,8 @@
           },
           {
             "title": "Retract Speed",
-            "x": 512.0,
-            "y": 640.0,
+            "x": 480.0,
+            "y": 480.0,
             "width": 512.0,
             "height": 128.0,
             "type": "Number Slider",
@@ -674,10 +691,10 @@
           },
           {
             "title": "Retract Time",
-            "x": 768.0,
-            "y": 768.0,
+            "x": 736.0,
+            "y": 608.0,
             "width": 256.0,
-            "height": 96.0,
+            "height": 128.0,
             "type": "Text Display",
             "properties": {
               "topic": "/Preferences/Dashboard/Dashboard Settings/Funnel Retract Time",
@@ -688,10 +705,10 @@
           },
           {
             "title": "Left Output",
-            "x": 416.0,
+            "x": 480.0,
             "y": 0.0,
             "width": 128.0,
-            "height": 192.0,
+            "height": 224.0,
             "type": "Number Bar",
             "properties": {
               "topic": "Dashboard/Robot Values/Manipulator Left Percent Output",
@@ -706,10 +723,10 @@
           },
           {
             "title": "Right Output",
-            "x": 544.0,
+            "x": 608.0,
             "y": 0.0,
             "width": 128.0,
-            "height": 192.0,
+            "height": 224.0,
             "type": "Number Bar",
             "properties": {
               "topic": "Dashboard/Robot Values/Manipulator Right Percent Output",
@@ -723,14 +740,14 @@
             }
           },
           {
-            "title": "Intake Speed",
-            "x": 672.0,
+            "title": "Coral Intake Speed",
+            "x": 736.0,
             "y": 128.0,
-            "width": 224.0,
+            "width": 256.0,
             "height": 128.0,
             "type": "Number Slider",
             "properties": {
-              "topic": "/Preferences/Dashboard/Dashboard Settings/Manipulator Intake Speed",
+              "topic": "/Preferences/Dashboard/Dashboard Settings/Manipulator Coral Intake Speed",
               "period": 0.02,
               "data_type": "double",
               "min_value": 0.0,
@@ -740,14 +757,14 @@
             }
           },
           {
-            "title": "Output Speed",
-            "x": 672.0,
+            "title": "Coral Output Speed",
+            "x": 736.0,
             "y": 0.0,
-            "width": 224.0,
+            "width": 256.0,
             "height": 128.0,
             "type": "Number Slider",
             "properties": {
-              "topic": "/Preferences/Dashboard/Dashboard Settings/Manipulator Output Speed",
+              "topic": "/Preferences/Dashboard/Dashboard Settings/Manipulator Coral Output Speed",
               "period": 0.02,
               "data_type": "double",
               "min_value": 0.0,
@@ -758,9 +775,9 @@
           },
           {
             "title": "L1 Speed Multiplier",
-            "x": 672.0,
+            "x": 736.0,
             "y": 256.0,
-            "width": 224.0,
+            "width": 256.0,
             "height": 128.0,
             "type": "Number Slider",
             "properties": {
@@ -775,10 +792,10 @@
           },
           {
             "title": "End Sensor",
-            "x": 416.0,
-            "y": 192.0,
+            "x": 480.0,
+            "y": 224.0,
             "width": 256.0,
-            "height": 96.0,
+            "height": 128.0,
             "type": "Boolean Box",
             "properties": {
               "topic": "Dashboard/Robot Values/Manipulator End Sensor Tripped",
@@ -792,10 +809,10 @@
           },
           {
             "title": "Start Sensor",
-            "x": 416.0,
-            "y": 288.0,
+            "x": 480.0,
+            "y": 352.0,
             "width": 256.0,
-            "height": 96.0,
+            "height": 128.0,
             "type": "Boolean Box",
             "properties": {
               "topic": "Dashboard/Robot Values/Manipulator Start Sensor Tripped",

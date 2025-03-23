@@ -131,7 +131,7 @@ public final class Constants
         public static final double          SPEED_MOTION_THRESHOLD              = 0.02 * MAX_LINEAR_SPEED;
         public static final double          ROTATION_MOTION_THRESHOLD           = 0.01 * MAX_ANGULAR_SPEED;
         public static final double          MAX_SNAP_SPEED_PERCENTAGE           = 0.7;
-        public static final double          MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE = 0.30;
+        public static final double          MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE = 0.20;
         public static final double          DEADBAND                            = 0.1;
         public static final double          TRANSLATE_KP                        = 10.0; // Auto-Align
         public static final double          TRANSLATE_KI                        = 0.2;
@@ -144,7 +144,7 @@ public final class Constants
         public static final double          FF_RAMP_RATE                        = 0.1; // Volts/Sec
         public static final double          WHEEL_RADIUS_MAX_VELOCITY           = 0.25; // Rad/Sec
         public static final double          WHEEL_RADIUS_RAMP_RATE              = 0.05; // Rad/Sec^2
-        public static final double          COLLISION_CURRENT_THRESHOLD         = 1000;
+        public static final double          ACCELEROMETER_COLLISION_THRESHOLD   = 0.8;
     }
 
     public static class Elevator

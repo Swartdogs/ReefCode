@@ -10,7 +10,6 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
-import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -86,7 +85,6 @@ public class Drive extends SubsystemBase
     private final PIDController            _xDrivePID;
     private final PIDController            _yDrivePID;
     private final PIDController            _rotatePID;
-    private final MedianFilter             _collisionFilter   = new MedianFilter(15);
     private double                         _xDriveMaxSpeed;
     private double                         _yDriveMaxSpeed;
     private double                         _rotateMaxSpeed;
@@ -493,19 +491,6 @@ public class Drive extends SubsystemBase
 
     public boolean collisionDetected()
     {
-        // TODO : replace with gyro acceleration threshold
-        return _collisionFilter.calculate(getAverageModuleCurrent()) >= Constants.Drive.COLLISION_CURRENT_THRESHOLD;
-    }
-
-    private double getAverageModuleCurrent()
-    {
-        double sum = 0;
-
-        for (var module : _modules)
-        {
-            sum += module.getDriveCurrent();
-        }
-
-        return sum / _modules.length;
+        return _gyroInputs.accelerationX >= Constants.Drive.ACCELEROMETER_COLLISION_THRESHOLD;
     }
 }

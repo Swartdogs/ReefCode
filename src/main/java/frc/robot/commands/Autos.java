@@ -1,8 +1,12 @@
 package frc.robot.commands;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import choreo.auto.AutoFactory;
+import choreo.auto.AutoRoutine;
+import choreo.auto.AutoTrajectory;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants;
@@ -134,17 +138,27 @@ public class Autos
         // @formatter:on
     }
 
-    public static Command splitAuto(String path, int numCoral)
+    public static AutonomousMode splitAuto(String path, int numCoral)
     {
         // @formatter:off
+        AutoRoutine routine = autoFactory.newRoutine("Autonomous");
+        ArrayList<AutoTrajectory> trajectories = new ArrayList<>();
+
         Command auto = Commands.defer(() -> Commands.waitSeconds(Dashboard.getInstance().getAutoDelay()), Set.of());
+
         for (int i = 0; i < numCoral; i++)
         {
+            var traj1 = routine.trajectory(path, 2 * i);
+            var traj2 = routine.trajectory(path, 2 * i + 1);
+
+            trajectories.add(traj1);
+            trajectories.add(traj2);
+
             auto = auto.andThen(
                 Commands.parallel
                 (
                     CompositeCommands.setHeight(ElevatorHeight.Level1),
-                    autoFactory.trajectoryCmd(path, 2 * i)
+                    traj1.cmd()
                 ),
                 Commands.parallel
                 (
@@ -155,7 +169,7 @@ public class Autos
                 CompositeCommands.output(),
                 Commands.parallel
                 (
-                    autoFactory.trajectoryCmd(path, 2 * i + 1),
+                    traj2.cmd(),
                     Commands.sequence
                     (
                         Commands.waitSeconds(0.5),
@@ -165,7 +179,21 @@ public class Autos
             );
         }
 
-        return auto;
+        routine.active().onTrue(auto);
+
+        return new AutonomousMode(routine, trajectories);
         // @formatter:off
+    }
+
+    public static class AutonomousMode
+    {
+        public final AutoRoutine routine;
+        public final List<AutoTrajectory> trajectories;
+
+        public AutonomousMode(AutoRoutine routine, List<AutoTrajectory> trajectories)
+        {
+            this.routine = routine;
+            this.trajectories = trajectories;
+        }
     }
 }

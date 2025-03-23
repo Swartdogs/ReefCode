@@ -20,6 +20,7 @@ import frc.robot.subsystems.elevator.Elevator.ElevatorHeight;
 import frc.robot.subsystems.manipulator.Manipulator;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.Vision.Camera;
+import frc.robot.util.Utilities;
 
 public class CompositeCommands
 {
@@ -77,15 +78,17 @@ public class CompositeCommands
                 DriveCommands.driveAtOrientation(xSupplier, ySupplier, robotCentric, Constants.Field.getTagAngle(branch.getID()), rotateMaxSpeed)
                 .until(() -> Vision.getInstance(Camera.FrontCenter).hasTarget()),
 
-                DriveCommands.driveToPose(Drive.getInstance().getPose().plus(Vision.getInstance(Camera.FrontCenter).getHorizontalTranslation()), translateMaxSpeed, rotateMaxSpeed),
+                DriveCommands.driveToPose(Utilities.getTagPose(branch.getID()).rotateAround(Utilities.getTagPose(branch.getID()).getTranslation(), Rotation2d.fromDegrees(180)).transformBy(new Transform2d(branch.getReference(), new Rotation2d())), translateMaxSpeed, rotateMaxSpeed)
+                .until(() -> (Drive.getInstance().xDriveIsFinished() && Drive.getInstance().yDriveIsFinished() && Drive.getInstance().rotateIsFinished())),
 
-                DriveCommands.joystickDrive(() -> translateMaxSpeed, () -> 0, () -> Drive.getInstance().rotateExecute(), () -> true, 1, 1)
-                .until(() -> Drive.getInstance().collisionDetected()),
+                DriveCommands.joystickDrive(() -> 0, () -> Drive.getInstance().yDriveExecute(), () -> Drive.getInstance().rotateExecute(), () -> true, 1, 1)
+                .until(() -> Drive.getInstance().yDriveIsFinished() && Drive.getInstance().rotateIsFinished()),
 
                 DriveCommands.stop(),
 
                 Commands.idle(Drive.getInstance())
-            ),
+            )
+            .finallyDo(() -> Drive.getInstance().stop()),
             Set.of(Drive.getInstance())
         );
         // @formatter:off
@@ -97,15 +100,17 @@ public class CompositeCommands
         return Commands.defer(() ->
             Commands.sequence
             (
-                Commands.runOnce(() -> Vision.getInstance(Camera.FrontCenter).setVisionReference(branch)),
+                Commands.runOnce(() -> 
+                {
+                    Vision.getInstance(Camera.FrontCenter).setVisionReference(branch);
+                    Drive.getInstance().rotateInit(Constants.Field.getTagAngle(branch.getID()), rotateMaxSpeed);
+                }),
 
-                DriveCommands.driveToPose(Drive.getInstance().getPose().plus(Vision.getInstance(Camera.FrontCenter).getHorizontalTranslation()), translateMaxSpeed, rotateMaxSpeed),
+                DriveCommands.driveToPose(Utilities.getTagPose(branch.getID()).rotateAround(Utilities.getTagPose(branch.getID()).getTranslation(), Rotation2d.fromDegrees(180)).transformBy(new Transform2d(branch.getReference(), new Rotation2d())), translateMaxSpeed, rotateMaxSpeed)
+                .until(() -> (Drive.getInstance().xDriveIsFinished() && Drive.getInstance().yDriveIsFinished() && Drive.getInstance().rotateIsFinished()))
+            )
+            .finallyDo(() -> Drive.getInstance().stop()),
 
-                DriveCommands.joystickDrive(() -> translateMaxSpeed, () -> 0, () -> Drive.getInstance().rotateExecute(), () -> true, 1, 1)
-                .until(() -> Drive.getInstance().collisionDetected()),
-
-                DriveCommands.stop()
-            ),
             Set.of(Drive.getInstance())
         );
         // @formatter:off

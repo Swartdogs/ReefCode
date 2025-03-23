@@ -1,5 +1,7 @@
 package frc.robot.subsystems.dashboard;
 
+import java.util.List;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -205,7 +207,6 @@ public class DashboardIONetwork implements DashboardIO
         _autoStartPositionChooser.addOption("Right", "Right");
         _autoStartPositionChooser.addOption("Middle", "Middle");
         _autoStartPositionChooser.addOption("Left", "Left");
-        _autoStartPositionChooser.addOption("Split", "Split");
 
         _autoCoralCountChooser.setDefaultOption("0", 0);
         _autoCoralCountChooser.addOption("1", 1);
@@ -288,6 +289,15 @@ public class DashboardIONetwork implements DashboardIO
         if (pose != null)
         {
             _field.setRobotPose(pose);
+        }
+    }
+
+    @Override
+    public void setTrajectory(List<Pose2d> poses)
+    {
+        if (poses != null)
+        {
+            _field.getObject("Trajectory").setPoses(poses);
         }
     }
 
