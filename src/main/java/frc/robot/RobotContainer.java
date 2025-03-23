@@ -1,14 +1,9 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.Field.Branch;
 import frc.robot.commands.CompositeCommands;
 import frc.robot.commands.DriveCommands;
@@ -27,11 +22,9 @@ import frc.robot.subsystems.vision.Vision.Camera;
 public class RobotContainer
 {
     // Controller
-    private final CommandJoystick          _driverJoystick          = new CommandJoystick(0);
-    private final CommandJoystick          _driverButtons           = new CommandJoystick(1);
-    private final CommandJoystick          _operatorButtons         = new CommandJoystick(2);
-    private final CommandXboxController    _controller              = new CommandXboxController(3);
-    private final SendableChooser<Command> _characterizationChooser = new SendableChooser<>();
+    private final CommandJoystick _driverJoystick  = new CommandJoystick(0);
+    private final CommandJoystick _driverButtons   = new CommandJoystick(1);
+    private final CommandJoystick _operatorButtons = new CommandJoystick(2);
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -44,35 +37,14 @@ public class RobotContainer
         Elevator.getInstance();
         Manipulator.getInstance();
         Funnel.getInstance();
-        Vision.getInstance(Camera.Front);
+        // Vision.getInstance(Camera.Front);
         Vision.getInstance(Camera.FrontCenter);
         Dashboard.getInstance();
 
         // Configure the button bindings
         configureButtonBindings();
-        // configureTestBindings();
     }
 
-    @SuppressWarnings("unused")
-    private void configureTestBindings()
-    {
-        Drive.getInstance().setDefaultCommand(DriveCommands.joystickDrive(() -> -_controller.getLeftY(), () -> -_controller.getLeftX(), () -> -_controller.getRightX(), () -> false));
-        // _controller.a().onTrue(DriveCommands.setOdometer(new
-        // Pose2d(Units.inchesToMeters(297.5), Units.inchesToMeters(158.5),
-        // Rotation2d.fromDegrees(0))));
-
-        _controller.back().onTrue(ElevatorCommands.setHeight(ElevatorHeight.Stow));
-        _controller.povUp().onTrue(ElevatorCommands.setHeight(ElevatorHeight.Level1));
-        _controller.povRight().onTrue(ElevatorCommands.setHeight(ElevatorHeight.Level2));
-        _controller.povDown().onTrue(ElevatorCommands.setHeight(ElevatorHeight.Level3));
-        _controller.povLeft().onTrue(ElevatorCommands.setHeight(ElevatorHeight.Level4));
-
-        _controller.start().whileTrue(
-                CompositeCommands.autoAlign(Branch.C, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric, Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE)
-        );
-    }
-
-    @SuppressWarnings("unused")
     private void configureButtonBindings()
     {
         Trigger funnelDropped = new Trigger(() -> Funnel.getInstance().isDropped());
@@ -83,20 +55,18 @@ public class RobotContainer
 
         // Trigger _hasCoral = new Trigger(() -> _manipulator.hasCoral());
         // Trigger _manipulatorRunning = new Trigger(() -> _manipulator.isRunning());
-        Trigger operatorButton13 = _operatorButtons.axisGreaterThan(0, 0.5);
+        // Trigger operatorButton13 = _operatorButtons.axisGreaterThan(0, 0.5);
         Trigger operatorButton14 = _operatorButtons.axisGreaterThan(1, 0.5);
-        Trigger operatorButton15 = _operatorButtons.axisLessThan(1, -0.5);
+        // Trigger operatorButton15 = _operatorButtons.axisLessThan(1, -0.5);
 
         // Default command, normal field-relative drive
         Drive.getInstance().setDefaultCommand(CompositeCommands.joystickDrive(() -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> -_driverJoystick.getZ(), () -> robotCentric(), 2, 5));
 
         // Driver Controls
-        (_driverJoystick.button(1).and(funnelDropped)).whileTrue(ElevatorCommands.hangExecute());
+        _driverJoystick.button(1).onTrue(CompositeCommands.output());
         _driverJoystick.button(2).whileTrue(DriveCommands.reduceSpeed());
+        (_driverJoystick.button(3).and(funnelDropped)).whileTrue(ElevatorCommands.hangExecute());
         _driverJoystick.button(11).onTrue(DriveCommands.resetGyro());
-        _driverJoystick.button(12).whileTrue(
-                CompositeCommands.autoAlign(Branch.C, () -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric, Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE)
-        );
 
         // Auto-Align Buttons
 
@@ -161,25 +131,17 @@ public class RobotContainer
         _operatorButtons.button(6).onTrue(CompositeCommands.intake());
         _operatorButtons.button(7).onTrue(ManipulatorCommands.stop());
         _operatorButtons.button(8).onTrue(CompositeCommands.output());
-        _operatorButtons.button(9).whileTrue(ManipulatorCommands.algaeIntake());
-        _operatorButtons.button(10).whileTrue(ManipulatorCommands.algaeOutput());
+        _operatorButtons.button(9).onTrue(ElevatorCommands.modifyHeight(Constants.Elevator.ELEVATOR_MODIFICATION_HEIGHT));
+        _operatorButtons.button(10).onTrue(ElevatorCommands.modifyHeight(-Constants.Elevator.ELEVATOR_MODIFICATION_HEIGHT));
         _operatorButtons.button(11).onTrue(ElevatorCommands.setHeight(ElevatorHeight.HighAlgae));
-        _operatorButtons.button(11).onTrue(ElevatorCommands.setHeight(ElevatorHeight.LowAlgae));
-        operatorButton13.onTrue(ElevatorCommands.modifyHeight(Constants.Elevator.ELEVATOR_MODIFICATION_HEIGHT));
-        operatorButton14.onTrue(ElevatorCommands.modifyHeight(-Constants.Elevator.ELEVATOR_MODIFICATION_HEIGHT));
-        (operatorButton15.or(_operatorButtons.povDown())).and(_driverJoystick.button(4)).onTrue(FunnelCommands.drop().alongWith(ElevatorCommands.setHeight(ElevatorHeight.Hang)));
+        _operatorButtons.button(12).onTrue(ElevatorCommands.setHeight(ElevatorHeight.LowAlgae));
+        // operatorButton13.onTrue(ElevatorCommands.modifyHeight(Constants.Elevator.ELEVATOR_MODIFICATION_HEIGHT));
+        // operatorButton14.onTrue(ElevatorCommands.modifyHeight(-Constants.Elevator.ELEVATOR_MODIFICATION_HEIGHT));
+        (operatorButton14.or(_operatorButtons.povDown())).and(_driverJoystick.button(4)).onTrue(FunnelCommands.drop().alongWith(ElevatorCommands.setHeight(ElevatorHeight.Hang)));
 
         // _hasCoral.onTrue(LEDCommands.setDefaultColor(Constants.LED.GREEN));
         // _hasCoral.onFalse(LEDCommands.setDefaultColor(Constants.LED.RED));
         // _manipulatorRunning.whileTrue(LEDCommands.flashColor(Constants.LED.YELLOW));
-
-        _characterizationChooser.setDefaultOption("Do nothing", Commands.none());
-        _characterizationChooser.addOption("Quasistatic Forward", Drive.getInstance().sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-        _characterizationChooser.addOption("Quasistatic Reverse", Drive.getInstance().sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-        _characterizationChooser.addOption("Dynamic Forward", Drive.getInstance().sysIdDynamic(SysIdRoutine.Direction.kForward));
-        _characterizationChooser.addOption("Dynamic Reverse", Drive.getInstance().sysIdDynamic(SysIdRoutine.Direction.kReverse));
-
-        SmartDashboard.putData("Characterization Chooser", _characterizationChooser);
     }
 
     public Command getAutonomousCommand()

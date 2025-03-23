@@ -17,6 +17,7 @@ public interface DashboardIO
         public double elevatorMinHeight               = Constants.Elevator.MIN_EXTENSION;
         public double elevatorMaxHeight               = Constants.Elevator.MAX_EXTENSION;
         public double elevatorStowHeight              = Constants.Elevator.STOW_HEIGHT;
+        public double elevatorCoastHeight             = Constants.Elevator.COAST_HEIGHT;
         public double elevatorL1Height                = Constants.Elevator.L1_HEIGHT;
         public double elevatorL2Height                = Constants.Elevator.L2_HEIGHT;
         public double elevatorL3Height                = Constants.Elevator.L3_HEIGHT;
@@ -51,6 +52,7 @@ public interface DashboardIO
         public boolean elevatorZeroMinHeightPressed       = false;
         public boolean elevatorZeroMaxHeightPressed       = false;
         public boolean elevatorZeroStowHeightPressed      = false;
+        public boolean elevatorZeroCoastHeightPressed     = false;
         public boolean elevatorZeroL1HeightPressed        = false;
         public boolean elevatorZeroL2HeightPressed        = false;
         public boolean elevatorZeroL3HeightPressed        = false;
@@ -164,6 +166,10 @@ public interface DashboardIO
     }
 
     public default void releaseElevatorStowHeightZeroButton()
+    {
+    }
+
+    public default void releaseElevatorCoastHeightZeroButton()
     {
     }
 

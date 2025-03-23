@@ -91,6 +91,8 @@ public class VisionIOPhotonLib implements VisionIO
 
             // Get pose estimate from processed targets
             _poseEstimator.setReferencePose(Drive.getInstance().getPose());
+            result.targets = processedTargets;
+
             Optional<EstimatedRobotPose> estimatedPose = _poseEstimator.update(result);
             Pose2d                       pose          = new Pose2d();
             boolean                      hasPose       = false;

@@ -22,7 +22,7 @@ public class Elevator extends SubsystemBase
     {
         Stow(() -> Dashboard.getInstance().getElevatorStowHeight()), Level1(() -> Dashboard.getInstance().getElevatorL1Height()), Level2(() -> Dashboard.getInstance().getElevatorL2Height()),
         Level3(() -> Dashboard.getInstance().getElevatorL3Height()), Level4(() -> Dashboard.getInstance().getElevatorL4Height()), Hang(() -> Dashboard.getInstance().getElevatorHangHeight()),
-        LowAlgae(() -> Dashboard.getInstance().getElevatorLowAlgaeHeight()), HighAlgae(() -> Dashboard.getInstance().getElevatorHighAlgaeHeight());
+        LowAlgae(() -> Dashboard.getInstance().getElevatorLowAlgaeHeight()), HighAlgae(() -> Dashboard.getInstance().getElevatorHighAlgaeHeight()), Coast(() -> Dashboard.getInstance().getElevatorCoastHeight());
 
         private DoubleSupplier _heightSupplier;
 

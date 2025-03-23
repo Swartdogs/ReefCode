@@ -140,7 +140,7 @@
             "x": 1312.0,
             "y": 32.0,
             "width": 224.0,
-            "height": 384.0,
+            "height": 448.0,
             "type": "List Layout",
             "properties": {
               "label_position": "RIGHT"
@@ -257,6 +257,20 @@
                   "data_type": "double",
                   "show_submit_button": false
                 }
+              },
+              {
+                "title": "Coast Height",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/Preferences/Dashboard/Dashboard Settings/Elevator Coast Height",
+                  "period": 0.02,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
               }
             ]
           },
@@ -265,7 +279,7 @@
             "x": 1536.0,
             "y": 32.0,
             "width": 224.0,
-            "height": 384.0,
+            "height": 448.0,
             "type": "List Layout",
             "properties": {
               "label_position": "HIDDEN"
@@ -371,6 +385,19 @@
                 "type": "Toggle Switch",
                 "properties": {
                   "topic": "Dashboard/Buttons/Elevator Zero Min Height",
+                  "period": 0.02,
+                  "data_type": "boolean"
+                }
+              },
+              {
+                "title": "Zero",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Toggle Switch",
+                "properties": {
+                  "topic": "Dashboard/Buttons/Elevator Zero Coast Height",
                   "period": 0.02,
                   "data_type": "boolean"
                 }
@@ -518,7 +545,7 @@
             "x": 1184.0,
             "y": 32.0,
             "width": 128.0,
-            "height": 384.0,
+            "height": 448.0,
             "type": "Number Bar",
             "properties": {
               "topic": "Dashboard/Robot Values/Elevator Height",
@@ -536,7 +563,7 @@
             "x": 1056.0,
             "y": 32.0,
             "width": 128.0,
-            "height": 384.0,
+            "height": 448.0,
             "type": "Number Bar",
             "properties": {
               "topic": "Dashboard/Robot Values/Elevator Setpoint",
@@ -579,7 +606,7 @@
           {
             "title": "Hang Speed",
             "x": 1056.0,
-            "y": 416.0,
+            "y": 480.0,
             "width": 352.0,
             "height": 128.0,
             "type": "Number Slider",
@@ -596,7 +623,7 @@
           {
             "title": "Max Downward Speed",
             "x": 1056.0,
-            "y": 544.0,
+            "y": 608.0,
             "width": 352.0,
             "height": 128.0,
             "type": "Number Slider",
@@ -613,7 +640,7 @@
           {
             "title": "Max Upward Speed",
             "x": 1408.0,
-            "y": 544.0,
+            "y": 608.0,
             "width": 352.0,
             "height": 128.0,
             "type": "Number Slider",
@@ -630,7 +657,7 @@
           {
             "title": "Elevator kD",
             "x": 1600.0,
-            "y": 416.0,
+            "y": 480.0,
             "width": 160.0,
             "height": 128.0,
             "type": "Text Display",
@@ -644,7 +671,7 @@
           {
             "title": "Elevator kP",
             "x": 1408.0,
-            "y": 416.0,
+            "y": 480.0,
             "width": 192.0,
             "height": 128.0,
             "type": "Text Display",

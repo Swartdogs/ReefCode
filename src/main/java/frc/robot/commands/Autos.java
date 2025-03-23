@@ -17,14 +17,22 @@ import frc.robot.util.Utilities;
 
 public class Autos
 {
-    public static final AutoFactory autoFactory       = new AutoFactory(Drive.getInstance()::getPose, Drive.getInstance()::setPose, Drive.getInstance()::followTrajectory, false, Drive.getInstance());
-    public static final Command     ONE_PIECE_LEFT    = oneCoralAuto("LeftToJ");
-    public static final Command     ONE_PIECE_MIDDLE  = oneCoralAuto("MiddleToG");
-    public static final Command     ONE_PIECE_RIGHT   = oneCoralAuto("RightToE");
-    public static final Command     TWO_PIECE_LEFT    = twoCoralAuto("LeftToK", "KToLeftCS", "LeftCSToL");
-    public static final Command     TWO_PIECE_RIGHT   = twoCoralAuto("RightToD", "DToRightCS", "RightCSToC");
-    public static final Command     THREE_PIECE_LEFT  = threeCoralAuto("LeftToJ", "JToLeftCS", "LeftCSToK", "KToLeftCS", "LeftCSToL");
-    public static final Command     THREE_PIECE_RIGHT = threeCoralAuto("RightToE", "EToRightCS", "RightCSToD", "DToRightCS", "RightCSToC");
+    public static final AutoFactory    autoFactory      = new AutoFactory(Drive.getInstance()::getPose, Drive.getInstance()::setPose, Drive.getInstance()::followTrajectory, false, Drive.getInstance());
+    public static final AutonomousMode ONE_PIECE_LEFT   = splitAuto("LeftToJ", 1);
+    public static final AutonomousMode ONE_PIECE_MIDDLE = splitAuto("MiddleToG", 1);
+    public static final AutonomousMode ONE_PIECE_RIGHT  = splitAuto("RightToE", 1);
+    public static final AutonomousMode TWO_PIECE_RIGHT  = splitAuto("RightDC", 2);
+    // public static final Command ONE_PIECE_LEFT = oneCoralAuto("LeftToJ");
+    // public static final Command ONE_PIECE_MIDDLE = oneCoralAuto("MiddleToG");
+    // public static final Command ONE_PIECE_RIGHT = oneCoralAuto("RightToE");
+    // public static final Command TWO_PIECE_LEFT = twoCoralAuto("LeftToK",
+    // "KToLeftCS", "LeftCSToL");
+    // public static final Command TWO_PIECE_RIGHT = twoCoralAuto("RightToD",
+    // "DToRightCS", "RightCSToC");
+    // public static final Command THREE_PIECE_LEFT = threeCoralAuto("LeftToJ",
+    // "JToLeftCS", "LeftCSToK", "KToLeftCS", "LeftCSToL");
+    // public static final Command THREE_PIECE_RIGHT = threeCoralAuto("RightToE",
+    // "EToRightCS", "RightCSToD", "DToRightCS", "RightCSToC");
 
     public static Command oneCoralAuto(String path)
     {
@@ -154,6 +162,11 @@ public class Autos
             trajectories.add(traj1);
             trajectories.add(traj2);
 
+            if (i == 0)
+            {
+                auto = auto.andThen(traj1.resetOdometry());
+            }
+
             auto = auto.andThen(
                 Commands.parallel
                 (
@@ -162,14 +175,19 @@ public class Autos
                 ),
                 Commands.parallel
                 (
-                    CompositeCommands.autoAlign(Utilities.parseAutoString(String.valueOf(path.charAt(path.length() + i - numCoral))), Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE),
+                    //CompositeCommands.autoAlign(Utilities.parseAutoString(String.valueOf(path.charAt(path.length() + i - numCoral))), Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE),
+                    DriveCommands.stop(),
                     CompositeCommands.setHeight(ElevatorHeight.Level4)
                 ),
                 Commands.waitSeconds(0.5),
                 CompositeCommands.output(),
                 Commands.parallel
                 (
-                    traj2.cmd(),
+                    Commands.sequence
+                    (
+                        traj2.cmd(),
+                        DriveCommands.stop()
+                    ),
                     Commands.sequence
                     (
                         Commands.waitSeconds(0.5),

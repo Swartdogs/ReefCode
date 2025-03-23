@@ -157,6 +157,7 @@ public final class Constants
         public static final double  EXTENSION_KD                 = 0.02;
         public static final double  EXTENSION_TOLERANCE          = 1.0;
         public static final double  STOW_HEIGHT                  = MIN_EXTENSION + 2.0;
+        public static final double  COAST_HEIGHT                 = MIN_EXTENSION + 8.0;
         public static final double  L1_HEIGHT                    = MIN_EXTENSION + 17.453;
         public static final double  L2_HEIGHT                    = MIN_EXTENSION + 19.665;
         public static final double  L3_HEIGHT                    = MIN_EXTENSION + 34.452;

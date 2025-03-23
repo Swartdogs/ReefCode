@@ -19,6 +19,7 @@ public class DashboardIONetwork implements DashboardIO
     private final String _elevatorMinHeightKey             = "Dashboard/Dashboard Settings/Elevator Min Height";
     private final String _elevatorMaxHeightKey             = "Dashboard/Dashboard Settings/Elevator Max Height";
     private final String _elevatorStowHeightKey            = "Dashboard/Dashboard Settings/Elevator Stow Height";
+    private final String _elevatorCoastHeightKey           = "Dashboard/Dashboard Settings/Elevator Coast Height";
     private final String _elevatorL1HeightKey              = "Dashboard/Dashboard Settings/Elevator L1 Height";
     private final String _elevatorL2HeightKey              = "Dashboard/Dashboard Settings/Elevator L2 Height";
     private final String _elevatorL3HeightKey              = "Dashboard/Dashboard Settings/Elevator L3 Height";
@@ -67,6 +68,7 @@ public class DashboardIONetwork implements DashboardIO
     private final NetworkTableEntry _elevatorZeroMinHeightButton;
     private final NetworkTableEntry _elevatorZeroMaxHeightButton;
     private final NetworkTableEntry _elevatorZeroStowHeightButton;
+    private final NetworkTableEntry _elevatorZeroCoastHeightButton;
     private final NetworkTableEntry _elevatorZeroL1HeightButton;
     private final NetworkTableEntry _elevatorZeroL2HeightButton;
     private final NetworkTableEntry _elevatorZeroL3HeightButton;
@@ -93,6 +95,7 @@ public class DashboardIONetwork implements DashboardIO
         Preferences.initDouble(_elevatorMinHeightKey, Constants.Elevator.MIN_EXTENSION);
         Preferences.initDouble(_elevatorMaxHeightKey, Constants.Elevator.MAX_EXTENSION);
         Preferences.initDouble(_elevatorStowHeightKey, Constants.Elevator.STOW_HEIGHT);
+        Preferences.initDouble(_elevatorCoastHeightKey, Constants.Elevator.COAST_HEIGHT);
         Preferences.initDouble(_elevatorL1HeightKey, Constants.Elevator.L1_HEIGHT);
         Preferences.initDouble(_elevatorL2HeightKey, Constants.Elevator.L2_HEIGHT);
         Preferences.initDouble(_elevatorL3HeightKey, Constants.Elevator.L3_HEIGHT);
@@ -163,6 +166,7 @@ public class DashboardIONetwork implements DashboardIO
         _elevatorZeroMinHeightButton       = NetworkTableInstance.getDefault().getEntry("Dashboard/Buttons/Elevator Zero Min Height");
         _elevatorZeroMaxHeightButton       = NetworkTableInstance.getDefault().getEntry("Dashboard/Buttons/Elevator Zero Max Height");
         _elevatorZeroStowHeightButton      = NetworkTableInstance.getDefault().getEntry("Dashboard/Buttons/Elevator Zero Stow Height");
+        _elevatorZeroCoastHeightButton     = NetworkTableInstance.getDefault().getEntry("Dashboard/Buttons/Elevator Zero Coast Height");
         _elevatorZeroL1HeightButton        = NetworkTableInstance.getDefault().getEntry("Dashboard/Buttons/Elevator Zero L1 Height");
         _elevatorZeroL2HeightButton        = NetworkTableInstance.getDefault().getEntry("Dashboard/Buttons/Elevator Zero L2 Height");
         _elevatorZeroL3HeightButton        = NetworkTableInstance.getDefault().getEntry("Dashboard/Buttons/Elevator Zero L3 Height");
@@ -179,6 +183,7 @@ public class DashboardIONetwork implements DashboardIO
         _elevatorZeroMinHeightButton.setBoolean(false);
         _elevatorZeroMaxHeightButton.setBoolean(false);
         _elevatorZeroStowHeightButton.setBoolean(false);
+        _elevatorZeroCoastHeightButton.setBoolean(false);
         _elevatorZeroL1HeightButton.setBoolean(false);
         _elevatorZeroL2HeightButton.setBoolean(false);
         _elevatorZeroL3HeightButton.setBoolean(false);
@@ -204,9 +209,9 @@ public class DashboardIONetwork implements DashboardIO
         _autoDelayChooser.addOption("4", 4);
         _autoDelayChooser.addOption("5", 5);
 
-        _autoStartPositionChooser.addOption("Right", "Right");
-        _autoStartPositionChooser.addOption("Middle", "Middle");
         _autoStartPositionChooser.addOption("Left", "Left");
+        _autoStartPositionChooser.addOption("Middle", "Middle");
+        _autoStartPositionChooser.addOption("Right", "Right");
 
         _autoCoralCountChooser.setDefaultOption("0", 0);
         _autoCoralCountChooser.addOption("1", 1);
@@ -230,6 +235,7 @@ public class DashboardIONetwork implements DashboardIO
         inputs.elevatorMinHeight               = Preferences.getDouble(_elevatorMinHeightKey, Constants.Elevator.MIN_EXTENSION);
         inputs.elevatorMaxHeight               = Preferences.getDouble(_elevatorMaxHeightKey, Constants.Elevator.MAX_EXTENSION);
         inputs.elevatorStowHeight              = Preferences.getDouble(_elevatorStowHeightKey, Constants.Elevator.STOW_HEIGHT);
+        inputs.elevatorCoastHeight             = Preferences.getDouble(_elevatorCoastHeightKey, Constants.Elevator.COAST_HEIGHT);
         inputs.elevatorL1Height                = Preferences.getDouble(_elevatorL1HeightKey, Constants.Elevator.L1_HEIGHT);
         inputs.elevatorL2Height                = Preferences.getDouble(_elevatorL2HeightKey, Constants.Elevator.L2_HEIGHT);
         inputs.elevatorL3Height                = Preferences.getDouble(_elevatorL3HeightKey, Constants.Elevator.L3_HEIGHT);
@@ -264,6 +270,7 @@ public class DashboardIONetwork implements DashboardIO
         inputs.elevatorZeroMinHeightPressed       = _elevatorZeroMinHeightButton.getBoolean(false);
         inputs.elevatorZeroMaxHeightPressed       = _elevatorZeroMaxHeightButton.getBoolean(false);
         inputs.elevatorZeroStowHeightPressed      = _elevatorZeroStowHeightButton.getBoolean(false);
+        inputs.elevatorZeroCoastHeightPressed     = _elevatorZeroCoastHeightButton.getBoolean(false);
         inputs.elevatorZeroL1HeightPressed        = _elevatorZeroL1HeightButton.getBoolean(false);
         inputs.elevatorZeroL2HeightPressed        = _elevatorZeroL2HeightButton.getBoolean(false);
         inputs.elevatorZeroL3HeightPressed        = _elevatorZeroL3HeightButton.getBoolean(false);
@@ -426,6 +433,13 @@ public class DashboardIONetwork implements DashboardIO
     {
         Preferences.setDouble(_elevatorStowHeightKey, Elevator.getInstance().getExtension());
         _elevatorZeroStowHeightButton.setBoolean(false);
+    }
+
+    @Override
+    public void releaseElevatorCoastHeightZeroButton()
+    {
+        Preferences.setDouble(_elevatorCoastHeightKey, Elevator.getInstance().getExtension());
+        _elevatorZeroCoastHeightButton.setBoolean(false);
     }
 
     @Override

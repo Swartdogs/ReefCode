@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.elevator.Elevator;
-import frc.robot.subsystems.elevator.Elevator.ElevatorHeight;
 import frc.robot.util.Elastic;
 
 import org.littletonrobotics.junction.LogFileUtil;
@@ -149,6 +148,6 @@ public class Robot extends LoggedRobot
     @Override
     public void disabledInit()
     {
-        Elevator.getInstance().setExtension(ElevatorHeight.Stow);
+        Elevator.getInstance().stop();
     }
 }

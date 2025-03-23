@@ -45,9 +45,12 @@ public class Dashboard extends SubsystemBase
     }
 
     private final DashboardIO                 _io;
-    private final DashboardIOInputsAutoLogged _inputs = new DashboardIOInputsAutoLogged();
+    private final DashboardIOInputsAutoLogged _inputs               = new DashboardIOInputsAutoLogged();
     private final Alert                       _nullAuto;
     private Command                           _selectedAuto;
+    private boolean                           _wasBlueAlliance      = true;
+    private int                               _lastNumCoral         = 0;
+    private String                            _lastStartingPosition = null;
 
     private Dashboard(DashboardIO io)
     {
@@ -99,6 +102,11 @@ public class Dashboard extends SubsystemBase
         if (_inputs.elevatorZeroStowHeightPressed)
         {
             _io.releaseElevatorStowHeightZeroButton();
+        }
+
+        if (_inputs.elevatorZeroCoastHeightPressed)
+        {
+            _io.releaseElevatorCoastHeightZeroButton();
         }
 
         if (_inputs.elevatorZeroL1HeightPressed)
@@ -154,60 +162,70 @@ public class Dashboard extends SubsystemBase
         // Match Time
         _io.setMatchTime(DriverStation.getMatchTime());
 
-        // Autonomous
-        AutonomousMode mode = null;
-
-        if (_inputs.autoStartPosition != null && _inputs.autoNumCoral > 0)
+        if (_lastStartingPosition != _inputs.autoStartPosition || _lastNumCoral != _inputs.autoNumCoral || _wasBlueAlliance != Utilities.isBlueAlliance())
         {
-            mode = switch (_inputs.autoStartPosition)
-            {
-                case "Left" -> Autos.splitAuto("LeftToJ", _inputs.autoNumCoral);
-                case "Middle" -> Autos.splitAuto("MiddleToG", _inputs.autoNumCoral);
-                case "Right" -> switch (_inputs.autoNumCoral)
-                    {
-                        case 2 -> Autos.splitAuto("RightDC", _inputs.autoNumCoral);
-                        default -> Autos.splitAuto("RightToE", _inputs.autoNumCoral);
-                    };
-                default -> null;
-            };
+            // Autonomous
+            AutonomousMode mode = null;
 
-            if (mode != null && mode.routine != null)
+            if (_inputs.autoStartPosition != null && _inputs.autoNumCoral > 0)
             {
-                _selectedAuto = mode.routine.cmd();
+                mode = switch (_inputs.autoStartPosition)
+                {
+                    case "Left" -> Autos.ONE_PIECE_LEFT;
+                    case "Middle" -> Autos.ONE_PIECE_MIDDLE;
+                    case "Right" -> switch (_inputs.autoNumCoral)
+                        {
+                            case 2 -> Autos.TWO_PIECE_RIGHT;
+                            default -> Autos.ONE_PIECE_RIGHT;
+                        };
+                    default -> null;
+                };
+
+                if (mode != null && mode.routine != null)
+                {
+                    _selectedAuto = mode.routine.cmd();
+                }
             }
-        }
-        else
-        {
-            _selectedAuto = null;
-        }
-
-        // Ensure the AprilTag layout is using the correct origin
-        Constants.Field.APRIL_TAG_FIELD_LAYOUT.setOrigin(Utilities.isBlueAlliance() ? OriginPosition.kBlueAllianceWallRightSide : OriginPosition.kRedAllianceWallRightSide);
-
-        _nullAuto.set(_selectedAuto == null);
-
-        if (mode != null && mode.trajectories.size() > 0)
-        {
-            var initialPose = mode.trajectories.get(0).getInitialPose().orElse(new Pose2d());
-            var trajectory  = mode.trajectories.stream().flatMap(t -> Arrays.asList(t.getRawTrajectory().getPoses()).stream()).collect(Collectors.toList());
-
-            if (!Utilities.isBlueAlliance())
+            else
             {
-                var fieldCenter = new Translation2d(Constants.Field.APRIL_TAG_FIELD_LAYOUT.getFieldLength() / 2, Constants.Field.APRIL_TAG_FIELD_LAYOUT.getFieldWidth() / 2);
-                var invertAngle = Rotation2d.fromDegrees(180);
-
-                initialPose = initialPose.rotateAround(fieldCenter, invertAngle);
-                trajectory = trajectory.stream().map(p -> p.rotateAround(fieldCenter, invertAngle)).toList();
+                _selectedAuto = null;
             }
 
-            _io.setRobotPose(initialPose);
-            _io.setTrajectory(trajectory);
+            if (mode != null && mode.trajectories.size() > 0)
+            {
+                var initialPose = mode.trajectories.get(0).getInitialPose().orElse(new Pose2d());
+                var trajectory  = mode.trajectories.stream().flatMap(t -> Arrays.asList(t.getRawTrajectory().getPoses()).stream()).collect(Collectors.toList());
+
+                if (!Utilities.isBlueAlliance())
+                {
+                    var fieldCenter = new Translation2d(Constants.Field.APRIL_TAG_FIELD_LAYOUT.getFieldLength() / 2, Constants.Field.APRIL_TAG_FIELD_LAYOUT.getFieldWidth() / 2);
+                    var invertAngle = Rotation2d.fromDegrees(180);
+
+                    initialPose = initialPose.rotateAround(fieldCenter, invertAngle);
+                    trajectory  = trajectory.stream().map(p -> p.rotateAround(fieldCenter, invertAngle)).toList();
+                }
+
+                _io.setRobotPose(initialPose);
+                _io.setTrajectory(trajectory);
+            }
+            else
+            {
+                _io.setRobotPose(new Pose2d());
+                _io.setTrajectory(List.of());
+            }
+
+            _nullAuto.set(_selectedAuto == null);
         }
-        else
+
+        if (_wasBlueAlliance != Utilities.isBlueAlliance())
         {
-            _io.setRobotPose(new Pose2d());
-            _io.setTrajectory(List.of());
+            // Ensure the AprilTag layout is using the correct origin
+            Constants.Field.APRIL_TAG_FIELD_LAYOUT.setOrigin(Utilities.isBlueAlliance() ? OriginPosition.kBlueAllianceWallRightSide : OriginPosition.kRedAllianceWallRightSide);
         }
+
+        _wasBlueAlliance      = Utilities.isBlueAlliance();
+        _lastNumCoral         = _inputs.autoNumCoral;
+        _lastStartingPosition = _inputs.autoStartPosition;
     }
 
     public double getAutoDelay()
@@ -270,6 +288,11 @@ public class Dashboard extends SubsystemBase
     public double getElevatorStowHeight()
     {
         return _inputs.elevatorStowHeight;
+    }
+
+    public double getElevatorCoastHeight()
+    {
+        return _inputs.elevatorCoastHeight;
     }
 
     public double getElevatorL1Height()
