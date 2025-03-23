@@ -32,7 +32,7 @@ public class Module
         {
             case REAL:
             case REPLAY:
-                _driveFeedForward = new SimpleMotorFeedforward(Constants.Drive.DRIVE_KS, Constants.Drive.DRIVE_KV);
+                _driveFeedForward = new SimpleMotorFeedforward(Constants.Drive.DRIVE_KS, Constants.Drive.DRIVE_KV, Constants.Drive.DRIVE_KA);
 
                 _driveFeedback = new PIDController(Constants.Drive.DRIVE_KP, 0, Constants.Drive.DRIVE_KD);
                 _turnFeedback = new PIDController(Constants.Drive.TURN_KP, 0, Constants.Drive.TURN_KD);

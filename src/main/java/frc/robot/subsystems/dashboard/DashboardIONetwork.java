@@ -22,8 +22,8 @@ public class DashboardIONetwork implements DashboardIO
     private final String _elevatorL3HeightKey              = "Dashboard/Dashboard Settings/Elevator L3 Height";
     private final String _elevatorL4HeightKey              = "Dashboard/Dashboard Settings/Elevator L4 Height";
     private final String _elevatorHangHeightKey            = "Dashboard/Dashboard Settings/Elevator Hang Height";
-    private final String _elevatorLowAlgaeHeightKey              = "Dashboard/Dashboard Settings/Elevator Low Algae Height";
-    private final String _elevatorHighAlgaeHeightKey            = "Dashboard/Dashboard Settings/Elevator High Algae Height";
+    private final String _elevatorLowAlgaeHeightKey        = "Dashboard/Dashboard Settings/Elevator Low Algae Height";
+    private final String _elevatorHighAlgaeHeightKey       = "Dashboard/Dashboard Settings/Elevator High Algae Height";
     private final String _elevatorHangSpeedKey             = "Dashboard/Dashboard Settings/Elevator Hang Speed";
     private final String _elevatorKPKey                    = "Dashboard/Dashboard Settings/Elevator kP";
     private final String _elevatorKDKey                    = "Dashboard/Dashboard Settings/Elevator kD";
@@ -158,21 +158,21 @@ public class DashboardIONetwork implements DashboardIO
         });
 
         // Buttons
-        _elevatorZeroMinHeightButton  = NetworkTableInstance.getDefault().getEntry("Dashboard/Buttons/Elevator Zero Min Height");
-        _elevatorZeroMaxHeightButton  = NetworkTableInstance.getDefault().getEntry("Dashboard/Buttons/Elevator Zero Max Height");
-        _elevatorZeroStowHeightButton = NetworkTableInstance.getDefault().getEntry("Dashboard/Buttons/Elevator Zero Stow Height");
-        _elevatorZeroL1HeightButton   = NetworkTableInstance.getDefault().getEntry("Dashboard/Buttons/Elevator Zero L1 Height");
-        _elevatorZeroL2HeightButton   = NetworkTableInstance.getDefault().getEntry("Dashboard/Buttons/Elevator Zero L2 Height");
-        _elevatorZeroL3HeightButton   = NetworkTableInstance.getDefault().getEntry("Dashboard/Buttons/Elevator Zero L3 Height");
-        _elevatorZeroL4HeightButton   = NetworkTableInstance.getDefault().getEntry("Dashboard/Buttons/Elevator Zero L4 Height");
-        _elevatorZeroHangHeightButton = NetworkTableInstance.getDefault().getEntry("Dashboard/Buttons/Elevator Zero Hang Height");
-        _elevatorZeroLowAlgaeHeightButton   = NetworkTableInstance.getDefault().getEntry("Dashboard/Buttons/Elevator Zero Low Algae Height");
+        _elevatorZeroMinHeightButton       = NetworkTableInstance.getDefault().getEntry("Dashboard/Buttons/Elevator Zero Min Height");
+        _elevatorZeroMaxHeightButton       = NetworkTableInstance.getDefault().getEntry("Dashboard/Buttons/Elevator Zero Max Height");
+        _elevatorZeroStowHeightButton      = NetworkTableInstance.getDefault().getEntry("Dashboard/Buttons/Elevator Zero Stow Height");
+        _elevatorZeroL1HeightButton        = NetworkTableInstance.getDefault().getEntry("Dashboard/Buttons/Elevator Zero L1 Height");
+        _elevatorZeroL2HeightButton        = NetworkTableInstance.getDefault().getEntry("Dashboard/Buttons/Elevator Zero L2 Height");
+        _elevatorZeroL3HeightButton        = NetworkTableInstance.getDefault().getEntry("Dashboard/Buttons/Elevator Zero L3 Height");
+        _elevatorZeroL4HeightButton        = NetworkTableInstance.getDefault().getEntry("Dashboard/Buttons/Elevator Zero L4 Height");
+        _elevatorZeroHangHeightButton      = NetworkTableInstance.getDefault().getEntry("Dashboard/Buttons/Elevator Zero Hang Height");
+        _elevatorZeroLowAlgaeHeightButton  = NetworkTableInstance.getDefault().getEntry("Dashboard/Buttons/Elevator Zero Low Algae Height");
         _elevatorZeroHighAlgaeHeightButton = NetworkTableInstance.getDefault().getEntry("Dashboard/Buttons/Elevator Zero High Algae Height");
-        _driveZeroFLOffsetButton      = NetworkTableInstance.getDefault().getEntry("Dashboard/Buttons/Drive Zero FL Offset");
-        _driveZeroFROffsetButton      = NetworkTableInstance.getDefault().getEntry("Dashboard/Buttons/Drive Zero FR Offset");
-        _driveZeroBLOffsetButton      = NetworkTableInstance.getDefault().getEntry("Dashboard/Buttons/Drive Zero BL Offset");
-        _driveZeroBROffsetButton      = NetworkTableInstance.getDefault().getEntry("Dashboard/Buttons/Drive Zero BR Offset");
-        _driveZeroModuleOffsetsButton = NetworkTableInstance.getDefault().getEntry("Dashboard/Buttons/Drive Zero Module Offsets");
+        _driveZeroFLOffsetButton           = NetworkTableInstance.getDefault().getEntry("Dashboard/Buttons/Drive Zero FL Offset");
+        _driveZeroFROffsetButton           = NetworkTableInstance.getDefault().getEntry("Dashboard/Buttons/Drive Zero FR Offset");
+        _driveZeroBLOffsetButton           = NetworkTableInstance.getDefault().getEntry("Dashboard/Buttons/Drive Zero BL Offset");
+        _driveZeroBROffsetButton           = NetworkTableInstance.getDefault().getEntry("Dashboard/Buttons/Drive Zero BR Offset");
+        _driveZeroModuleOffsetsButton      = NetworkTableInstance.getDefault().getEntry("Dashboard/Buttons/Drive Zero Module Offsets");
 
         _elevatorZeroMinHeightButton.setBoolean(false);
         _elevatorZeroMaxHeightButton.setBoolean(false);
@@ -234,8 +234,8 @@ public class DashboardIONetwork implements DashboardIO
         inputs.elevatorL3Height                = Preferences.getDouble(_elevatorL3HeightKey, Constants.Elevator.L3_HEIGHT);
         inputs.elevatorL4Height                = Preferences.getDouble(_elevatorL4HeightKey, Constants.Elevator.L4_HEIGHT);
         inputs.elevatorHangHeight              = Preferences.getDouble(_elevatorHangHeightKey, Constants.Elevator.HANG_HEIGHT);
-        inputs.elevatorLowAlgaeHeight                = Preferences.getDouble(_elevatorLowAlgaeHeightKey, Constants.Elevator.LOW_ALGAE_HEIGHT);
-        inputs.elevatorHighAlgaeHeight              = Preferences.getDouble(_elevatorHighAlgaeHeightKey, Constants.Elevator.HIGH_ALGAE_HEIGHT);
+        inputs.elevatorLowAlgaeHeight          = Preferences.getDouble(_elevatorLowAlgaeHeightKey, Constants.Elevator.LOW_ALGAE_HEIGHT);
+        inputs.elevatorHighAlgaeHeight         = Preferences.getDouble(_elevatorHighAlgaeHeightKey, Constants.Elevator.HIGH_ALGAE_HEIGHT);
         inputs.elevatorKP                      = Preferences.getDouble(_elevatorKPKey, Constants.Elevator.EXTENSION_KP);
         inputs.elevatorKD                      = Preferences.getDouble(_elevatorKDKey, Constants.Elevator.EXTENSION_KD);
         inputs.elevatorMaxDownwardPercentSpeed = Preferences.getDouble(_elevatorMaxDownPercentKey, Constants.Elevator.MAX_DESCENT_SPEED);
@@ -260,21 +260,21 @@ public class DashboardIONetwork implements DashboardIO
         inputs.driveBROffset = Rotation2d.fromDegrees(Preferences.getDouble(_driveBROffsetKey, Constants.Drive.BR_ZERO_ROTATION.getDegrees()));
 
         // Buttons
-        inputs.elevatorZeroMinHeightPressed  = _elevatorZeroMinHeightButton.getBoolean(false);
-        inputs.elevatorZeroMaxHeightPressed  = _elevatorZeroMaxHeightButton.getBoolean(false);
-        inputs.elevatorZeroStowHeightPressed = _elevatorZeroStowHeightButton.getBoolean(false);
-        inputs.elevatorZeroL1HeightPressed   = _elevatorZeroL1HeightButton.getBoolean(false);
-        inputs.elevatorZeroL2HeightPressed   = _elevatorZeroL2HeightButton.getBoolean(false);
-        inputs.elevatorZeroL3HeightPressed   = _elevatorZeroL3HeightButton.getBoolean(false);
-        inputs.elevatorZeroL4HeightPressed   = _elevatorZeroL4HeightButton.getBoolean(false);
-        inputs.elevatorZeroHangHeightPressed = _elevatorZeroHangHeightButton.getBoolean(false);
-        inputs.elevatorZeroLowAlgaeHeightPressed   = _elevatorZeroL4HeightButton.getBoolean(false);
+        inputs.elevatorZeroMinHeightPressed       = _elevatorZeroMinHeightButton.getBoolean(false);
+        inputs.elevatorZeroMaxHeightPressed       = _elevatorZeroMaxHeightButton.getBoolean(false);
+        inputs.elevatorZeroStowHeightPressed      = _elevatorZeroStowHeightButton.getBoolean(false);
+        inputs.elevatorZeroL1HeightPressed        = _elevatorZeroL1HeightButton.getBoolean(false);
+        inputs.elevatorZeroL2HeightPressed        = _elevatorZeroL2HeightButton.getBoolean(false);
+        inputs.elevatorZeroL3HeightPressed        = _elevatorZeroL3HeightButton.getBoolean(false);
+        inputs.elevatorZeroL4HeightPressed        = _elevatorZeroL4HeightButton.getBoolean(false);
+        inputs.elevatorZeroHangHeightPressed      = _elevatorZeroHangHeightButton.getBoolean(false);
+        inputs.elevatorZeroLowAlgaeHeightPressed  = _elevatorZeroL4HeightButton.getBoolean(false);
         inputs.elevatorZeroHighAlgaeHeightPressed = _elevatorZeroHangHeightButton.getBoolean(false);
-        inputs.driveZeroFLModulePressed      = _driveZeroFLOffsetButton.getBoolean(false);
-        inputs.driveZeroFRModulePressed      = _driveZeroFROffsetButton.getBoolean(false);
-        inputs.driveZeroBLModulePressed      = _driveZeroBLOffsetButton.getBoolean(false);
-        inputs.driveZeroBRModulePressed      = _driveZeroBROffsetButton.getBoolean(false);
-        inputs.driveZeroModulesPressed       = _driveZeroModuleOffsetsButton.getBoolean(false);
+        inputs.driveZeroFLModulePressed           = _driveZeroFLOffsetButton.getBoolean(false);
+        inputs.driveZeroFRModulePressed           = _driveZeroFROffsetButton.getBoolean(false);
+        inputs.driveZeroBLModulePressed           = _driveZeroBLOffsetButton.getBoolean(false);
+        inputs.driveZeroBRModulePressed           = _driveZeroBROffsetButton.getBoolean(false);
+        inputs.driveZeroModulesPressed            = _driveZeroModuleOffsetsButton.getBoolean(false);
 
         // Auto Selectors
         inputs.autoDelay         = _autoDelayChooser.getSelected();

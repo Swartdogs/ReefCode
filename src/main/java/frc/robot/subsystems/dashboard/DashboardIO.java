@@ -20,8 +20,8 @@ public interface DashboardIO
         public double elevatorL3Height                = Constants.Elevator.L3_HEIGHT;
         public double elevatorL4Height                = Constants.Elevator.L4_HEIGHT;
         public double elevatorHangHeight              = Constants.Elevator.HANG_HEIGHT;
-        public double elevatorLowAlgaeHeight                = Constants.Elevator.L4_HEIGHT;
-        public double elevatorHighAlgaeHeight              = Constants.Elevator.HANG_HEIGHT;
+        public double elevatorLowAlgaeHeight          = Constants.Elevator.L4_HEIGHT;
+        public double elevatorHighAlgaeHeight         = Constants.Elevator.HANG_HEIGHT;
         public double elevatorKP                      = Constants.Elevator.EXTENSION_KP;
         public double elevatorKD                      = Constants.Elevator.EXTENSION_KD;
         public double elevatorMaxUpwardPercentSpeed   = Constants.Elevator.MAX_ASCENT_SPEED;
@@ -46,21 +46,21 @@ public interface DashboardIO
         public Rotation2d driveBROffset = Constants.Drive.BR_ZERO_ROTATION;
 
         // Buttons
-        public boolean elevatorZeroMinHeightPressed  = false;
-        public boolean elevatorZeroMaxHeightPressed  = false;
-        public boolean elevatorZeroStowHeightPressed = false;
-        public boolean elevatorZeroL1HeightPressed   = false;
-        public boolean elevatorZeroL2HeightPressed   = false;
-        public boolean elevatorZeroL3HeightPressed   = false;
-        public boolean elevatorZeroL4HeightPressed   = false;
-        public boolean elevatorZeroHangHeightPressed = false;
-        public boolean elevatorZeroLowAlgaeHeightPressed   = false;
+        public boolean elevatorZeroMinHeightPressed       = false;
+        public boolean elevatorZeroMaxHeightPressed       = false;
+        public boolean elevatorZeroStowHeightPressed      = false;
+        public boolean elevatorZeroL1HeightPressed        = false;
+        public boolean elevatorZeroL2HeightPressed        = false;
+        public boolean elevatorZeroL3HeightPressed        = false;
+        public boolean elevatorZeroL4HeightPressed        = false;
+        public boolean elevatorZeroHangHeightPressed      = false;
+        public boolean elevatorZeroLowAlgaeHeightPressed  = false;
         public boolean elevatorZeroHighAlgaeHeightPressed = false;
-        public boolean driveZeroFLModulePressed      = false;
-        public boolean driveZeroFRModulePressed      = false;
-        public boolean driveZeroBLModulePressed      = false;
-        public boolean driveZeroBRModulePressed      = false;
-        public boolean driveZeroModulesPressed       = false;
+        public boolean driveZeroFLModulePressed           = false;
+        public boolean driveZeroFRModulePressed           = false;
+        public boolean driveZeroBLModulePressed           = false;
+        public boolean driveZeroBRModulePressed           = false;
+        public boolean driveZeroModulesPressed            = false;
 
         // Auto Selectors
         public int    autoDelay         = 0;
@@ -180,7 +180,7 @@ public interface DashboardIO
     public default void releaseElevatorHangHeightZeroButton()
     {
     }
-    
+
     public default void releaseElevatorLowAlgaeHeightZeroButton()
     {
     }

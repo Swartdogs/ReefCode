@@ -22,5 +22,8 @@ public class GyroIONavX implements GyroIO
         inputs.yawVelocityRadPerSec = Units.degreesToRadians(-_gyro.getRate());
         inputs.rollPosition         = Rotation2d.fromDegrees(_gyro.getRoll());
         inputs.pitchPosition        = Rotation2d.fromDegrees(_gyro.getPitch());
+        inputs.accelerationX        = _gyro.getWorldLinearAccelX();
+        inputs.accelerationY        = _gyro.getWorldLinearAccelY();
+        inputs.accelerationZ        = _gyro.getWorldLinearAccelZ();
     }
 }

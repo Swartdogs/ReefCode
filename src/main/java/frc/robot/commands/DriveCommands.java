@@ -8,6 +8,8 @@ import java.util.Set;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -95,6 +97,7 @@ public final class DriveCommands
                 Drive.getInstance().xDriveInit(target.getX(), translationMaxSpeed);
                 Drive.getInstance().yDriveInit(target.getY(), translationMaxSpeed);
                 Drive.getInstance().rotateInit(target.getRotation(), rotationMaxSpeed);
+                Logger.recordOutput("DriveToPose", target);
             }),
             joystickDrive(() -> Drive.getInstance().xDriveExecute(), () -> Drive.getInstance().yDriveExecute(), () -> Drive.getInstance().rotateExecute(), () -> false, 1, 1)
             .finallyDo(() -> Drive.getInstance().stop())

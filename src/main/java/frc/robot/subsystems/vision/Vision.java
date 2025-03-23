@@ -6,7 +6,6 @@ import java.util.Map;
 
 import org.littletonrobotics.junction.Logger;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -16,10 +15,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.Field.Branch;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.util.Utilities;
 
 public class Vision extends SubsystemBase
 {
@@ -61,7 +62,6 @@ public class Vision extends SubsystemBase
     private final PIDController            _yController = new PIDController(Constants.Vision.AUTO_ALIGN_KP, 0, Constants.Vision.AUTO_ALIGN_KD);
     private Pose2d                         _lastPose    = new Pose2d();
     private Branch                         _branch;
-    private double                         _maxSpeed;
 
     private Vision(VisionIO io, Camera camera)
     {
@@ -165,33 +165,22 @@ public class Vision extends SubsystemBase
         }
     }
 
-    public void setVisionReference(Branch branch, double maxSpeed)
+    public void setVisionReference(Branch branch)
     {
-        _maxSpeed = Math.abs(maxSpeed);
         _branch   = branch;
     }
 
-    public double alignExecute()
+    public Transform2d getHorizontalTranslation()
     {
-        double setpoint = Units.radiansToDegrees(Math.asin(_branch.getReference().getY() / getTargetDistance(_branch.getID())));
-        double calc     = MathUtil.clamp(_yController.calculate(getTargetYaw(_branch.getID()).getDegrees(), setpoint), -_maxSpeed, _maxSpeed);
-        Logger.recordOutput("Vision/YawSetpoint", setpoint);
-        Logger.recordOutput("Vision/YDrive", calc);
-        return calc;
-    }
-
-    public boolean alignIsFinished()
-    {
-        return hasTarget() && _yController.atSetpoint();
-    }
-
-    public double getHorizontalTranslation()
-    {
-        if (hasTarget())
+        if (hasTarget() && _inputs.hasPose)
         {
-            
+            var localPose = _inputs.pose.minus(Utilities.getTagPose(_branch.getID()));
+
+            var distToDrive = _branch.getReference().getY() - localPose.getY();
+
+            return new Transform2d(0, distToDrive, new Rotation2d());
         }
 
-        return 0;
+        return new Transform2d();
     }
 }

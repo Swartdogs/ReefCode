@@ -493,6 +493,7 @@ public class Drive extends SubsystemBase
 
     public boolean collisionDetected()
     {
+        // TODO : replace with gyro acceleration threshold
         return _collisionFilter.calculate(getAverageModuleCurrent()) >= Constants.Drive.COLLISION_CURRENT_THRESHOLD;
     }
 
