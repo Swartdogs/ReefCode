@@ -140,6 +140,17 @@ public class Module
         _io.setTurnBrakeMode(enabled);
     }
 
+    public void setAbsoluteEncoderOffset(Rotation2d moduleOffset)
+    {
+        _io.setAngleOffset(moduleOffset);
+    }
+
+    public void setDriveVolts(double volts)
+    {
+        _speedSetpoint = null;
+        _io.setDriveVolts(volts);
+    }
+
     /** Returns the current turn angle of the module. */
     public Rotation2d getAngle()
     {
@@ -196,19 +207,13 @@ public class Module
         return Units.radiansToRotations(_inputs.driveVelocityRadPerSec);
     }
 
-    public void setAbsoluteEncoderOffset(Rotation2d moduleOffset)
-    {
-        _io.setAngleOffset(moduleOffset);
-    }
-
-    public void setDriveVolts(double volts)
-    {
-        _speedSetpoint = null;
-        _io.setDriveVolts(volts);
-    }
-
     public double getDriveCurrent()
     {
         return _inputs.driveCurrentAmps;
+    }
+
+    public Rotation2d getRawRotation()
+    {
+        return _inputs.rawRotationPosition;
     }
 }

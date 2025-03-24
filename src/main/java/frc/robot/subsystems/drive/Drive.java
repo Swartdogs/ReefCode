@@ -493,4 +493,9 @@ public class Drive extends SubsystemBase
     {
         return _gyroInputs.accelerationX >= Constants.Drive.ACCELEROMETER_COLLISION_THRESHOLD;
     }
+
+    public Module[] getModules()
+    {
+        return _modules;
+    }
 }

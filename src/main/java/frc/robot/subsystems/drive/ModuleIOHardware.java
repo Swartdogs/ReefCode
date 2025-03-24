@@ -122,6 +122,7 @@ public class ModuleIOHardware implements ModuleIO
 
         inputs.turnAbsolutePosition  = Rotation2d.fromRotations(_turnPot.get()).minus(_potOffset);
         inputs.turnPosition          = Rotation2d.fromRotations(_turnEncoder.getPosition() / Constants.Drive.TURN_MOTOR_REDUCTION);
+        inputs.rawRotationPosition   = Rotation2d.fromRotations(_turnPot.get());
         inputs.turnVelocityRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(_turnEncoder.getVelocity()) / Constants.Drive.TURN_MOTOR_REDUCTION;
         inputs.turnAppliedVolts      = _turnMotor.getAppliedOutput() * _turnMotor.getBusVoltage();
         inputs.turnCurrentAmps       = _turnMotor.getOutputCurrent();

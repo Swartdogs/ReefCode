@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
+import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.elevator.Elevator;
 
 public class DashboardIONetwork implements DashboardIO
@@ -494,30 +495,38 @@ public class DashboardIONetwork implements DashboardIO
     @Override
     public void releaseDriveFLOffsetZeroButton()
     {
+        Preferences.setDouble(_driveFLOffsetKey, Drive.getInstance().getModules()[0].getRawRotation().plus(Rotation2d.fromDegrees(45)).getDegrees());
         _driveZeroFLOffsetButton.setBoolean(false);
     }
 
     @Override
     public void releaseDriveFROffsetZeroButton()
     {
+        Preferences.setDouble(_driveFROffsetKey, Drive.getInstance().getModules()[1].getRawRotation().plus(Rotation2d.fromDegrees(135)).getDegrees());
         _driveZeroFROffsetButton.setBoolean(false);
     }
 
     @Override
     public void releaseDriveBLOffsetZeroButton()
     {
+        Preferences.setDouble(_driveBLOffsetKey, Drive.getInstance().getModules()[2].getRawRotation().minus(Rotation2d.fromDegrees(45)).getDegrees());
         _driveZeroBLOffsetButton.setBoolean(false);
     }
 
     @Override
     public void releaseDriveBROffsetZeroButton()
     {
+        Preferences.setDouble(_driveBROffsetKey, Drive.getInstance().getModules()[3].getRawRotation().minus(Rotation2d.fromDegrees(135)).getDegrees());
         _driveZeroBROffsetButton.setBoolean(false);
     }
 
     @Override
     public void releaseDriveModuleOffsetZeroButton()
     {
+        releaseDriveFLOffsetZeroButton();
+        releaseDriveFROffsetZeroButton();
+        releaseDriveBLOffsetZeroButton();
+        releaseDriveBROffsetZeroButton();
         _driveZeroModuleOffsetsButton.setBoolean(false);
     }
 }
