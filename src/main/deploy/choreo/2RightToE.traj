@@ -1,5 +1,5 @@
 {
- "name":"2RightToD",
+ "name":"2RightToE",
  "version":1,
  "snapshot":{
   "waypoints":[
@@ -17,7 +17,7 @@
  },
  "params":{
   "waypoints":[
-    {"x":{"exp":"RightStar.x", "val":7.181602478027344}, "y":{"exp":"RightStar.y", "val":1.9102410078048704}, "heading":{"exp":"RightStar.heading", "val":-3.141592653589793}, "intervals":45, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
+    {"x":{"exp":"RightStart.x", "val":7.181602478027344}, "y":{"exp":"RightStart.y", "val":1.9102410078048704}, "heading":{"exp":"RightStart.heading", "val":-3.141592653589793}, "intervals":45, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
     {"x":{"exp":"5.719944000244141 m", "val":5.719944000244141}, "y":{"exp":"2.216169595718384 m", "val":2.216169595718384}, "heading":{"exp":"120 deg", "val":2.0943951023931953}, "intervals":28, "split":false, "fixTranslation":true, "fixHeading":false, "overrideIntervals":false},
     {"x":{"exp":"4.99570369720459 m", "val":4.99570369720459}, "y":{"exp":"2.7951912879943848 m", "val":2.7951912879943848}, "heading":{"exp":"E.heading", "val":2.0943951023931953}, "intervals":40, "split":false, "fixTranslation":true, "fixHeading":false, "overrideIntervals":false}],
   "constraints":[
