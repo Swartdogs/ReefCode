@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 import frc.robot.commands.CompositeCommands;
 import frc.robot.subsystems.dashboard.Dashboard;
+import frc.robot.subsystems.manipulator.Manipulator;
 
 import static edu.wpi.first.units.Units.*;
 
@@ -61,7 +62,6 @@ public class Elevator extends SubsystemBase
     private final PIDController              _extensionPID;
     private final SysIdRoutine               _sysId;
     private Double                           _extensionSetpoint = null;
-    private boolean                          _differential      = false;
 
     private Elevator(ElevatorIO io)
     {
@@ -91,7 +91,7 @@ public class Elevator extends SubsystemBase
 
     public void setExtension(ElevatorHeight elevatorHeight) // height is measured in inches
     {
-        _differential      = elevatorHeight == ElevatorHeight.Level1;
+        Manipulator.getInstance().setDifferential(elevatorHeight == ElevatorHeight.Level1);
         _extensionSetpoint = elevatorHeight.getHeight();
     }
 
@@ -125,12 +125,7 @@ public class Elevator extends SubsystemBase
     {
         return _extensionSetpoint;
     }
-
-    public boolean isDifferential()
-    {
-        return _differential;
-    }
-
+    
     public void stop()
     {
         _extensionSetpoint = null;

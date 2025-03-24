@@ -33,6 +33,7 @@ public class Manipulator extends SubsystemBase
     private final ManipulatorIOInputsAutoLogged _inputs = new ManipulatorIOInputsAutoLogged();
     private Debouncer                           _debouncer;
     private boolean                             _coralDetected;
+    private boolean                             _isDifferential;
 
     private Manipulator(ManipulatorIO io)
     {
@@ -64,7 +65,7 @@ public class Manipulator extends SubsystemBase
 
     public void coralOutput()
     {
-        if (Elevator.getInstance().isDifferential())
+        if (_isDifferential)
         {
             _io.setLeftVolts(Dashboard.getInstance().getManipulatorCoralOutputPercentSpeed() * Constants.General.MOTOR_VOLTAGE);
             _io.setRightVolts(Dashboard.getInstance().getManipulatorCoralOutputPercentSpeed() * Dashboard.getInstance().getManipulatorL1SpeedMultiplier() * Constants.General.MOTOR_VOLTAGE);
@@ -93,6 +94,11 @@ public class Manipulator extends SubsystemBase
     public void setVolts(double volts)
     {
         _io.setVolts(volts);
+    }
+
+    public void setDifferential(boolean isDifferential)
+    {
+        _isDifferential = isDifferential;
     }
 
     public boolean detectedCoral()
