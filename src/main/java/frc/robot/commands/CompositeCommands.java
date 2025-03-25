@@ -116,14 +116,16 @@ public class CompositeCommands
         // @formatter:off
     }
 
-    public static Command intake()
+    public static Command coralIntake()
     {
         // @formatter:off
         return Commands.sequence
         (
             Commands.repeatingSequence
             (
+                ElevatorCommands.setHeight(ElevatorHeight.Stow).unless(() -> Elevator.getInstance().getSetpoint() == null),
                 ManipulatorCommands.coralIntake()
+                // ElevatorCommands.setHeight(ElevatorHeight.Coast)
             )
             .until(() -> Manipulator.getInstance().hasCoral()),
 
@@ -133,7 +135,7 @@ public class CompositeCommands
         // @formatter:on
     }
 
-    public static Command output()
+    public static Command coralOutput()
     {
         // @formatter:off
         return Commands.sequence

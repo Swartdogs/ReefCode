@@ -125,7 +125,7 @@ public class Elevator extends SubsystemBase
     {
         return _extensionSetpoint;
     }
-    
+
     public void stop()
     {
         _extensionSetpoint = null;

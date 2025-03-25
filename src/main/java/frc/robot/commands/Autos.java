@@ -49,7 +49,7 @@ public class Autos
                 CompositeCommands.setHeight(ElevatorHeight.Level4)
             ),
             Commands.waitSeconds(1.0),
-            CompositeCommands.output()
+            CompositeCommands.coralOutput()
         );
         // @formatter:on
     }
@@ -69,10 +69,10 @@ public class Autos
                 CompositeCommands.setHeight(ElevatorHeight.Level4)
             ),
             Commands.waitSeconds(1),
-            CompositeCommands.output(),
+            CompositeCommands.coralOutput(),
             autoFactory.trajectoryCmd(pathToCS),
             Drive.getInstance().runOnce(() -> Drive.getInstance().stop()),
-            CompositeCommands.intake(),
+            CompositeCommands.coralIntake(),
             CompositeCommands.setHeight(ElevatorHeight.Level1),
             autoFactory.trajectoryCmd(pathToPegTwo),
             Commands.parallel
@@ -81,7 +81,7 @@ public class Autos
                 CompositeCommands.setHeight(ElevatorHeight.Level4)
             ),
             Commands.waitSeconds(1),
-            CompositeCommands.output()
+            CompositeCommands.coralOutput()
         );
         // @formatter:on
     }
@@ -96,19 +96,19 @@ public class Autos
             CompositeCommands.setHeight(ElevatorHeight.Level3),
             autoFactory.trajectoryCmd(pathToPegOne),
             CompositeCommands.setHeight(ElevatorHeight.Level4),
-            CompositeCommands.output(),
+            CompositeCommands.coralOutput(),
             autoFactory.trajectoryCmd(pathToCSOne),
-            CompositeCommands.intake(),
+            CompositeCommands.coralIntake(),
             CompositeCommands.setHeight(ElevatorHeight.Level3),
             autoFactory.trajectoryCmd(pathToPegTwo),
             CompositeCommands.setHeight(ElevatorHeight.Level4),
-            CompositeCommands.output(),
+            CompositeCommands.coralOutput(),
             autoFactory.trajectoryCmd(pathToCSTwo),
-            CompositeCommands.intake(),
+            CompositeCommands.coralIntake(),
             CompositeCommands.setHeight(ElevatorHeight.Level3),
             autoFactory.trajectoryCmd(pathToPegThree),
             CompositeCommands.setHeight(ElevatorHeight.Level4),
-            CompositeCommands.output()
+            CompositeCommands.coralOutput()
         );
         // @formatter:on
     }
@@ -123,25 +123,25 @@ public class Autos
             CompositeCommands.setHeight(ElevatorHeight.Level3),
             autoFactory.trajectoryCmd(pathToPegOne),
             CompositeCommands.setHeight(ElevatorHeight.Level4),
-            CompositeCommands.output(),
+            CompositeCommands.coralOutput(),
             autoFactory.trajectoryCmd(pathToCSOne),
-            CompositeCommands.intake(),
+            CompositeCommands.coralIntake(),
             CompositeCommands.setHeight(ElevatorHeight.Level3),
             autoFactory.trajectoryCmd(pathToPegTwo),
             CompositeCommands.setHeight(ElevatorHeight.Level4),
-            CompositeCommands.output(),
+            CompositeCommands.coralOutput(),
             autoFactory.trajectoryCmd(pathToCSTwo),
-            CompositeCommands.intake(),
+            CompositeCommands.coralIntake(),
             CompositeCommands.setHeight(ElevatorHeight.Level3),
             autoFactory.trajectoryCmd(pathToPegThree),
             CompositeCommands.setHeight(ElevatorHeight.Level4),
-            CompositeCommands.output(),
+            CompositeCommands.coralOutput(),
             autoFactory.trajectoryCmd(pathToCSThree),
-            CompositeCommands.intake(),
+            CompositeCommands.coralIntake(),
             CompositeCommands.setHeight(ElevatorHeight.Level3),
             autoFactory.trajectoryCmd(pathToPegFour),
             CompositeCommands.setHeight(ElevatorHeight.Level4),
-            CompositeCommands.output()
+            CompositeCommands.coralOutput()
         );
         // @formatter:on
     }
@@ -180,7 +180,7 @@ public class Autos
                     CompositeCommands.setHeight(ElevatorHeight.Level4)
                 ),
                 Commands.waitSeconds(0.5),
-                CompositeCommands.output(),
+                CompositeCommands.coralOutput(),
                 Commands.parallel
                 (
                     Commands.sequence
@@ -191,7 +191,7 @@ public class Autos
                     Commands.sequence
                     (
                         Commands.waitSeconds(0.5),
-                        CompositeCommands.intake()
+                        CompositeCommands.coralIntake()
                     )
                 )
             );

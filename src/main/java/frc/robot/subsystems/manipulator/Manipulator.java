@@ -58,11 +58,6 @@ public class Manipulator extends SubsystemBase
         _io.setVolts(Dashboard.getInstance().getManipulatorCoralIntakePercentSpeed() * Constants.General.MOTOR_VOLTAGE);
     }
 
-    public void slowCoralIntake()
-    {
-        _io.setVolts(Constants.Manipulator.CORAL_SLOW_INTAKE_SPEED * Constants.General.MOTOR_VOLTAGE);
-    }
-
     public void coralOutput()
     {
         if (_isDifferential)
