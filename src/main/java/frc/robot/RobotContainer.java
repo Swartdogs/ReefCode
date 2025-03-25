@@ -55,15 +55,15 @@ public class RobotContainer
 
         // Trigger _hasCoral = new Trigger(() -> _manipulator.hasCoral());
         // Trigger _manipulatorRunning = new Trigger(() -> _manipulator.isRunning());
-        // Trigger operatorButton13 = _operatorButtons.axisGreaterThan(0, 0.5);
+        Trigger operatorButton13 = _operatorButtons.axisGreaterThan(0, 0.5);
         Trigger operatorButton14 = _operatorButtons.axisGreaterThan(1, 0.5);
-        // Trigger operatorButton15 = _operatorButtons.axisLessThan(1, -0.5);
+        Trigger operatorButton15 = _operatorButtons.axisLessThan(1, -0.5);
 
         // Default command, normal field-relative drive
         Drive.getInstance().setDefaultCommand(CompositeCommands.joystickDrive(() -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), () -> -_driverJoystick.getZ(), () -> robotCentric(), 2, 5));
 
         // Driver Controls
-        _driverJoystick.button(1).onTrue(CompositeCommands.output());
+        _driverJoystick.button(1).onTrue(CompositeCommands.coralOutput());
         _driverJoystick.button(2).whileTrue(DriveCommands.reduceSpeed());
         (_driverJoystick.button(3).and(funnelDropped)).whileTrue(ElevatorCommands.hangExecute());
         _driverJoystick.button(11).onTrue(DriveCommands.resetGyro());
@@ -128,17 +128,18 @@ public class RobotContainer
         _operatorButtons.button(3).onTrue(ElevatorCommands.setHeight(ElevatorHeight.Level2));
         _operatorButtons.button(4).onTrue(ElevatorCommands.setHeight(ElevatorHeight.Level1));
         _operatorButtons.button(5).onTrue(ElevatorCommands.setHeight(ElevatorHeight.Stow));
-        _operatorButtons.button(6).onTrue(CompositeCommands.intake());
+        _operatorButtons.button(6).onTrue(CompositeCommands.coralIntake());
         _operatorButtons.button(7).onTrue(ManipulatorCommands.stop());
-        _operatorButtons.button(8).onTrue(CompositeCommands.output());
+        _operatorButtons.button(8).onTrue(CompositeCommands.coralOutput());
         _operatorButtons.button(9).onTrue(ElevatorCommands.modifyHeight(Constants.Elevator.ELEVATOR_MODIFICATION_HEIGHT));
         _operatorButtons.button(10).onTrue(ElevatorCommands.modifyHeight(-Constants.Elevator.ELEVATOR_MODIFICATION_HEIGHT));
         _operatorButtons.button(11).onTrue(ElevatorCommands.setHeight(ElevatorHeight.HighAlgae));
         _operatorButtons.button(12).onTrue(ElevatorCommands.setHeight(ElevatorHeight.LowAlgae));
+        operatorButton13.onTrue(ElevatorCommands.setHeight(ElevatorHeight.Coast));
         // operatorButton13.onTrue(ElevatorCommands.modifyHeight(Constants.Elevator.ELEVATOR_MODIFICATION_HEIGHT));
         // operatorButton14.onTrue(ElevatorCommands.modifyHeight(-Constants.Elevator.ELEVATOR_MODIFICATION_HEIGHT));
         (operatorButton14.or(_operatorButtons.povDown())).and(_driverJoystick.button(4)).onTrue(FunnelCommands.drop().alongWith(ElevatorCommands.setHeight(ElevatorHeight.Hang)));
-
+        operatorButton15.whileTrue(ManipulatorCommands.algaeIntake());
         // _hasCoral.onTrue(LEDCommands.setDefaultColor(Constants.LED.GREEN));
         // _hasCoral.onFalse(LEDCommands.setDefaultColor(Constants.LED.RED));
         // _manipulatorRunning.whileTrue(LEDCommands.flashColor(Constants.LED.YELLOW));

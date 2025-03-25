@@ -122,7 +122,7 @@ public final class Constants
         public static final double          ROTATE_KD                           = 0.1;
         public static final double          MAX_SPEED_ELEVATOR_MULTIPLIER       = 1;
         public static final double          MIN_SPEED_ELEVATOR_MULTIPLIER       = 0.3;
-        public static final double          MAX_SPEED_ELEVATOR_HEIGHT           = Constants.Elevator.L1_HEIGHT;
+        public static final double          MAX_SPEED_ELEVATOR_HEIGHT           = Constants.Elevator.COAST_HEIGHT;
         public static final double          MIN_SPEED_ELEVATOR_HEIGHT           = Constants.Elevator.L3_HEIGHT;
         public static final double          SPEED_ELEVATOR_M                    = (MAX_SPEED_ELEVATOR_MULTIPLIER - MIN_SPEED_ELEVATOR_MULTIPLIER) / (MAX_SPEED_ELEVATOR_HEIGHT - MIN_SPEED_ELEVATOR_HEIGHT);
         public static final double          SPEED_ELEVATOR_B                    = MAX_SPEED_ELEVATOR_MULTIPLIER - SPEED_ELEVATOR_M * MAX_SPEED_ELEVATOR_HEIGHT;
@@ -131,7 +131,7 @@ public final class Constants
         public static final double          SPEED_MOTION_THRESHOLD              = 0.02 * MAX_LINEAR_SPEED;
         public static final double          ROTATION_MOTION_THRESHOLD           = 0.01 * MAX_ANGULAR_SPEED;
         public static final double          MAX_SNAP_SPEED_PERCENTAGE           = 0.7;
-        public static final double          MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE = 0.20;
+        public static final double          MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE = 0.2;
         public static final double          DEADBAND                            = 0.1;
         public static final double          TRANSLATE_KP                        = 10.0; // Auto-Align
         public static final double          TRANSLATE_KI                        = 0.2;
@@ -292,17 +292,16 @@ public final class Constants
 
     public static class Manipulator
     {
-        public static final DCMotor MANIPULATOR_MOTOR       = DCMotor.getNeo550(2);
-        public static final double  MOTOR_REDUCTION         = 5.0;
-        public static final double  CORAL_INTAKE_SPEED      = 3.5 / Constants.General.MOTOR_VOLTAGE;
-        public static final double  CORAL_SLOW_INTAKE_SPEED = 1.5 / Constants.General.MOTOR_VOLTAGE;
-        public static final double  CORAL_OUTPUT_SPEED      = 10.0 / Constants.General.MOTOR_VOLTAGE;
-        public static final double  ALGAE_INTAKE_SPEED      = -8.0 / Constants.General.MOTOR_VOLTAGE;
-        public static final double  ALGAE_OUTPUT_SPEED      = 10.0 / Constants.General.MOTOR_VOLTAGE;
-        public static final double  L1_SPEED_MULTIPLIER     = 1.0;
-        public static final double  DEBOUNCE_TIMER          = 0.2;
-        public static final double  INDEX_SPEED             = 1.0 / Constants.General.MOTOR_VOLTAGE;
-        public static final double  INDEX_TIME              = 0.35;
+        public static final DCMotor MANIPULATOR_MOTOR   = DCMotor.getNeo550(2);
+        public static final double  MOTOR_REDUCTION     = 5.0;
+        public static final double  CORAL_INTAKE_SPEED  = 3.5 / Constants.General.MOTOR_VOLTAGE;
+        public static final double  CORAL_OUTPUT_SPEED  = 10.0 / Constants.General.MOTOR_VOLTAGE;
+        public static final double  ALGAE_INTAKE_SPEED  = -8.0 / Constants.General.MOTOR_VOLTAGE;
+        public static final double  ALGAE_OUTPUT_SPEED  = 10.0 / Constants.General.MOTOR_VOLTAGE;
+        public static final double  L1_SPEED_MULTIPLIER = 1.0;
+        public static final double  DEBOUNCE_TIMER      = 0.2;
+        public static final double  INDEX_SPEED         = 1.5 / Constants.General.MOTOR_VOLTAGE;
+        public static final double  INDEX_TIME          = 0.42;
     }
 
     public static class Vision
