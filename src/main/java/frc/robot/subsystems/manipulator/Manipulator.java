@@ -106,6 +106,11 @@ public class Manipulator extends SubsystemBase
         return _debouncer.calculate(_coralDetected);
     }
 
+    public boolean coralSafe()
+    {
+        return _inputs.endSensorTripped;
+    }
+
     public boolean isRunning()
     {
         return _inputs.leftAppliedVolts > 0 || _inputs.rightAppliedVolts > 0;

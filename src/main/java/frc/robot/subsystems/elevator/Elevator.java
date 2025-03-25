@@ -21,20 +21,27 @@ public class Elevator extends SubsystemBase
 {
     public enum ElevatorHeight
     {
-        Stow(() -> Dashboard.getInstance().getElevatorStowHeight()), Level1(() -> Dashboard.getInstance().getElevatorL1Height()), Level2(() -> Dashboard.getInstance().getElevatorL2Height()),
-        Level3(() -> Dashboard.getInstance().getElevatorL3Height()), Level4(() -> Dashboard.getInstance().getElevatorL4Height()), Hang(() -> Dashboard.getInstance().getElevatorHangHeight()),
-        LowAlgae(() -> Dashboard.getInstance().getElevatorLowAlgaeHeight()), HighAlgae(() -> Dashboard.getInstance().getElevatorHighAlgaeHeight()), Coast(() -> Dashboard.getInstance().getElevatorCoastHeight());
+        Stow(() -> Dashboard.getInstance().getElevatorStowHeight(), false), Level1(() -> Dashboard.getInstance().getElevatorL1Height(), true), Level2(() -> Dashboard.getInstance().getElevatorL2Height(), true),
+        Level3(() -> Dashboard.getInstance().getElevatorL3Height(), true), Level4(() -> Dashboard.getInstance().getElevatorL4Height(), true), Hang(() -> Dashboard.getInstance().getElevatorHangHeight(), false),
+        LowAlgae(() -> Dashboard.getInstance().getElevatorLowAlgaeHeight(), false), HighAlgae(() -> Dashboard.getInstance().getElevatorHighAlgaeHeight(), false), Coast(() -> Dashboard.getInstance().getElevatorCoastHeight(), false);
 
         private DoubleSupplier _heightSupplier;
+        private boolean        _disableable;
 
-        private ElevatorHeight(DoubleSupplier heightSupplier)
+        private ElevatorHeight(DoubleSupplier heightSupplier, boolean disableable)
         {
             _heightSupplier = heightSupplier;
+            _disableable    = disableable;
         }
 
         public double getHeight()
         {
             return _heightSupplier.getAsDouble();
+        }
+
+        public boolean getDisableable()
+        {
+            return _disableable;
         }
     }
 

@@ -50,7 +50,7 @@ public class RobotContainer
         Trigger funnelDropped = new Trigger(() -> Funnel.getInstance().isDropped());
 
         Trigger driverButton13 = _driverButtons.axisLessThan(0, -0.5);
-        Trigger driverButton14 = _driverButtons.axisGreaterThan(0, 0.5);
+        Trigger driverButton14 = _driverButtons.axisGreaterThan(1, 0.5);
         Trigger driverButton15 = _driverButtons.axisLessThan(1, -0.5);
 
         // Trigger _hasCoral = new Trigger(() -> _manipulator.hasCoral());
@@ -123,19 +123,19 @@ public class RobotContainer
         driverButton15.whileTrue(DriveCommands.driveAtOrientation(() -> -_driverJoystick.getY(), () -> -_driverJoystick.getX(), this::robotCentric, Constants.Field.BLUE_PROCESSOR_ANGLE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE));
 
         // Operator Controls
-        _operatorButtons.button(1).onTrue(ElevatorCommands.setHeight(ElevatorHeight.Level4));
-        _operatorButtons.button(2).onTrue(ElevatorCommands.setHeight(ElevatorHeight.Level3));
-        _operatorButtons.button(3).onTrue(ElevatorCommands.setHeight(ElevatorHeight.Level2));
-        _operatorButtons.button(4).onTrue(ElevatorCommands.setHeight(ElevatorHeight.Level1));
-        _operatorButtons.button(5).onTrue(ElevatorCommands.setHeight(ElevatorHeight.Stow));
+        _operatorButtons.button(1).onTrue(CompositeCommands.setHeight(ElevatorHeight.Level4));
+        _operatorButtons.button(2).onTrue(CompositeCommands.setHeight(ElevatorHeight.Level3));
+        _operatorButtons.button(3).onTrue(CompositeCommands.setHeight(ElevatorHeight.Level2));
+        _operatorButtons.button(4).onTrue(CompositeCommands.setHeight(ElevatorHeight.Level1));
+        _operatorButtons.button(5).onTrue(CompositeCommands.setHeight(ElevatorHeight.Stow));
         _operatorButtons.button(6).onTrue(CompositeCommands.coralIntake());
         _operatorButtons.button(7).onTrue(ManipulatorCommands.stop());
         _operatorButtons.button(8).onTrue(CompositeCommands.coralOutput());
         _operatorButtons.button(9).onTrue(ElevatorCommands.modifyHeight(Constants.Elevator.ELEVATOR_MODIFICATION_HEIGHT));
         _operatorButtons.button(10).onTrue(ElevatorCommands.modifyHeight(-Constants.Elevator.ELEVATOR_MODIFICATION_HEIGHT));
-        _operatorButtons.button(11).onTrue(ElevatorCommands.setHeight(ElevatorHeight.HighAlgae));
-        _operatorButtons.button(12).onTrue(ElevatorCommands.setHeight(ElevatorHeight.LowAlgae));
-        operatorButton13.onTrue(ElevatorCommands.setHeight(ElevatorHeight.Coast));
+        _operatorButtons.button(11).onTrue(CompositeCommands.setHeight(ElevatorHeight.HighAlgae));
+        _operatorButtons.button(12).onTrue(CompositeCommands.setHeight(ElevatorHeight.LowAlgae));
+        operatorButton13.onTrue(CompositeCommands.setHeight(ElevatorHeight.Coast));
         // operatorButton13.onTrue(ElevatorCommands.modifyHeight(Constants.Elevator.ELEVATOR_MODIFICATION_HEIGHT));
         // operatorButton14.onTrue(ElevatorCommands.modifyHeight(-Constants.Elevator.ELEVATOR_MODIFICATION_HEIGHT));
         (operatorButton14.or(_operatorButtons.povDown())).and(_driverJoystick.button(4)).onTrue(FunnelCommands.drop().alongWith(ElevatorCommands.setHeight(ElevatorHeight.Hang)));

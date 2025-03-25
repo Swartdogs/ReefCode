@@ -91,10 +91,10 @@ public final class Constants
         public static final double          DRIVE_BASE_RADIUS                   = Math.hypot(TRACK_WIDTH / 2.0, WHEEL_BASE / 2.0);
         public static final Translation2d[] MODULE_TRANSLATIONS                 = new Translation2d[] { new Translation2d(TRACK_WIDTH / 2.0, WHEEL_BASE / 2.0), new Translation2d(TRACK_WIDTH / 2.0, -WHEEL_BASE / 2.0),
                 new Translation2d(-TRACK_WIDTH / 2.0, WHEEL_BASE / 2.0), new Translation2d(-TRACK_WIDTH / 2.0, -WHEEL_BASE / 2.0) };
-        public static final Rotation2d      FL_ZERO_ROTATION                    = Rotation2d.fromRadians(0.944 + Math.PI / 4); // Raw reading + 1/8 for the 45 degree offset
-        public static final Rotation2d      FR_ZERO_ROTATION                    = Rotation2d.fromRadians(-2.942 + 3 * Math.PI / 4);
-        public static final Rotation2d      BL_ZERO_ROTATION                    = Rotation2d.fromRadians(1.12 - Math.PI / 4);
-        public static final Rotation2d      BR_ZERO_ROTATION                    = Rotation2d.fromRadians(-1.150 - 3 * Math.PI / 4);
+        public static final Rotation2d      FL_ZERO_ROTATION                    = Rotation2d.fromDegrees(104.73682672005505); // Rotation2d.fromRadians(0.944 + Math.PI / 4);
+        public static final Rotation2d      FR_ZERO_ROTATION                    = Rotation2d.fromDegrees(-28.896014907341144); // Rotation2d.fromRadians(-2.942 + 3 * Math.PI / 4);
+        public static final Rotation2d      BL_ZERO_ROTATION                    = Rotation2d.fromDegrees(20.22286182699888); // Rotation2d.fromRadians(1.12 - Math.PI / 4);
+        public static final Rotation2d      BR_ZERO_ROTATION                    = Rotation2d.fromDegrees(159.06889771665584); // Rotation2d.fromRadians(-1.150 - 3 * Math.PI / 4);
         public static final int             DRIVE_MOTOR_CURRENT_LIMIT           = 120;
         public static final double          WHEEL_RADIUS                        = Units.inchesToMeters(2.0);
         public static final double          DRIVE_MOTOR_REDUCTION               = 5.67;

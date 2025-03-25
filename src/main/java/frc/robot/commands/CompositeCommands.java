@@ -116,6 +116,7 @@ public class CompositeCommands
         // @formatter:off
     }
 
+    
     public static Command coralIntake()
     {
         // @formatter:off
@@ -150,10 +151,16 @@ public class CompositeCommands
     public static Command setHeight(ElevatorHeight height)
     {
         // @formatter:off
-        return Commands.sequence
+        return 
+        Commands.either
         (
-            ElevatorCommands.setHeight(height),
-            Commands.waitUntil(() -> Elevator.getInstance().atSetpoint())
+            Commands.sequence
+            (
+                ElevatorCommands.setHeight(height), 
+                Commands.waitUntil(() -> Elevator.getInstance().atSetpoint())
+            ),
+            Commands.none(), 
+            () -> !height.getDisableable() || Manipulator.getInstance().coralSafe()
         );
         // @formatter:on
     }
