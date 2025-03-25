@@ -170,7 +170,7 @@ public class Autos
             auto = auto.andThen(
                 Commands.parallel
                 (
-                    CompositeCommands.setHeight(ElevatorHeight.Level1),
+                    CompositeCommands.setHeight(ElevatorHeight.Coast),
                     traj1.cmd()
                 ),
                 Commands.parallel

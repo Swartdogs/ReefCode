@@ -122,7 +122,7 @@ public final class Constants
         public static final double          ROTATE_KD                           = 0.1;
         public static final double          MAX_SPEED_ELEVATOR_MULTIPLIER       = 1;
         public static final double          MIN_SPEED_ELEVATOR_MULTIPLIER       = 0.3;
-        public static final double          MAX_SPEED_ELEVATOR_HEIGHT           = Constants.Elevator.COAST_HEIGHT;
+        public static final double          MAX_SPEED_ELEVATOR_HEIGHT           = Constants.Elevator.L1_HEIGHT;
         public static final double          MIN_SPEED_ELEVATOR_HEIGHT           = Constants.Elevator.L3_HEIGHT;
         public static final double          SPEED_ELEVATOR_M                    = (MAX_SPEED_ELEVATOR_MULTIPLIER - MIN_SPEED_ELEVATOR_MULTIPLIER) / (MAX_SPEED_ELEVATOR_HEIGHT - MIN_SPEED_ELEVATOR_HEIGHT);
         public static final double          SPEED_ELEVATOR_B                    = MAX_SPEED_ELEVATOR_MULTIPLIER - SPEED_ELEVATOR_M * MAX_SPEED_ELEVATOR_HEIGHT;
