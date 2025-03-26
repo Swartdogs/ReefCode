@@ -149,8 +149,8 @@ public final class Constants
 
     public static class Elevator
     {
-        public static final double  RAW_SENSOR_MIN               = 0.628;
-        public static final double  RAW_SENSOR_MAX               = 0.3877;
+        public static final double  RAW_SENSOR_MIN               = 0.625;
+        public static final double  RAW_SENSOR_MAX               = 0.3829;
         public static final double  MIN_EXTENSION                = 14.75;
         public static final double  MAX_EXTENSION                = 77.0;
         public static final double  EXTENSION_KP                 = 0.5;
