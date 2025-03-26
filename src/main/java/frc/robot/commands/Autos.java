@@ -21,7 +21,7 @@ public class Autos
     public static final AutonomousMode ONE_PIECE_LEFT   = splitAuto("LeftToJ", 1);
     public static final AutonomousMode ONE_PIECE_MIDDLE = splitAuto("MiddleToG", 1);
     public static final AutonomousMode ONE_PIECE_RIGHT  = splitAuto("RightToE", 1);
-    public static final AutonomousMode TWO_PIECE_RIGHT  = splitAuto("RightDC", 2);
+    public static final AutonomousMode TWO_PIECE_RIGHT  = splitAuto("RightEC", 2);
     // public static final Command ONE_PIECE_LEFT = oneCoralAuto("LeftToJ");
     // public static final Command ONE_PIECE_MIDDLE = oneCoralAuto("MiddleToG");
     // public static final Command ONE_PIECE_RIGHT = oneCoralAuto("RightToE");
@@ -69,8 +69,12 @@ public class Autos
                 CompositeCommands.setHeight(ElevatorHeight.Level4)
             ),
             Commands.waitSeconds(1),
-            CompositeCommands.coralOutput(),
-            autoFactory.trajectoryCmd(pathToCS),
+            ManipulatorCommands.coralOutput(),
+            Commands.parallel
+            (
+                autoFactory.trajectoryCmd(pathToCS),
+                CompositeCommands.setHeight(ElevatorHeight.Stow)   
+            ),
             Drive.getInstance().runOnce(() -> Drive.getInstance().stop()),
             CompositeCommands.coralIntake(),
             CompositeCommands.setHeight(ElevatorHeight.Level1),
