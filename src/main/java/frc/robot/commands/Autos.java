@@ -184,12 +184,16 @@ public class Autos
                     CompositeCommands.setHeight(ElevatorHeight.Level4)
                 ),
                 Commands.waitSeconds(0.5),
-                CompositeCommands.coralOutput(),
+                ManipulatorCommands.coralOutput(),
                 Commands.parallel
                 (
                     Commands.sequence
                     (
-                        traj2.cmd(),
+                        Commands.parallel
+                        (
+                            traj2.cmd(),
+                            ElevatorCommands.setHeight(ElevatorHeight.Stow)
+                        ),
                         DriveCommands.stop()
                     ),
                     Commands.sequence

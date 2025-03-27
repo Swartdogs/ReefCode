@@ -133,8 +133,8 @@ public class RobotContainer
         _operatorButtons.button(8).onTrue(CompositeCommands.coralOutput());
         _operatorButtons.button(9).onTrue(ElevatorCommands.modifyHeight(Constants.Elevator.ELEVATOR_MODIFICATION_HEIGHT));
         _operatorButtons.button(10).onTrue(ElevatorCommands.modifyHeight(-Constants.Elevator.ELEVATOR_MODIFICATION_HEIGHT));
-        _operatorButtons.button(11).onTrue(CompositeCommands.setHeight(ElevatorHeight.HighAlgae));
-        _operatorButtons.button(12).onTrue(CompositeCommands.setHeight(ElevatorHeight.LowAlgae));
+        _operatorButtons.button(11).whileTrue((CompositeCommands.setHeight(ElevatorHeight.HighAlgae).alongWith(ManipulatorCommands.algaeIntake())));
+        _operatorButtons.button(12).whileTrue((CompositeCommands.setHeight(ElevatorHeight.LowAlgae).alongWith(ManipulatorCommands.algaeIntake())));
         operatorButton13.onTrue(CompositeCommands.setHeight(ElevatorHeight.Coast));
         // operatorButton13.onTrue(ElevatorCommands.modifyHeight(Constants.Elevator.ELEVATOR_MODIFICATION_HEIGHT));
         // operatorButton14.onTrue(ElevatorCommands.modifyHeight(-Constants.Elevator.ELEVATOR_MODIFICATION_HEIGHT));

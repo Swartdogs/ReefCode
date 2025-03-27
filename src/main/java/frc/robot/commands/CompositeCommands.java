@@ -156,10 +156,10 @@ public class CompositeCommands
         (
             Commands.sequence
             (
-                ElevatorCommands.setHeight(height), 
+                ElevatorCommands.setHeight(height),
                 Commands.waitUntil(() -> Elevator.getInstance().atSetpoint())
             ),
-            Commands.none(), 
+            Commands.none(),
             () -> !height.getDisableable() || Manipulator.getInstance().coralSafe()
         );
         // @formatter:on
