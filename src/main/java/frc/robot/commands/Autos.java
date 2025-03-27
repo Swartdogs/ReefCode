@@ -189,18 +189,11 @@ public class Autos
                 (
                     Commands.sequence
                     (
-                        Commands.parallel
-                        (
+                        
                             traj2.cmd(),
-                            ElevatorCommands.setHeight(ElevatorHeight.Stow)
-                        ),
                         DriveCommands.stop()
                     ),
-                    Commands.sequence
-                    (
-                        Commands.waitSeconds(0.5),
                         CompositeCommands.coralIntake()
-                    )
                 )
             );
         }
