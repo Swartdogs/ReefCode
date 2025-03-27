@@ -27,7 +27,7 @@ public class Vision extends SubsystemBase
     public enum Camera
     {
         Front("front", new Transform3d(new Translation3d(Units.inchesToMeters(9), Units.inchesToMeters(12), Units.inchesToMeters(11.75)), new Rotation3d(Rotation2d.fromDegrees(-45)))),
-        FrontCenter("front-center", new Transform3d(new Translation3d(Units.inchesToMeters(9.5), 0.0, Units.inchesToMeters(11.75)), new Rotation3d(Rotation2d.fromDegrees(0))));
+        FrontCenter("front-center", new Transform3d(new Translation3d(Units.inchesToMeters(9.5), Units.inchesToMeters(-0.5), Units.inchesToMeters(11.75)), new Rotation3d(Rotation2d.fromDegrees(0))));
 
         public final String      cameraName;
         public final Transform3d robotToCamera;
