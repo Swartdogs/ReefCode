@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import static edu.wpi.first.units.Units.Rotation;
+
 import java.util.Set;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
@@ -75,7 +77,7 @@ public class CompositeCommands
             (
                 Commands.runOnce(() -> Vision.getInstance(Camera.FrontCenter).setVisionReference(branch)),
 
-                DriveCommands.driveAtOrientation(xSupplier, ySupplier, robotCentric, Constants.Field.getTagAngle(branch.getID()), rotateMaxSpeed)
+                DriveCommands.driveAtOrientation(xSupplier, ySupplier, robotCentric, Constants.Field.getTagAngle(branch.getID()).rotateBy(Rotation2d.fromDegrees(180)), rotateMaxSpeed)
                 .until(() -> Vision.getInstance(Camera.FrontCenter).hasTarget()),
 
                 DriveCommands.driveToPose(Utilities.getTagPose(branch.getID()).rotateAround(Utilities.getTagPose(branch.getID()).getTranslation(), Rotation2d.fromDegrees(180)).transformBy(new Transform2d(branch.getReference(), new Rotation2d())), translateMaxSpeed, rotateMaxSpeed)
