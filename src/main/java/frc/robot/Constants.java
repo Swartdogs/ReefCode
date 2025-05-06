@@ -3,6 +3,9 @@ package frc.robot;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.pathplanner.lib.config.ModuleConfig;
+import com.pathplanner.lib.config.RobotConfig;
+
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -318,5 +321,17 @@ public final class Constants
         public static final double        AUTO_ALIGN_KD              = 0.0;
         public static final Translation2d LEFT_REFERENCE             = new Translation2d(Units.inchesToMeters(-18.5), Units.inchesToMeters(6.5)); // set values
         public static final Translation2d RIGHT_REFERENCE            = new Translation2d(Units.inchesToMeters(-18.5), Units.inchesToMeters(-6.5)); // set values
+    }
+
+    public static class Demo
+    {
+        public static final double       WHEEL_RADIUS  = Units.inchesToMeters(1.5);
+        public static final double       WHEEL_COF     = 1.2;
+        public static final double       ROBOT_MASS    = 63.0947;
+        public static final double       ROBOT_MOI     = 1.8;
+        public static final ModuleConfig MODULE_CONFIG = new ModuleConfig(WHEEL_RADIUS, Drive.MAX_LINEAR_SPEED, WHEEL_COF, Drive.DRIVE_GEARBOX, Drive.DRIVE_MOTOR_REDUCTION, Drive.TURN_MOTOR_CURRENT_LIMIT, 1);
+        public static final RobotConfig  PP_CONFIG     = new RobotConfig(
+                ROBOT_MASS, ROBOT_MOI, new ModuleConfig(WHEEL_RADIUS, Drive.MAX_LINEAR_SPEED, WHEEL_COF, Drive.DRIVE_GEARBOX.withReduction(Drive.DRIVE_MOTOR_REDUCTION), Drive.DRIVE_MOTOR_CURRENT_LIMIT, 1), Drive.MODULE_TRANSLATIONS
+        );
     }
 }

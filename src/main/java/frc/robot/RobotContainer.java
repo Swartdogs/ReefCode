@@ -1,5 +1,7 @@
 package frc.robot;
 
+import com.pathplanner.lib.commands.PathPlannerAuto;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
@@ -147,7 +149,8 @@ public class RobotContainer
 
     public Command getAutonomousCommand()
     {
-        return Dashboard.getInstance().getSelectedAuto();
+        // return Dashboard.getInstance().getSelectedAuto();
+        return new PathPlannerAuto("New Auto");
     }
 
     private boolean robotCentric()

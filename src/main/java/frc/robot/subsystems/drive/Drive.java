@@ -5,6 +5,11 @@ import static edu.wpi.first.units.Units.Volts;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+
 import choreo.trajectory.SwerveSample;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
@@ -99,6 +104,22 @@ public class Drive extends SubsystemBase
         _modules[1] = new Module(frModuleIO, 1);
         _modules[2] = new Module(blModuleIO, 2);
         _modules[3] = new Module(brModuleIO, 3);
+
+        RobotConfig config;
+
+        try
+        {
+            config = RobotConfig.fromGUISettings();
+        }
+        catch (Exception e)
+        {
+            config = Constants.Demo.PP_CONFIG;
+        }
+
+        AutoBuilder.configure(
+                this::getPose, this::setPose, this::getChassisSpeeds, (speeds, feedforwards) -> runVelocity(speeds),
+                new PPHolonomicDriveController(new PIDConstants(Constants.Choreo.DRIVE_KP, Constants.Choreo.DRIVE_KD), new PIDConstants(Constants.Choreo.TURN_KP, Constants.Choreo.TURN_KD)), config, () -> false, this
+        );
 
         _headingController.enableContinuousInput(-Math.PI, Math.PI);
 
