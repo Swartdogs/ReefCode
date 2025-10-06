@@ -163,7 +163,7 @@ public final class Constants
         public static final double  COAST_HEIGHT                 = MIN_EXTENSION + 10.0;
         public static final double  L1_HEIGHT                    = MIN_EXTENSION + 17.453;
         public static final double  L2_HEIGHT                    = MIN_EXTENSION + 19.665;
-        public static final double  L3_HEIGHT                    = MIN_EXTENSION + 32.452;
+        public static final double  L3_HEIGHT                    = MIN_EXTENSION + 29.452;
         public static final double  L4_HEIGHT                    = MIN_EXTENSION + 59.883;
         public static final double  LOW_ALGAE_HEIGHT             = MIN_EXTENSION + 9.557;
         public static final double  HIGH_ALGAE_HEIGHT            = MIN_EXTENSION + 24.344;
