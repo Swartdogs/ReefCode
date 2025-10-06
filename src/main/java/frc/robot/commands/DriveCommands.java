@@ -7,10 +7,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 
 import org.littletonrobotics.junction.Logger;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -34,19 +34,21 @@ public final class DriveCommands
      * Field relative drive command using two joysticks (controlling linear and
      * angular velocities).
      */
-    public static Command joystickDrive(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier omegaSupplier, BooleanSupplier robotCentric)
+    public static Command joystickDrive(Supplier<Translation2d> translationSupplier, DoubleSupplier omegaSupplier, BooleanSupplier robotCentric)
     {
-        return joystickDrive(xSupplier, ySupplier, omegaSupplier, robotCentric, 2, 3);
+        return joystickDrive(translationSupplier, omegaSupplier, robotCentric, 2, 3);
     }
 
-    public static Command joystickDrive(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier omegaSupplier, BooleanSupplier robotCentric, int translateExponent, double rotateExponent)
+    public static Command joystickDrive(Supplier<Translation2d> translationSupplier, DoubleSupplier omegaSupplier, BooleanSupplier robotCentric, int translateExponent, double rotateExponent)
     {
         return Commands.run(() ->
         {
             // Apply deadband
-            double     linearMagnitude = MathUtil.applyDeadband(Math.hypot(xSupplier.getAsDouble(), ySupplier.getAsDouble()), Constants.Controls.JOYSTICK_DEADBAND);
-            Rotation2d linearDirection = new Rotation2d(xSupplier.getAsDouble(), ySupplier.getAsDouble());
-            double     omega           = MathUtil.applyDeadband(omegaSupplier.getAsDouble(), Constants.Controls.JOYSTICK_DEADBAND);
+            Translation2d translation = translationSupplier.get();
+            double        omega       = omegaSupplier.getAsDouble();
+
+            double     linearMagnitude = translation.getNorm();
+            Rotation2d linearDirection = translation.getAngle();
 
             // Square values
             linearMagnitude = Math.pow(linearMagnitude, translateExponent);
@@ -73,14 +75,14 @@ public final class DriveCommands
         }, Drive.getInstance());
     }
 
-    public static Command driveAtOrientation(DoubleSupplier xSupplier, DoubleSupplier ySupplier, BooleanSupplier robotCentric, Rotation2d setpoint, double maxSpeed)
+    public static Command driveAtOrientation(Supplier<Translation2d> translationSupplier, BooleanSupplier robotCentric, Rotation2d setpoint, double maxSpeed)
     {
         // @formatter:off
         return Commands.defer(() ->
             Commands.sequence
             (
                 Commands.runOnce(() -> Drive.getInstance().rotateInit(setpoint, maxSpeed)),
-                joystickDrive(xSupplier, ySupplier, () -> Drive.getInstance().rotateExecute(), robotCentric, 2, 1)
+                joystickDrive(translationSupplier, () -> Drive.getInstance().rotateExecute(), robotCentric, 2, 1)
             ),
             Set.of(Drive.getInstance())
         );
@@ -99,7 +101,7 @@ public final class DriveCommands
                 Drive.getInstance().rotateInit(target.getRotation(), rotationMaxSpeed);
                 Logger.recordOutput("DriveToPose", target);
             }),
-            joystickDrive(() -> Drive.getInstance().xDriveExecute(), () -> Drive.getInstance().yDriveExecute(), () -> Drive.getInstance().rotateExecute(), () -> false, 1, 1)
+            joystickDrive(() -> new Translation2d(Drive.getInstance().xDriveExecute(), Drive.getInstance().yDriveExecute()), () -> Drive.getInstance().rotateExecute(), () -> false, 1, 1)
             .finallyDo(() -> Drive.getInstance().stop())
         );
         // @formatter:on

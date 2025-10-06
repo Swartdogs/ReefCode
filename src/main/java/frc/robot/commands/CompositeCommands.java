@@ -3,6 +3,7 @@ package frc.robot.commands;
 import java.util.Set;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -28,15 +29,17 @@ public class CompositeCommands
     {
     }
 
-    public static Command joystickDrive(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier omegaSupplier, BooleanSupplier robotCentric, int translateExponent, double rotateExponent)
+    public static Command joystickDrive(Supplier<Translation2d> translateSupplier, DoubleSupplier omegaSupplier, BooleanSupplier robotCentric, int translateExponent, double rotateExponent)
     {
         return Commands.run(() ->
         {
-            // Apply deadband
-            double     linearMagnitude = MathUtil.applyDeadband(Math.hypot(xSupplier.getAsDouble(), ySupplier.getAsDouble()), Constants.Controls.JOYSTICK_DEADBAND);
-            Rotation2d linearDirection = new Rotation2d(xSupplier.getAsDouble(), ySupplier.getAsDouble());
-            double     omega           = MathUtil.applyDeadband(omegaSupplier.getAsDouble(), Constants.Controls.JOYSTICK_DEADBAND);
-            double     speedModifier   = MathUtil
+            Translation2d translation = translateSupplier.get();
+            double        omega       = omegaSupplier.getAsDouble();
+
+            double     linearMagnitude = translation.getNorm();
+            Rotation2d linearDirection = translation.getAngle();
+
+            double speedModifier = MathUtil
                     .clamp((Constants.Drive.SPEED_ELEVATOR_M * Elevator.getInstance().getExtension() + Constants.Drive.SPEED_ELEVATOR_B), Constants.Drive.MIN_SPEED_ELEVATOR_MULTIPLIER, Constants.Drive.MAX_SPEED_ELEVATOR_MULTIPLIER);
 
             // Square values
@@ -67,7 +70,7 @@ public class CompositeCommands
         }, Drive.getInstance());
     }
 
-    public static Command autoAlign(Branch branch, DoubleSupplier xSupplier, DoubleSupplier ySupplier, BooleanSupplier robotCentric, double translateMaxSpeed, double rotateMaxSpeed)
+    public static Command autoAlign(Branch branch, Supplier<Translation2d> translationSupplier, BooleanSupplier robotCentric, double translateMaxSpeed, double rotateMaxSpeed)
     {
         // @formatter:off
         return Commands.defer(() ->
@@ -75,13 +78,13 @@ public class CompositeCommands
             (
                 Commands.runOnce(() -> Vision.getInstance(Camera.FrontCenter).setVisionReference(branch)),
 
-                DriveCommands.driveAtOrientation(xSupplier, ySupplier, robotCentric, Constants.Field.getTagAngle(branch.getID()).rotateBy(Rotation2d.fromDegrees(180)), rotateMaxSpeed)
+                DriveCommands.driveAtOrientation(translationSupplier, robotCentric, Constants.Field.getTagAngle(branch.getID()).rotateBy(Rotation2d.fromDegrees(180)), rotateMaxSpeed)
                 .until(() -> Vision.getInstance(Camera.FrontCenter).hasTarget()),
 
                 DriveCommands.driveToPose(Utilities.getTagPose(branch.getID()).rotateAround(Utilities.getTagPose(branch.getID()).getTranslation(), Rotation2d.fromDegrees(180)).transformBy(new Transform2d(branch.getReference(), new Rotation2d())), translateMaxSpeed, rotateMaxSpeed)
                 .until(() -> (Drive.getInstance().xDriveIsFinished() && Drive.getInstance().yDriveIsFinished() && Drive.getInstance().rotateIsFinished())),
 
-                DriveCommands.joystickDrive(() -> 0, () -> Drive.getInstance().yDriveExecute(), () -> Drive.getInstance().rotateExecute(), () -> true, 1, 1)
+                DriveCommands.joystickDrive(() -> new Translation2d(0, Drive.getInstance().yDriveExecute()), () -> Drive.getInstance().rotateExecute(), () -> true, 1, 1)
                 .until(() -> Drive.getInstance().yDriveIsFinished() && Drive.getInstance().rotateIsFinished()),
 
                 DriveCommands.stop(),
