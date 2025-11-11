@@ -121,8 +121,8 @@ public final class Constants
         public static final double          TURN_SIM_KP                         = 8.0;
         public static final double          TURN_SIM_KD                         = 0.0;
         public static final double          ODOMETRY_FREQUENCY                  = 100.0; // ms
-        public static final double          ROTATE_KP                           = 2.1; // Snap To Angle
-        public static final double          ROTATE_KD                           = 0.1;
+        public static final double          ROTATE_KP                           = 0.5; // Snap To Angle
+        public static final double          ROTATE_KD                           = 0.0;
         public static final double          MAX_SPEED_ELEVATOR_MULTIPLIER       = 1;
         public static final double          MIN_SPEED_ELEVATOR_MULTIPLIER       = 0.3;
         public static final double          MAX_SPEED_ELEVATOR_HEIGHT           = Constants.Elevator.L1_HEIGHT;
@@ -136,9 +136,9 @@ public final class Constants
         public static final double          MAX_SNAP_SPEED_PERCENTAGE           = 0.7;
         public static final double          MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE = 0.2;
         public static final double          DEADBAND                            = 0.1;
-        public static final double          TRANSLATE_KP                        = 10.0; // Auto-Align
-        public static final double          TRANSLATE_KI                        = 0.2;
-        public static final double          TRANSLATE_KD                        = 0.3;
+        public static final double          TRANSLATE_KP                        = 4.0; // Auto-Align
+        public static final double          TRANSLATE_KI                        = 0.0;
+        public static final double          TRANSLATE_KD                        = 0.0;
         public static final double          ANGLE_KP                            = 5.0;
         public static final double          ANGLE_KD                            = 0.4;
         public static final double          ANGLE_MAX_VELOCITY                  = 8.0;

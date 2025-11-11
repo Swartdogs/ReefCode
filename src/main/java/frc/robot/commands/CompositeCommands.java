@@ -5,6 +5,8 @@ import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -37,7 +39,12 @@ public class CompositeCommands
             double        omega       = omegaSupplier.getAsDouble();
 
             double     linearMagnitude = translation.getNorm();
-            Rotation2d linearDirection = translation.getAngle();
+            Rotation2d linearDirection = new Rotation2d();
+
+            if (linearMagnitude >= Constants.Controls.JOYSTICK_DEADBAND)
+            {
+                linearDirection = translation.getAngle();
+            }
 
             double speedModifier = MathUtil
                     .clamp((Constants.Drive.SPEED_ELEVATOR_M * Elevator.getInstance().getExtension() + Constants.Drive.SPEED_ELEVATOR_B), Constants.Drive.MIN_SPEED_ELEVATOR_MULTIPLIER, Constants.Drive.MAX_SPEED_ELEVATOR_MULTIPLIER);
@@ -78,7 +85,7 @@ public class CompositeCommands
             (
                 Commands.runOnce(() -> Vision.getInstance(Camera.FrontCenter).setVisionReference(branch)),
 
-                DriveCommands.driveAtOrientation(translationSupplier, robotCentric, Constants.Field.getTagAngle(branch.getID()).rotateBy(Rotation2d.fromDegrees(180)), rotateMaxSpeed)
+                DriveCommands.driveAtOrientation(translationSupplier, robotCentric, Constants.Field.getTagAngle(branch.getID()), rotateMaxSpeed)
                 .until(() -> Vision.getInstance(Camera.FrontCenter).hasTarget()),
 
                 DriveCommands.driveToPose(Utilities.getTagPose(branch.getID()).rotateAround(Utilities.getTagPose(branch.getID()).getTranslation(), Rotation2d.fromDegrees(180)).transformBy(new Transform2d(branch.getReference(), new Rotation2d())), translateMaxSpeed, rotateMaxSpeed)

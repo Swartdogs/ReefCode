@@ -48,7 +48,12 @@ public final class DriveCommands
             double        omega       = omegaSupplier.getAsDouble();
 
             double     linearMagnitude = translation.getNorm();
-            Rotation2d linearDirection = translation.getAngle();
+            Rotation2d linearDirection = new Rotation2d();
+
+            if (linearMagnitude >= Constants.Controls.JOYSTICK_DEADBAND)
+            {
+                linearDirection = translation.getAngle();
+            }
 
             // Square values
             linearMagnitude = Math.pow(linearMagnitude, translateExponent);

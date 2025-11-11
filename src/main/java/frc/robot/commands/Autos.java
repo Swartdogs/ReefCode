@@ -45,7 +45,7 @@ public class Autos
             autoFactory.trajectoryCmd(path),
             Commands.parallel
             (
-                CompositeCommands.autoAlign(Utilities.parseAutoString(path), Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE),
+                //CompositeCommands.autoAlign(Utilities.parseAutoString(path), Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE),
                 CompositeCommands.setHeight(ElevatorHeight.Level4)
             ),
             Commands.waitSeconds(1.0),

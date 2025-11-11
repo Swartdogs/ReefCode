@@ -1,5 +1,7 @@
 package frc.robot;
 
+import java.util.Set;
+
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.math.MathUtil;
@@ -7,6 +9,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Field.Branch;
@@ -23,6 +26,7 @@ import frc.robot.subsystems.funnel.Funnel;
 import frc.robot.subsystems.manipulator.Manipulator;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.Vision.Camera;
+import frc.robot.util.Utilities;
 
 public class RobotContainer
 {
@@ -54,7 +58,7 @@ public class RobotContainer
     {
         Trigger funnelDropped = new Trigger(() -> Funnel.getInstance().isDropped());
 
-        Trigger driverButton13 = _driverButtons.axisLessThan(0, -0.5);
+        Trigger driverButton13 = _driverButtons.axisGreaterThan(0, 0.5);
         Trigger driverButton14 = _driverButtons.axisGreaterThan(1, 0.5);
         Trigger driverButton15 = _driverButtons.axisLessThan(1, -0.5);
 
@@ -87,9 +91,9 @@ public class RobotContainer
         _driverButtons.button(11).whileTrue(CompositeCommands.autoAlign(Branch.K, this::getJoystickTranslation, this::robotCentric, Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE));
         _driverButtons.button(12).whileTrue(CompositeCommands.autoAlign(Branch.L, this::getJoystickTranslation, this::robotCentric, Constants.Drive.MAX_AUTO_TRANSLATE_SPEED_PERCENTAGE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE));
 
-        driverButton13.whileTrue(DriveCommands.driveAtOrientation(this::getJoystickTranslation, this::robotCentric, Constants.Field.BLUE_RIGHT_STATION_ANGLE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE));
-        driverButton14.whileTrue(DriveCommands.driveAtOrientation(this::getJoystickTranslation, this::robotCentric, Constants.Field.BLUE_LEFT_STATION_ANGLE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE));
-        driverButton15.whileTrue(DriveCommands.driveAtOrientation(this::getJoystickTranslation, this::robotCentric, Constants.Field.BLUE_PROCESSOR_ANGLE, Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE));
+        driverButton13.whileTrue(Commands.defer(() -> DriveCommands.driveAtOrientation(this::getJoystickTranslation, this::robotCentric, getLeftCoralStationAngle(), Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE), Set.of(Drive.getInstance())));
+        driverButton14.whileTrue(Commands.defer(() -> DriveCommands.driveAtOrientation(this::getJoystickTranslation, this::robotCentric, getRightCoralStationAngle(), Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE), Set.of(Drive.getInstance())));
+        driverButton15.whileTrue(Commands.defer(() -> DriveCommands.driveAtOrientation(this::getJoystickTranslation, this::robotCentric, getProcessorAngle(), Constants.Drive.MAX_SNAP_SPEED_PERCENTAGE), Set.of(Drive.getInstance())));
 
         // Operator Controls
         _operatorButtons.button(1).onTrue(CompositeCommands.setHeight(ElevatorHeight.Level4));
@@ -116,13 +120,30 @@ public class RobotContainer
 
     public Command getAutonomousCommand()
     {
-        // return Dashboard.getInstance().getSelectedAuto();
-        return new PathPlannerAuto("New Auto");
+        return Dashboard.getInstance().getSelectedAuto();
+        // return new PathPlannerAuto("New Auto");
     }
 
     private boolean robotCentric()
     {
         return false;
+    }
+
+    private Rotation2d getProcessorAngle()
+    {
+        var angle = Utilities.isBlueAlliance() ? Constants.Field.BLUE_PROCESSOR_ANGLE : Constants.Field.RED_PROCESSOR_ANGLE;
+        System.out.println(String.format("Angle: %5.1f", angle.getDegrees()));
+        return angle;
+    }
+
+    private Rotation2d getLeftCoralStationAngle()
+    {
+        return Utilities.isBlueAlliance() ? Constants.Field.BLUE_LEFT_STATION_ANGLE : Constants.Field.RED_LEFT_STATION_ANGLE;
+    }
+
+    private Rotation2d getRightCoralStationAngle()
+    {
+        return Utilities.isBlueAlliance() ? Constants.Field.BLUE_RIGHT_STATION_ANGLE : Constants.Field.RED_RIGHT_STATION_ANGLE;
     }
 
     private Translation2d getJoystickTranslation()
@@ -131,7 +152,16 @@ public class RobotContainer
         double yStrafe = -_driverJoystick.getX();
 
         double     linearMagnitude = MathUtil.applyDeadband(Math.hypot(xDrive, yStrafe), Constants.Controls.JOYSTICK_DEADBAND);
-        Rotation2d linearDirection = new Rotation2d(xDrive, yStrafe);
+        Rotation2d linearDirection;
+
+        if (linearMagnitude >= Constants.Controls.JOYSTICK_DEADBAND)
+        {
+            linearDirection = new Rotation2d(xDrive, yStrafe);
+        }
+        else
+        {
+            linearDirection = new Rotation2d();
+        }
 
         return new Translation2d(linearMagnitude, linearDirection);
     }
